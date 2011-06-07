@@ -36,11 +36,12 @@ our (@ISA, @EXPORT);
 @EXPORT = qw(install);
 
 sub install {
-	my ($sth, $dbname, $dbuser, $dbpass, $dbtype, $dsn, $dbh, @creates);
+	my ($sth, $dbname, $dbuser, $dbpass, $dbhost, $dbtype, $dsn, $dbh, @creates);
 
 	$dbname = getconfig('dbname');
 	$dbuser = getconfig('dbuser');
 	$dbpass = getconfig('dbpass');
+	$dbhost = getconfig('dbhost');
 
 	if(defined(getconfig('dbtype'))) {
 		$dbtype = getconfig('dbtype');
@@ -48,7 +49,7 @@ sub install {
 		$dbtype = 'mysql';
 	}
 
-	$dsn = "DBI:$dbtype:dbname=$dbname;host=localhost";
+	$dsn = "DBI:$dbtype:dbname=$dbname;host=$dbhost";
 	$dbh = DBI->connect($dsn, $dbuser, $dbpass, { 'RaiseError' => 0}) or die $DBI::errstr;
 
 	print "Content-Type: text/html\r\n\r\n";

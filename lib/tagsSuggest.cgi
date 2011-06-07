@@ -19,24 +19,22 @@ print $cgi->header(-type => "text/html", -charset => "utf-8");
 # @return $out:string - HTML-formatted list of tags.
 my ($in) = shift;
 
-if ($in =~ /^[0-9a-z:_]+/i)
-{
+if ($in =~ /^[0-9a-z:_]+/i) {
 	my ($sql, $sth);
 
 	# The user has typed in the first two letters, look for a match.
 	# Order suggestions by popularity.
-	$sql = "select $tbl_tags.name,count(*) from $tbl_tags
+	$sql = "select $tbl_tags.name, count(*) from `$tbl_tags`
 		inner join $tbl_bookmark_tags on
 			($tbl_tags.id = $tbl_bookmark_tags.tag_id)
-		where ($tbl_tags.name LIKE '$in%')
+		where ($tbl_tags.name LIKE ".$dbh->quote($in.'%').")
 		group by $tbl_tags.name
-		order by count( * ) desc";
+		order by count(*) desc";
 	$sth = $dbh->prepare($sql);
 	$sth->execute();
 
 	# external wrappers div.suggestlist>ul> ... /ul/div
-	if($sth->rows ne 0) 
-	{
+	if($sth->rows ne 0) {
 		my $out = "";
 		#$out .= "Content-Type: text/html; charset=UTF-8\n\n";
 		while(my @r = $sth->fetchrow_array()) {

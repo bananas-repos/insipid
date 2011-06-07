@@ -37,12 +37,13 @@ our (@ISA, @EXPORT);
 	install $version $tag_url $feed_url $full_url $snapshot_url
 	export_options $dbprefix);
 	
-our ($dsn, $dbh, $dbname, $dbuser, $dbpass, $snapshot_url,
+our ($dsn, $dbh, $dbname, $dbuser, $dbpass, $dbhost, $snapshot_url,
 	$dbtype, $tag_url, $feed_url, $full_url, $dbprefix);
 
 $dbname = getconfig('dbname');
 $dbuser = getconfig('dbuser');
 $dbpass = getconfig('dbpass');
+$dbhost = getconfig('dbhost');
 
 if(defined(getconfig('dbtype'))) {
 	$dbtype = getconfig('dbtype');
@@ -50,7 +51,7 @@ if(defined(getconfig('dbtype'))) {
 	$dbtype = 'mysql';
 }
 
-$dsn = "DBI:$dbtype:dbname=$dbname;host=localhost";
+$dsn = "DBI:$dbtype:dbname=$dbname;host=$dbhost";
 $dbh = DBI->connect($dsn, $dbuser, $dbpass, { 'RaiseError' => 0}) or die $DBI::errstr;
 
 my %options;
