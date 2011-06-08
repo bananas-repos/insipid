@@ -55,17 +55,43 @@ sub tag_operations {
 		
 		my $newTag = param('newName');
 		my $oldTagName = param('rename');
+		my $oldTagId = get_tag_id_by_name($oldTagName);
 		
 		# is the new name already a tag ?
-		my $check = already_a_tag($newTag);
+		# if check then check is the new tagId
+		my $check = get_tag_id_by_name($newTag);
 		if($check) {
-			# delete the old one and rewrite the id
+			my $sql = "SELECT bookmark_id, tag_id 
+						FROM `$tbl_bookmark_tags`
+						WHERE tag_id = ?";
+			my $sth = $dbh->prepare($sql);
+			$sth->execute($oldTagId);
+			while(my ($bid, $tid) = $sth->fetchrow_array) {
+				#print Dumper $bid;
+				my $sql1 = "DELETE FROM `$tbl_bookmark_tags` 
+							WHERE bookmark_id = ?
+							AND tag_id = ?";
+				my $sth1 = $dbh->prepare($sql1);
+				$sth1->execute($bid,$tid);
+				
+				my $sql2 = "INSERT IGNORE INTO `$tbl_bookmark_tags`
+							SET bookmark_id = ?,
+							tag_id = ?";
+				my $sth2 = $dbh->prepare($sql2);
+				$sth2->execute($bid,$check);
+			}			
+			
+			# remove the old one
+			my $sql = "DELETE FROM `$tbl_tags` WHERE id = ?";
+			my $sth = $dbh->prepare($sql);
+			$sth->execute($oldTagId);
+			
 		}
 		else {
 			# just rename the tag
 			my $sql = "UPDATE $tbl_tags SET name = ? WHERE name = ?";
 			my $sth = $dbh->prepare($sql);
-			$sth->execute($newTag, $oldTagName);
+			$sth->execute($oldTagId);
 		}
 		
 		print '<span style="color: green;">Done !</span>';
@@ -272,7 +298,7 @@ sub set_tags {
 
 # check if given word is an existing tag
 # if so return the tag id
-sub already_a_tag {
+sub get_tag_id_by_name {
 	my ($tag) = (@_);
 	
 	my($tagId, $sql, $sth, @result);
@@ -282,9 +308,10 @@ sub already_a_tag {
 		$sth = $dbh->prepare($sql);
 		$sth->execute($tag);
 		@result = $sth->fetchrow_array();
-		#print "..".$result[0];
 		$tagId = $result[0];
 	}
+	
+	return $tagId;
 }
 
 1;
