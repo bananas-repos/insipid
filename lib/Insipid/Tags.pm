@@ -31,6 +31,8 @@ use Insipid::Database;
 use Insipid::Sessions;
 require Exporter;
 
+use Data::Dumper;
+
 @ISA = qw(Exporter);
 
 @EXPORT = qw(
@@ -42,10 +44,45 @@ tag_operations
 );
 
 sub tag_operations {
+	
+	if(logged_in() ne 1) {
+		push(@errors, "You have to be logged in to perform that operation.");
+		return;
+	}
+	
+	if(param('save') && param('newName')) {
+		print '<p>Reanming...</p>';
+		
+		my $newTag = param('newName');
+		my $oldTagName = param('rename');
+		
+		# is the new name already a tag ?
+		my $check = already_a_tag($newTag);
+		if($check) {
+			# delete the old one and rewrite the id
+		}
+		else {
+			# just rename the tag
+			my $sql = "UPDATE $tbl_tags SET name = ? WHERE name = ?";
+			my $sth = $dbh->prepare($sql);
+			$sth->execute($newTag, $oldTagName);
+		}
+		
+		print '<span style="color: green;">Done !</span>';
+		
+	}
+	
 	print '<h2>Rename Tag</h2>';
+	print '<form method="post" action="">';
 	print '<select name="rename">';
 	show_tags(1);
 	print '</select>';
+	print '<input type="text" name="newName" value="" /><br />';
+	print '<input type="submit" value="Rename" />';
+	print '<input type=hidden name="op" value="tags">';
+	print '<input type=hidden name="save" value="yes">';
+	print '</form>';
+	
 	print '<h2>Delete Tag</h2>';
 	print '<select name="delete">';
 	show_tags(1);
@@ -233,6 +270,22 @@ sub set_tags {
 	}
 }
 
+# check if given word is an existing tag
+# if so return the tag id
+sub already_a_tag {
+	my ($tag) = (@_);
+	
+	my($tagId, $sql, $sth, @result);
+	
+	if($tag) {
+		$sql = "select id from `$tbl_tags` where (name = ?)";
+		$sth = $dbh->prepare($sql);
+		$sth->execute($tag);
+		@result = $sth->fetchrow_array();
+		#print "..".$result[0];
+		$tagId = $result[0];
+	}
+}
 
 1;
 __END__
