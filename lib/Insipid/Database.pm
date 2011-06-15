@@ -45,11 +45,7 @@ $dbuser = getconfig('dbuser');
 $dbpass = getconfig('dbpass');
 $dbhost = getconfig('dbhost');
 
-if(defined(getconfig('dbtype'))) {
-	$dbtype = getconfig('dbtype');
-} else {
-	$dbtype = 'mysql';
-}
+$dbtype = 'mysql';
 
 $dsn = "DBI:$dbtype:dbname=$dbname;host=$dbhost";
 $dbh = DBI->connect($dsn, $dbuser, $dbpass, { 'RaiseError' => 0}) or die $DBI::errstr;

@@ -28,7 +28,6 @@ use vars qw(
 @ISA
 @EXPORT
 $createMySQL
-$createPostgres
 );
 
 use Exporter;
@@ -38,114 +37,12 @@ use Exporter;
 @EXPORT = qw(
 $version
 $createMySQL
-$createPostgres
 );
 
 # Insipid will check the database version number on each initialization of
 # the options table (every hit essentially) and upgrade the tables if there's
 # any mismatch.
-our $version = "0.9.20";
-
-our $createPostgres = <<CPOSTGRES;
-CREATE TABLE $tbl_authentication (
-	session_id CHAR(32) NOT NULL UNIQUE,
-	create_time INT,
-	PRIMARY KEY(session_id)
-);
-
-CREATE TABLE $tbl_bookmarks (
-	id SERIAL,
-	url TEXT NOT NULL,
-	md5 CHAR(32) NOT NULL UNIQUE,
-	date INT NOT NULL DEFAULT 0,
-	title VARCHAR(255) NOT NULL,
-	description TEXT NOT NULL,
-	access_level INT NOT NULL DEFAULT 0,
-	PRIMARY KEY(id)
-);
-
-
-CREATE TABLE $tbl_tags (
-	id SERIAL,
-	name VARCHAR(255) NOT NULL UNIQUE,
-	PRIMARY KEY(id),
-	UNIQUE(name)
-);
-
-CREATE TABLE $tbl_bookmark_tags (
-	bookmark_id SERIAL,
-	tag_id INT NOT NULL,
-	PRIMARY KEY(bookmark_id, tag_id)
-);
-
-CREATE TABLE $tbl_options (
-        name VARCHAR(255) NOT NULL UNIQUE,
-        description TEXT NOT NULL,
-        value TEXT NOT NULL,
-        PRIMARY KEY(name)
-);
-
-CREATE TABLE $tbl_pagecache (
-        md5 CHAR(32) NOT NULL DEFAULT '',
-        url TEXT NOT NULL DEFAULT '',
-        content_type VARCHAR(50),
-        content_length INT NOT NULL DEFAULT 0,
-        content bytea,
-        date INT NOT NULL DEFAULT 0,
-        PRIMARY KEY(md5)
-);
-
-CREATE TABLE $tbl_pagecache_references (
-        md5_parent CHAR(32) NOT NULL DEFAULT '',
-        md5_child CHAR(32) NOT NULL DEFAULT '',
-        PRIMARY KEY(md5_parent, md5_child)
-);
-
-INSERT INTO $tbl_options VALUES (
-  'feed_name',
-  'The title of your feed (e.g. My Bookmarks)',
-  'Bookmarks'
-);
-
-INSERT INTO $tbl_options VALUES (
-  'site_name',
-  'The title of the main page (e.g. My Bookmarks)',
-  'My Bookmarks'
-);
-
-
-INSERT INTO $tbl_options VALUES (
-  'public_searches',
-  'Allow public searches - when set to yes, any visitor can search your bookmarks.',
-  'no'
-);
-
-INSERT INTO $tbl_options VALUES(
-  'version',
-  'Internal Insipid version number',
-  '$version'
-);
-
-INSERT INTO $tbl_options VALUES(
-  'proxy_host',
-  'The proxy server (if any) to use when making page snapshots.',
-  ''
-);
-
-INSERT INTO $tbl_options VALUES(
-  'proxy_port',
-  'Your proxy port number.',
-  '3128'
-);
-
-INSERT INTO $tbl_options VALUES(
-  'use_rewrite',
-  'Use mod_rewrite - disable this if you do not want .htaccess-controlled URLs, or if your Apache does not have the rewrite module installed.',
-  'no'
-);
-
-CPOSTGRES
-
+our $version = "1.0";
 
 our $createMySQL = <<CMYSQL;
 CREATE TABLE IF NOT EXISTS $tbl_authentication (

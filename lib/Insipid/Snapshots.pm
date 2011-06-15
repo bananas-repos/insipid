@@ -140,12 +140,8 @@ sub fetch_url {
 		$sth->bind_param(3, $ct);
 		$sth->bind_param(4, length($content));
 
-		# Postgres needs escaping for the binary data.
-		if($dbtype eq 'Pg') {
-			$sth->bind_param(5, $content, SQL_VARBINARY);
-		} else {
-			$sth->bind_param(5, $content);
-		}
+		$sth->bind_param(5, $content);
+
 		$sth->bind_param(6, time());
 		$sth->execute;
 

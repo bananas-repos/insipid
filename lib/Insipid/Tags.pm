@@ -200,11 +200,7 @@ sub show_tags {
 	}
 
 	my $order_clause;
-	if($dbtype eq "Pg") {
-		$order_clause = "order by upper($tbl_tags.name)";
-	} else {
-		$order_clause = "order by $tbl_tags.name";
-	}
+	$order_clause = "order by $tbl_tags.name";
 
 	$sql = "select $tbl_tags.name, count(*) 
 		   from $tbl_bookmarks  

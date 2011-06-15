@@ -43,11 +43,7 @@ sub install {
 	$dbpass = getconfig('dbpass');
 	$dbhost = getconfig('dbhost');
 
-	if(defined(getconfig('dbtype'))) {
-		$dbtype = getconfig('dbtype');
-	} else {
-		$dbtype = 'mysql';
-	}
+	$dbtype = 'mysql';
 
 	$dsn = "DBI:$dbtype:dbname=$dbname;host=$dbhost";
 	$dbh = DBI->connect($dsn, $dbuser, $dbpass, { 'RaiseError' => 0}) or die $DBI::errstr;
@@ -57,11 +53,7 @@ sub install {
 
 	print "<p>Creating tables...";
 
-	if($dbtype eq 'mysql') {
-		@creates = split(/\;/, $createMySQL);
-	} else {
-		@creates = split(/\;/, $createPostgres);
-	}
+	@creates = split(/\;/, $createMySQL);
 
 	foreach(@creates) {
 		my $sql = $_;

@@ -553,7 +553,7 @@ sub do_import {
     my ($omd5, $ourl, $otype, $olength, $odate, $sql, $oadd, $omod, $otags);
     my $ispec = '';
 
-    if ($dbtype eq 'mysql') {$ispec = " ignore ";}
+    $ispec = " ignore ";
 
     $sql = "insert $ispec into pagecache_references
 			(md5_parent, md5_child) values(?,?)";
@@ -668,12 +668,7 @@ sub do_import {
                 $insert_snapshot->bind_param(3, $otype);
                 $insert_snapshot->bind_param(4, $olength);
 
-                if ($dbtype eq "Pg") {
-                    $insert_snapshot->bind_param(5, decode_base64($cbuffer),
-                        SQL_VARBINARY);
-                } else {
-                    $insert_snapshot->bind_param(5, decode_base64($cbuffer));
-                }
+                $insert_snapshot->bind_param(5, decode_base64($cbuffer));
 
                 $insert_snapshot->bind_param(6, $odate);
                 $insert_snapshot->execute;
@@ -854,13 +849,7 @@ sub show_bookmarks {
     # drills in on a specific tag or to get a smaller view of the entire
     # dataset (for paging purposes).
 
-    # MySQL and postgres have slightly different syntax here...
-    if ($dbtype eq 'mysql') {
-        $sql = "select $tbl_bookmarks.id from $tbl_bookmarks";
-    } elsif ($dbtype eq 'Pg') {
-        $sql = "select $tbl_bookmarks.id, $tbl_bookmarks.date 
-	    	from $tbl_bookmarks";
-    }
+    $sql = "select $tbl_bookmarks.id from $tbl_bookmarks";
 
     # Limit to tags
     if (defined(url_param('tag'))) {

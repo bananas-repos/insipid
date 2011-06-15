@@ -1,9 +1,7 @@
-# This is the database configuration for Insipid.  The "dbtype" parameter
-# can be either "mysql" for the MySQL database or "Pg" for PostgreSQL.
+# This is the database configuration for Insipid.
 dbname = insipid_luke
 dbuser = luke
 dbpass = dbpass
-dbtype = mysql
 
 # If you'd like the Insipid database tables to use a prefix, uncomment
 # this line.

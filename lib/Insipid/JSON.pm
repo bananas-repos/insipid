@@ -105,11 +105,7 @@ sub send_json_tags {
 	}
 
 	my $order_clause;
-	if($dbtype eq "Pg") {
-		$order_clause = "order by upper($tbl_tags.name)";
-	} else {
-		$order_clause = "order by $tbl_tags.name";
-	}
+	$order_clause = "order by $tbl_tags.name";
 
 	$sql = "select $tbl_tags.name, count(*)
 		   from $tbl_bookmarks
@@ -177,13 +173,7 @@ sub send_json_posts {
 	# drills in on a specific tag or to get a smaller view of the entire
 	# dataset (for paging purposes).
 
-	# MySQL and postgres have slightly different syntax here...
-	if ($dbtype eq 'mysql') {
-	    $sql = "select $tbl_bookmarks.id from $tbl_bookmarks";
-	} elsif ($dbtype eq 'Pg') {
-	    $sql = "select $tbl_bookmarks.id, $tbl_bookmarks.date
-	    	from $tbl_bookmarks";
-	}
+    $sql = "select $tbl_bookmarks.id from $tbl_bookmarks";
 
 	# Limit to tags
 	if(defined(url_param('tag'))) {
