@@ -1,5 +1,6 @@
 === Open Bugs ===
 
+* Add possible even if no data is inserted !
 * Add form shown although not logged in
 * Case-sensitivity in SELECT statements with Postgres really do a number on
   the tag algorithms

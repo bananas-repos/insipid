@@ -45,10 +45,7 @@ tag_operations
 
 sub tag_operations {
 	
-	if(logged_in() ne 1) {
-		push(@errors, "You have to be logged in to perform that operation.");
-		return;
-	}
+	check_access();
 	
 	if(param('save') && param('newName')) {
 		print '<p>Reanming...</p>';
@@ -257,10 +254,7 @@ sub get_tags_list {
 sub set_tags {
 	my ($bookmark_id, $tag_string) = (@_);
 
-	if(logged_in() ne 1) {
-		push(@errors, "You have to be logged in to perform that operation.");
-		return;
-	}
+	check_access();
 	
 	my @tags = split(" ", $tag_string);
 	

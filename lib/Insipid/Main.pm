@@ -115,10 +115,7 @@ sub main {
     if ( defined( url_param('op') ) ) {
         if ( url_param('op') eq 'export' ) {
 			
-			if ( logged_in() ne 1 ) {
-                push( @errors,"You have to be logged in to perform that operation." );
-                #return;
-            }
+			check_access();
 	
             my $sn = 'n';
             if ( defined( param('snapshots') ) ) {
@@ -281,14 +278,9 @@ IFORM
             login_form();
         }
 
-        if (   ( param('op') eq 'add_bookmark' )
-            || ( param('op') eq 'edit_bookmark' ) )
-        {
-
-            if ( logged_in() ne 1 ) {
-                push( @errors,"You have to be logged in to perform that operation." );
-                #return;
-            }
+        if ( (param('op') eq 'add_bookmark' ) || (param('op') eq 'edit_bookmark' )) {
+			
+			check_access();
 
      #check to see if the url is bookmarked, then indicate that this is an edit.
             my (
@@ -845,10 +837,7 @@ sub delete_bookmark {
     my ($id) = (@_);
     my ( $sql, $sth, $md5 ) = ( "", "", "" );
 
-    if ( logged_in() ne 1 ) {
-        push( @errors, "You have to be logged in to perform that operation." );
-        return;
-    }
+    check_access();
 
     # Check for cached version to delete.
     $sql = "select $tbl_pagecache.md5 from $tbl_pagecache 
@@ -1222,10 +1211,7 @@ sub get_bookmark {
 sub update_bookmark {
     my ( $id, $url, $title, $description, $access_level, $tags ) = (@_);
 
-    if ( logged_in() ne 1 ) {
-        push( @errors, "You have to be logged in to perform that operation." );
-        return;
-    }
+    check_access();
 
     my $sql = "update $tbl_bookmarks 
 			set url = ?, md5 = ?, title = ?, description = ?, 

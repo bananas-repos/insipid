@@ -46,7 +46,7 @@ my @MoY = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
 # TODO: If content is already sent, add the error to @errors instead of dying
 sub check_access {
 	if(logged_in() ne 1) {
-		print "Content-Type: text/plain\r\n\r\n";
+		#print "Content-Type: text/plain\r\n\r\n";
 		print "You have to be logged in to perform that operation.";
 		exit;
 	}

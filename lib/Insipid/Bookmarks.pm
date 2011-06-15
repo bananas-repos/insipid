@@ -64,11 +64,7 @@ sub add_bookmark {
 	my ($url, $title, $description, $access_level, $epoch, $tags) = (@_);
 	my ($sql, $sth);
 
-	if(logged_in() ne 1) {
-		push(@errors, 'You have to be logged in to perform ' .
-			'that operation.');
-		return;
-	}
+	check_access();
 
 	my $md5 = md5_hex($url);
 
