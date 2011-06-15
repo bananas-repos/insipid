@@ -2,7 +2,6 @@
 
 * Case-sensitivity in SELECT statements with Postgres really do a number on
   the tag algorithms
-* Tag operations (op=tags) or not working yet.
 
 === Fixed in 0.9.21 ===
 

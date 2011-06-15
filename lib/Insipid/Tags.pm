@@ -48,10 +48,6 @@ sub tag_operations {
 	
 	check_access();
 	
-	print Dumper param("doDelete");
-	print Dumper param("deleteTag");
-	print Dumper param("moveTo");
-	
 	if(param('save') && param('newName')) {
 		print '<p>Reanming...</p>';
 		
@@ -99,10 +95,22 @@ sub tag_operations {
 	elsif(param("doDelete") && param("deleteTag") && param("moveTo")) {
 		print '<p>Delete...</p>';
 		
+		# this moves the selected tag and its bookmarks to the new one
+		# the tag is still availbale in the DB
+		
 		my($delTagName,$moveToTagName) = (param('deleteTag'), param('moveTo'));
 		
-		if($delTagName && $moveToTagName && ($delTagName != $moveToTagName)) {
-			
+		if($delTagName && $moveToTagName && ($delTagName ne $moveToTagName)) {
+			# get the ones with the old tag
+			my $oldTagId = get_tag_id_by_name($delTagName);
+			my $moveToTagId = get_tag_id_by_name($moveToTagName);
+			if($oldTagId && $moveToTagId) {
+				my $sql = "UPDATE IGNORE `$tbl_bookmark_tags`
+							SET `tag_id` = ?
+							WHERE `tag_id` = ?";
+				my $sth = $dbh->prepare($sql);
+				$sth->execute($moveToTagId,$oldTagId);
+			}
 		}
 		
 		print '<span style="color: green;">Done !</span>';

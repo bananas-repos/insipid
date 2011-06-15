@@ -3,6 +3,8 @@
 	* tag rename feature implemented
 	* tag rename case sensitive problem
 	* add bookmark only if url and title are not empty
+	* tag delete is available now. It moves the selected bookmarks
+		to another one
 	
 Tue Jul 14 21:38 EST 2009  Luke Reeve   <luke@neuro-tech.net>
 
