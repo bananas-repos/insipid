@@ -1,19 +1,16 @@
 Insipid is a web-based bookmark manager similar to the Delicious service.
 
+
+This is a heavily modified version of insipid createted by Luke Reeves.
+This release was done by https://github.com/jumpin-banana/insipid
+
+
 Rename the insipid-config.cgi.example to insipid-config.cgi and edit it,
-replacing the example values with those that match your system.  Make sure 
-that the line "dbtype" is set:
-
-# For MySQL:
-dbtype = mysql
-
-# For PostgreSQL:
-dbtype = Pg
+replacing the example values with those that match your system.  
 
 Create a user and password for the database if you don't have one assigned
 to you by your adiministrator or ISP.  Doing this is beyond the scope of this
-readme file - refer to the MySQL or PostgreSQL server documentation for more
-help.
+readme file - refer to the server documentation for more help.
 
 Rename the htaccess file to .htaccess and add a "RewriteBase" clause to the 
 top, such as:
