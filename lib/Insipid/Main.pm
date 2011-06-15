@@ -141,16 +141,14 @@ sub main {
         # JSON
         # JSON Show tags:
         if (url_param('op') eq 'json_tags') {
-            print
-              "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
+            print "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
             send_json_tags();
             exit;
         }
 
         # JSON Show bookmarks:
         if (url_param('op') eq 'json_posts') {
-            print
-              "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
+            print "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
             send_json_posts();
             exit;
         }
@@ -226,8 +224,7 @@ DOC
 
     # If the user just saved a bookmark, redirect them now.
     if ($redirect ne "") {
-        print
-          "<script language=\"JavaScript\">document.location = \"$redirect\";</script>";
+        print "<script language=\"JavaScript\">document.location = \"$redirect\";</script>";
         print "</body></html>";
         exit;
     }
@@ -241,8 +238,7 @@ DOC
         if (url_param('op') eq 'export') {
             if (!defined(param('target'))) {
                 print "<br /><br /><form method=\"post\" class=\"formText\">";
-                print
-                  "<input type=\"checkbox\" name=\"snapshots\" />Include Snapshots<br />";
+                print "<input type=\"checkbox\" name=\"snapshots\" />Include Snapshots<br />";
                 print "<input type=\"submit\" value=\"Export\" /></form>";
             }
         }
@@ -277,12 +273,9 @@ IFORM
             login_form();
         }
 
-        if ((param('op') eq 'add_bookmark') || (param('op') eq 'edit_bookmark'))
-        {
-
+        if ((param('op') eq 'add_bookmark') || (param('op') eq 'edit_bookmark')) {
             check_access();
-
-     #check to see if the url is bookmarked, then indicate that this is an edit.
+     		#check to see if the url is bookmarked, then indicate that this is an edit.
             my (
                 $id,           $url,          $title,
                 $description,  $button,       $tags,
@@ -297,6 +290,11 @@ IFORM
                     param('description'), param('tags')
                 );
 
+				if($url == '' || $title == '') {
+					print "URL or Title can not be empty";
+					exit;
+				}
+
                 if (defined(param('access_level'))) {
                     if (param('access_level') eq 'on') {
                         $access_level = 1;
@@ -306,11 +304,9 @@ IFORM
                 }
 
                 if (param('id')) {
-                    update_bookmark(param('id'), $url, $title, $description,
-                        $access_level, $tags);
+                    update_bookmark(param('id'), $url, $title, $description, $access_level, $tags);
                 } else {
-                    add_bookmark($url, $title, $description, $access_level, 0,
-                        $tags);
+                    add_bookmark($url, $title, $description, $access_level, 0, $tags);
                     if (param('snapshot')) {
                         if (param('snapshot') eq 'on') {
                             $id = get_bookmark_id(param('url'));
@@ -327,8 +323,7 @@ IFORM
                     }
                 }
             } else {
-
-        # Show the form, populating from the database if it's an existing entry.
+        		# Show the form, populating from the database if it's an existing entry.
                 my $utext           = "URL:";
                 my $snapshot_params = "";
                 $id = "-1";
@@ -347,10 +342,8 @@ IFORM
                       get_bookmark($id);
                     $tags   = get_tags($url);
                     $button = "Save";
-                    $utext =
-                      "<span style=\"color:red\">URL (already bookmarked):</span>";
-                    $extra_params =
-                      "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
+                    $utext = "<span style=\"color:red\">URL (already bookmarked):</span>";
+                    $extra_params = "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
                 } else {
 
                     # There has to be a nicer way to do this.
@@ -361,8 +354,7 @@ IFORM
                     }
                     $access_level = 1;
                     $button       = "Add";
-                    $snapshot_params =
-                      "<span class=\"formtext\">Snapshot:</span><input type=\"checkbox\" name=\"snapshot\" />\n";
+                    $snapshot_params = "<span class=\"formtext\">Snapshot:</span><input type=\"checkbox\" name=\"snapshot\" />\n";
                 }
 
                 my $style     = "style=\"width:500px\"";
@@ -375,7 +367,7 @@ IFORM
                 }
 
                 if   ($access_level eq 0) {$access_box = "";}
-                else                      {$access_box = "checked=\"true\" ";}
+                else {$access_box = "checked=\"true\" ";}
 
                 if ($redir eq 'on') {$redir_box = "checked=\"true\"";}
 
@@ -523,8 +515,7 @@ sub show_options {
         if ($hr->{'name'} eq 'version') {
             print "<td>$hr->{'value'}</td>";
         } else {
-            print
-              "<td><input name=\"$hr->{'name'}\" value=\"$hr->{'value'}\" /></td>";
+            print "<td><input name=\"$hr->{'name'}\" value=\"$hr->{'value'}\" /></td>";
         }
         print "</tr>";
     }
@@ -634,8 +625,7 @@ sub do_import {
                     $tagvalue = "";
                 }
 
-                add_bookmark($url, $title, "", $access_level, $epoch, $tagvalue,
-                    1);
+                add_bookmark($url, $title, "", $access_level, $epoch, $tagvalue, 1);
             }
 
             # Option
