@@ -64,7 +64,7 @@ my $query     = "";
 my $last_page = 0;
 my $site_title;
 
-if ( !defined( $ENV{SERVER_NAME} ) ) {
+if (!defined($ENV{SERVER_NAME})) {
     $NL = "\n";
 }
 
@@ -84,49 +84,47 @@ sub main {
 
     # Get the basic options
     $site_title = get_option('site_name');
-    if ( $site_title eq '' ) {
+    if ($site_title eq '') {
         $site_title = 'Insipid Bookmarks';
     }
 
     # Initialize variables that can be posted and in the URL.
-    if ( defined( url_param('q') ) ) {
+    if (defined(url_param('q'))) {
         $query = url_param('q');
     }
 
-    if ( defined( param('q') ) ) {
+    if (defined(param('q'))) {
         $query = param('q');
     }
 
     # Check to see if a username and password have been posted
-    if ( defined( param('password') ) && defined( param('username') ) ) {
-        if (   ( param('password') eq $userpass )
-            && ( param('username') eq $username ) )
-        {
+    if (defined(param('password')) && defined(param('username'))) {
+        if (   (param('password') eq $userpass)
+            && (param('username') eq $username)) {
             my $rv = login();
             print $rv;
-        }
-        else {
-            push( @errors, "Invalid username or password." );
+        } else {
+            push(@errors, "Invalid username or password.");
         }
     }
 
     # Operations for non-HTML content
 
-    if ( defined( url_param('op') ) ) {
-        if ( url_param('op') eq 'export' ) {
-			
-			check_access();
-	
+    if (defined(url_param('op'))) {
+        if (url_param('op') eq 'export') {
+
+            check_access();
+
             my $sn = 'n';
-            if ( defined( param('snapshots') ) ) {
+            if (defined(param('snapshots'))) {
                 $sn = 'y';
             }
             do_export($sn);
         }
 
-        if ( defined( param('op') ) ) {
-            if ( logged_in() eq 1 ) {
-                if ( param('op') eq 'logout' ) {
+        if (defined(param('op'))) {
+            if (logged_in() eq 1) {
+                if (param('op') eq 'logout') {
                     my $rv = logout();
                     print $rv;
                 }
@@ -134,7 +132,7 @@ sub main {
         }
 
         # RSS
-        if ( url_param('op') eq 'rss' ) {
+        if (url_param('op') eq 'rss') {
             print "Content-Type: text/xml\r\n\r\n";
             send_rss();
             exit;
@@ -142,64 +140,65 @@ sub main {
 
         # JSON
         # JSON Show tags:
-        if ( url_param('op') eq 'json_tags' ) {
-            print "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
+        if (url_param('op') eq 'json_tags') {
+            print
+              "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
             send_json_tags();
             exit;
         }
 
         # JSON Show bookmarks:
-        if ( url_param('op') eq 'json_posts' ) {
-            print "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
+        if (url_param('op') eq 'json_posts') {
+            print
+              "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
             send_json_posts();
             exit;
         }
 
         # Cache
-        if ( url_param('op') eq 'viewsnapshot' ) {
+        if (url_param('op') eq 'viewsnapshot') {
             check_access();
-            if ( param('md5') ) {
-                show_snapshot( param('md5') );
+            if (param('md5')) {
+                show_snapshot(param('md5'));
             }
         }
     }
 
     # Allow redirections to a bookmark if the user's logged in.
     # This allows private bookmarks to not send a referer.
-    if ( logged_in() eq 1 ) {
-        if ( param('go') ) {
+    if (logged_in() eq 1) {
+        if (param('go')) {
             my $bid = param('go');
             my $sql = "select url from $tbl_bookmarks
 			 	where ($tbl_bookmarks.id = ?)";
             my $sth = $dbh->prepare($sql);
             $sth->execute($bid);
             my $hr = $sth->fetchrow_hashref;
-            if ( defined( $hr->{'url'} ) ) {
+            if (defined($hr->{'url'})) {
                 print "Cache-Control: private, must-revalidate\n";
                 print "Content-Type: text/html; charset=UTF-8\n\n";
                 print
                   "<META HTTP-EQUIV=Refresh CONTENT=\"0; URL=$hr->{'url'}\">\n";
                 exit;
-            }
-            else {
-                push( @errors, "Bookmark does not exist." );
+            } else {
+                push(@errors, "Bookmark does not exist.");
             }
         }
     }
 
     # Add description to the HTML title tag.
-    if ( url_param('tag') ) {
+    if (url_param('tag')) {
         $tspec = "/" . url_param('tag');
         $tspec =~ s/ /\+/g;
         my $tt = url_param('tag');
         $tt =~ s/ / \+ /g;
-        $et = sprintf( " - %s", $tt );
+        $et = sprintf(" - %s", $tt);
     }
-    if ( $query ne "" ) {
-        $et = sprintf( " - search results for \"%s\"", $query );
+    if ($query ne "") {
+        $et = sprintf(" - search results for \"%s\"", $query);
     }
 
-    if ( logged_in() eq 1 ) {
+    if (logged_in() eq 1) {
         print "Cache-Control: private, must-revalidate\n";
     }
 
@@ -218,17 +217,17 @@ sub main {
 DOC
 
     ###### Operations that don't touch the screen
-    if ( defined( param('op') ) && defined( param('id') ) ) {
-        if ( param('op') eq 'delete_bookmark' ) {
+    if (defined(param('op')) && defined(param('id'))) {
+        if (param('op') eq 'delete_bookmark') {
             my $id = param('id');
             delete_bookmark($id);
         }
     }
 
     # If the user just saved a bookmark, redirect them now.
-    if ( $redirect ne "" ) {
+    if ($redirect ne "") {
         print
-"<script language=\"JavaScript\">document.location = \"$redirect\";</script>";
+          "<script language=\"JavaScript\">document.location = \"$redirect\";</script>";
         print "</body></html>";
         exit;
     }
@@ -238,21 +237,21 @@ DOC
 
     print '<table class="bodyContent" border="0"><tr><td>';
 
-    if ( defined( url_param('op') ) ) {
-        if ( url_param('op') eq 'export' ) {
-            if ( !defined( param('target') ) ) {
+    if (defined(url_param('op'))) {
+        if (url_param('op') eq 'export') {
+            if (!defined(param('target'))) {
                 print "<br /><br /><form method=\"post\" class=\"formText\">";
-                print "<input type=\"checkbox\" name=\"snapshots\" />Include Snapshots<br />";
+                print
+                  "<input type=\"checkbox\" name=\"snapshots\" />Include Snapshots<br />";
                 print "<input type=\"submit\" value=\"Export\" /></form>";
             }
         }
 
-        if ( url_param('op') eq 'import' ) {
+        if (url_param('op') eq 'import') {
             check_access();
-            if ( param('fileupload') ) {
+            if (param('fileupload')) {
                 do_import();
-            }
-            else {
+            } else {
                 print <<IFORM;
 	<p>This allows you to import either 
 	<a href="http://www.neuro-tech.net/insipid/">Insipid</a> or 
@@ -273,112 +272,112 @@ IFORM
         }
     }
 
-    if ( defined( param('op') ) ) {
-        if ( param('op') eq 'login' ) {
+    if (defined(param('op'))) {
+        if (param('op') eq 'login') {
             login_form();
         }
 
-        if ( (param('op') eq 'add_bookmark' ) || (param('op') eq 'edit_bookmark' )) {
-			
-			check_access();
+        if ((param('op') eq 'add_bookmark') || (param('op') eq 'edit_bookmark'))
+        {
+
+            check_access();
 
      #check to see if the url is bookmarked, then indicate that this is an edit.
             my (
                 $id,           $url,          $title,
                 $description,  $button,       $tags,
                 $extra_params, $access_level, $access_box
-            ) = ( -1, "", "", "", "", "", "", 0, "" );
+            ) = (-1, "", "", "", "", "", "", 0, "");
 
             $access_level = 0;
 
-            if ( defined( param('save') ) ) {
-                ( $url, $title, $description, $tags ) = (
+            if (defined(param('save'))) {
+                ($url, $title, $description, $tags) = (
                     param('url'),         param('title'),
                     param('description'), param('tags')
                 );
 
-                if ( defined( param('access_level') ) ) {
-                    if ( param('access_level') eq 'on' ) {
+                if (defined(param('access_level'))) {
+                    if (param('access_level') eq 'on') {
                         $access_level = 1;
-                    }
-                    else {
+                    } else {
                         $access_level = 0;
                     }
                 }
 
-                if ( param('id') ) {
-                    update_bookmark( param('id'), $url, $title, $description,
-                        $access_level, $tags );
-                }
-                else {
-                    add_bookmark( $url, $title, $description, $access_level, 0,
-                        $tags );
-                    if ( param('snapshot') ) {
-                        if ( param('snapshot') eq 'on' ) {
-                            $id = get_bookmark_id( param('url') );
+                if (param('id')) {
+                    update_bookmark(param('id'), $url, $title, $description,
+                        $access_level, $tags);
+                } else {
+                    add_bookmark($url, $title, $description, $access_level, 0,
+                        $tags);
+                    if (param('snapshot')) {
+                        if (param('snapshot') eq 'on') {
+                            $id = get_bookmark_id(param('url'));
                             do_snapshot($id);
                         }
                     }
                 }
 
-                if ( param('redirect') ) {
-                    if ( param('redirect') eq 'on' ) {
-                        if ( @errors eq 0 ) {
+                if (param('redirect')) {
+                    if (param('redirect') eq 'on') {
+                        if (@errors eq 0) {
                             $redirect = $url;
                         }
                     }
                 }
-            }
-            else {
+            } else {
 
         # Show the form, populating from the database if it's an existing entry.
                 my $utext           = "URL:";
                 my $snapshot_params = "";
                 $id = "-1";
 
-                if ( defined( param('id') ) )     { $id = param('id'); }
-                if ( defined( url_param('id') ) ) { $id = url_param('id'); }
+                if (defined(param('id')))     {$id = param('id');}
+                if (defined(url_param('id'))) {$id = url_param('id');}
 
-                if ( $id eq "-1" ) {
-                    if ( defined( param('url') ) ) {
-                        $id = get_bookmark_id( param('url') );
+                if ($id eq "-1") {
+                    if (defined(param('url'))) {
+                        $id = get_bookmark_id(param('url'));
                     }
                 }
 
-                if ( $id ne -1 ) {
-                    ( $url, $title, $description, $access_level ) =
+                if ($id ne -1) {
+                    ($url, $title, $description, $access_level) =
                       get_bookmark($id);
                     $tags   = get_tags($url);
                     $button = "Save";
-                    $utext = "<span style=\"color:red\">URL (already bookmarked):</span>";
-                    $extra_params = "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
-                }
-                else {
+                    $utext =
+                      "<span style=\"color:red\">URL (already bookmarked):</span>";
+                    $extra_params =
+                      "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
+                } else {
 
                     # There has to be a nicer way to do this.
-                    if ( param('url') )   { $url   = param('url'); }
-                    if ( param('title') ) { $title = param('title'); }
-                    if ( param('description') ) {
+                    if (param('url'))   {$url   = param('url');}
+                    if (param('title')) {$title = param('title');}
+                    if (param('description')) {
                         $description = param('description');
                     }
                     $access_level = 1;
                     $button       = "Add";
-                    $snapshot_params = "<span class=\"formtext\">Snapshot:</span><input type=\"checkbox\" name=\"snapshot\" />\n";
+                    $snapshot_params =
+                      "<span class=\"formtext\">Snapshot:</span><input type=\"checkbox\" name=\"snapshot\" />\n";
                 }
 
                 my $style     = "style=\"width:500px\"";
                 my $redir     = "off";
                 my $redir_box = "";
 
-                if ( param('redirect') ) {
-                    if ( param('redirect') eq 'on' )   { $redir = 'on'; }
-                    if ( param('redirect') eq 'true' ) { $redir = 'on'; }
+                if (param('redirect')) {
+                    if (param('redirect') eq 'on')   {$redir = 'on';}
+                    if (param('redirect') eq 'true') {$redir = 'on';}
                 }
 
-                if ( $access_level eq 0 ) { $access_box = ""; }
-                else                      { $access_box = "checked=\"true\" "; }
+                if   ($access_level eq 0) {$access_box = "";}
+                else                      {$access_box = "checked=\"true\" ";}
 
-                if ( $redir eq 'on' ) { $redir_box = "checked=\"true\""; }
+                if ($redir eq 'on') {$redir_box = "checked=\"true\"";}
 
                 print <<FORM;
 		  <script type="text/javascript" src="lib/js/tagsSuggest.js"></script>
@@ -409,36 +408,36 @@ FORM
     }
 
     # Late redirects.  TODO: Get rid of this.
-    if ( $redirect ne "" ) {
+    if ($redirect ne "") {
         print
-"<script language=\"JavaScript\">document.location = \"$redirect\";</script>";
+          "<script language=\"JavaScript\">document.location = \"$redirect\";</script>";
         print "</body></html>";
         exit;
     }
 
-    if ( defined( param('op') ) ) {
-        if ( logged_in() eq 1 ) {
-            if ( param('op') eq 'fetchrelated' ) {
-                if ( defined( param('id') ) ) {
-                    fetch_related( param('id') );
+    if (defined(param('op'))) {
+        if (logged_in() eq 1) {
+            if (param('op') eq 'fetchrelated') {
+                if (defined(param('id'))) {
+                    fetch_related(param('id'));
                 }
             }
 
-            if ( param('op') eq 'snapshots' ) {
+            if (param('op') eq 'snapshots') {
                 show_snapshots();
                 print "</body></html>";
                 exit;
             }
 
-            if ( param('op') eq 'snapshot' ) {
-                if ( defined( param('id') ) ) {
-                    do_snapshot( param('id') );
+            if (param('op') eq 'snapshot') {
+                if (defined(param('id'))) {
+                    do_snapshot(param('id'));
                     print "</body></html>";
                     exit;
                 }
             }
 
-            if ( param('op') eq 'bookmarklets' ) {
+            if (param('op') eq 'bookmarklets') {
                 print <<DESC;
 <p>This bookmarklet provides a fast way to add your browser's 
 current page to this Insipid installation.  Either drag the 
@@ -459,13 +458,13 @@ BLET
             }
 
             # Configuration and management pages
-            if ( param('op') eq 'tags' ) {
+            if (param('op') eq 'tags') {
                 tag_operations();
                 print '</body></html>';
                 exit;
             }
 
-            if ( param('op') eq 'options' ) {
+            if (param('op') eq 'options') {
                 show_options();
                 print '</body></html>';
                 exit;
@@ -488,25 +487,25 @@ sub show_options {
 
     # Save options if they were posted.
     print "<br /><br />";
-    if ( param('save') ) {
+    if (param('save')) {
         my $sql = "update $tbl_options set value=? 
 			where (name = ?)";
         my $sth = $dbh->prepare($sql);
 
         my %save;
         foreach my $p (@valid) {
-            if ( param($p) ) {
+            if (param($p)) {
                 $save{$p} = param($p);
             }
         }
 
-        foreach my $k ( keys %save ) {
-            $sth->execute( $save{$k}, $k );
+        foreach my $k (keys %save) {
+            $sth->execute($save{$k}, $k);
         }
 
         # The proxy_host can be empty, so check for that.
-        if ( !defined( $save{'proxy_host'} ) ) {
-            $sth->execute( '', 'proxy_host' );
+        if (!defined($save{'proxy_host'})) {
+            $sth->execute('', 'proxy_host');
         }
 
         print "<div class=\"error\">Your options have been saved.</div>";
@@ -519,13 +518,13 @@ sub show_options {
 
     print "<form method=\"post\">";
     print "<table id=\"options\" cellpadding=5 cellspacing=5>";
-    while ( my $hr = $sth->fetchrow_hashref ) {
+    while (my $hr = $sth->fetchrow_hashref) {
         print "<td>$hr->{'description'}</td>";
-        if ( $hr->{'name'} eq 'version' ) {
+        if ($hr->{'name'} eq 'version') {
             print "<td>$hr->{'value'}</td>";
-        }
-        else {
-            print "<td><input name=\"$hr->{'name'}\" value=\"$hr->{'value'}\" /></td>";
+        } else {
+            print
+              "<td><input name=\"$hr->{'name'}\" value=\"$hr->{'value'}\" /></td>";
         }
         print "</tr>";
     }
@@ -538,17 +537,16 @@ sub show_options {
 
 sub show_footer {
     my $older = 2;
-    if ( defined( url_param('page') ) ) {
+    if (defined(url_param('page'))) {
         $older = url_param('page') + 1;
     }
 
-    if ( $last_page eq 0 ) {
-        if ( $query ne "" ) {
+    if ($last_page eq 0) {
+        if ($query ne "") {
             print " | <a href=\"?page=$older&q=";
             print $query;
             print "\">More Results</a>";
-        }
-        else {
+        } else {
             print " | <a href=\"?page=$older\">older</a>";
         }
     }
@@ -561,10 +559,10 @@ sub do_import {
     $| = 1;
     select($old_fh);
 
-    my ( $omd5, $ourl, $otype, $olength, $odate, $sql, $oadd, $omod, $otags );
+    my ($omd5, $ourl, $otype, $olength, $odate, $sql, $oadd, $omod, $otags);
     my $ispec = '';
 
-    if ( $dbtype eq 'mysql' ) { $ispec = " ignore "; }
+    if ($dbtype eq 'mysql') {$ispec = " ignore ";}
 
     $sql = "insert $ispec into pagecache_references
 			(md5_parent, md5_child) values(?,?)";
@@ -593,7 +591,7 @@ sub do_import {
             }
 
             # netscape stuff
-            if ( $element eq "A" ) {
+            if ($element eq "A") {
                 $ourl    = $attr{'HREF'};
                 $oadd    = $attr{'ADD_DATE'};
                 $omod    = $attr{'LAST_MODIFIED'};
@@ -602,7 +600,7 @@ sub do_import {
             }
 
             # A pagecache object
-            if ( $element eq "object" ) {
+            if ($element eq "object") {
                 $omd5    = $attr{'md5'};
                 $ourl    = $attr{'url'};
                 $otype   = $attr{'type'};
@@ -611,39 +609,38 @@ sub do_import {
             }
 
             # A pagecache relationship
-            if ( $element eq "relationship" ) {
+            if ($element eq "relationship") {
                 my $parent = $attr{parent};
                 my $child  = $attr{child};
-                $insert_reference->execute( $parent, $child );
+                $insert_reference->execute($parent, $child);
             }
 
             # A bookmark
-            if ( $element eq "post" ) {
+            if ($element eq "post") {
                 my $url       = $attr{href};
                 my $title     = $attr{description};
                 my $tagvalue  = $attr{tag};
                 my $datevalue = $attr{time};
                 my $access_level;
-                if ( defined( $attr{access_level} ) ) {
+                if (defined($attr{access_level})) {
                     $access_level = $attr{access_level};
-                }
-                else {
+                } else {
                     $access_level = 1;
                 }
 
                 my $epoch = str2time($datevalue);
 
-                if ( $tagvalue eq "system:unfiled" ) {
+                if ($tagvalue eq "system:unfiled") {
                     $tagvalue = "";
                 }
 
-                add_bookmark( $url, $title, "", $access_level, $epoch,
-                    $tagvalue, 1 );
+                add_bookmark($url, $title, "", $access_level, $epoch, $tagvalue,
+                    1);
             }
 
             # Option
-            if ( $element eq 'option' ) {
-                $update_option->execute( $attr{value}, $attr{name} );
+            if ($element eq 'option') {
+                $update_option->execute($attr{value}, $attr{name});
             }
         },
         Char => sub {
@@ -659,7 +656,7 @@ sub do_import {
             #
             # netscape stuff
             #
-            if ( $element eq 'A' ) {
+            if ($element eq 'A') {
                 add_bookmark(
                     $ourl,       # $url,
                     $cbuffer,    # $title,
@@ -670,29 +667,28 @@ sub do_import {
                 );
                 $cbuffer = '';
             }
-            if ( $element eq 'TITLE' || $element eq 'H1' || $element eq 'DD' ) {
+            if ($element eq 'TITLE' || $element eq 'H1' || $element eq 'DD') {
                 $cbuffer = '';
             }
 
-            if ( $element eq 'object' ) {
+            if ($element eq 'object') {
 
-                $insert_snapshot->bind_param( 1, $omd5 );
-                $insert_snapshot->bind_param( 2, $ourl );
-                $insert_snapshot->bind_param( 3, $otype );
-                $insert_snapshot->bind_param( 4, $olength );
+                $insert_snapshot->bind_param(1, $omd5);
+                $insert_snapshot->bind_param(2, $ourl);
+                $insert_snapshot->bind_param(3, $otype);
+                $insert_snapshot->bind_param(4, $olength);
 
-                if ( $dbtype eq "Pg" ) {
-                    $insert_snapshot->bind_param( 5, decode_base64($cbuffer),
-                        SQL_VARBINARY );
+                if ($dbtype eq "Pg") {
+                    $insert_snapshot->bind_param(5, decode_base64($cbuffer),
+                        SQL_VARBINARY);
+                } else {
+                    $insert_snapshot->bind_param(5, decode_base64($cbuffer));
                 }
-                else {
-                    $insert_snapshot->bind_param( 5, decode_base64($cbuffer) );
-                }
 
-                $insert_snapshot->bind_param( 6, $odate );
+                $insert_snapshot->bind_param(6, $odate);
                 $insert_snapshot->execute;
 
-                if ( !defined($DBI::errstr) ) { $pcount++; }
+                if (!defined($DBI::errstr)) {$pcount++;}
 
                 $cbuffer = "";
             }
@@ -707,16 +703,15 @@ sub do_import {
     #	  };
     #	}
 
-    if ( defined( $ENV{SERVER_NAME} ) ) {
+    if (defined($ENV{SERVER_NAME})) {
         my $fh = upload('fileupload');
         while (<$fh>) {
             $xml .= $_;
         }
 
         $parser->parse($xml);
-    }
-    else {
-        if ( !defined( $ARGV[0] ) ) {
+    } else {
+        if (!defined($ARGV[0])) {
             print "Please specify the filename to import.\n\n";
             exit;
         }
@@ -730,10 +725,10 @@ sub do_import {
 }
 
 sub do_export {
-    my ( $snapshots, $islocal ) = (@_);
+    my ($snapshots, $islocal) = (@_);
     my $writer;
 
-    if ( !defined($islocal) ) {
+    if (!defined($islocal)) {
         print "Content-Type: text/xml;charset=UTF-8\r\n";
         print "Content-Disposition: attachment; filename=bookmarks.xml\r\n\r\n";
     }
@@ -768,7 +763,7 @@ FORM
 
 sub show_toolbar {
     my $rdata = "";
-    if ( defined( url_param('tag') ) ) {
+    if (defined(url_param('tag'))) {
         $rdata = url_param('tag');
         $rdata =~ s/ /\+/g;
     }
@@ -780,29 +775,27 @@ sub show_toolbar {
 
     # Title
     print '<div class="title"><a href="';
-    if ( get_option('use_rewrite') eq 'yes' ) {
+    if (get_option('use_rewrite') eq 'yes') {
         print $site_url . '/bookmarks';
-    }
-    else {
+    } else {
         print 'insipid.cgi';
     }
     print '">' . $site_title . '</a></div>';
 
-    if ( ( get_option("public_searches") eq "yes" ) || ( logged_in() eq 1 ) ) {
+    if ((get_option("public_searches") eq "yes") || (logged_in() eq 1)) {
         print "<div class=\"search\">";
         print "<form action=\"$site_url/bookmarks\" method=\"post\">";
         print "<input type=\"text\" name=\"q\"> <input type=\"submit\" value=\"search\">";
         print "</form>";
         print "</div>";
-    }
-    else {
+    } else {
         print "&nbsp;";
     }
 
     print "</td><td valign=\"top\" bgcolor=\"#CCCCCC\" align=\"right\">";
     print "<div class=\"toolbar\">";
 
-    if ( logged_in() eq 1 ) {
+    if (logged_in() eq 1) {
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=options\">options</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=tags\">tags</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=import\">import</a> | ";
@@ -814,16 +807,15 @@ sub show_toolbar {
     }
 
     my $rf;
-    if ( get_option('use_rewrite') eq 'yes' ) {
+    if (get_option('use_rewrite') eq 'yes') {
         $rf = $feed_url . '/' . $rdata;
-    }
-    else {
+    } else {
         $rf = $feed_url . $rdata;
     }
 
     print "<a class=\"tools\" href=\"$rf\">RSS feed</a>";
 
-    if ( logged_in() ne 1 ) {
+    if (logged_in() ne 1) {
         print " | <a class=\"tools\" href=\"$site_url/insipid.cgi?op=login\">login</a>";
     }
 
@@ -835,7 +827,7 @@ sub show_toolbar {
 
 sub delete_bookmark {
     my ($id) = (@_);
-    my ( $sql, $sth, $md5 ) = ( "", "", "" );
+    my ($sql, $sth, $md5) = ("", "", "");
 
     check_access();
 
@@ -846,7 +838,7 @@ sub delete_bookmark {
 		where ($tbl_bookmarks.id = ?)";
     $sth = $dbh->prepare($sql);
     $sth->execute($id);
-    while ( my @r = $sth->fetchrow_array ) {
+    while (my @r = $sth->fetchrow_array) {
         $md5 = $r[0];
     }
 
@@ -861,36 +853,35 @@ sub delete_bookmark {
     $sth->execute($id);
 
     # Delete the cached page.
-    if ( $md5 ne "" ) { delete_snapshot($md5); }
+    if ($md5 ne "") {delete_snapshot($md5);}
 }
 
 sub show_bookmarks {
-    my ( $subquery, $sql, $sth, @parms, @wheres, @hr );
+    my ($subquery, $sql, $sth, @parms, @wheres, @hr);
 
     # this first query will be used to select from a set, like when a user
     # drills in on a specific tag or to get a smaller view of the entire
     # dataset (for paging purposes).
 
     # MySQL and postgres have slightly different syntax here...
-    if ( $dbtype eq 'mysql' ) {
+    if ($dbtype eq 'mysql') {
         $sql = "select $tbl_bookmarks.id from $tbl_bookmarks";
-    }
-    elsif ( $dbtype eq 'Pg' ) {
+    } elsif ($dbtype eq 'Pg') {
         $sql = "select $tbl_bookmarks.id, $tbl_bookmarks.date 
 	    	from $tbl_bookmarks";
     }
 
     # Limit to tags
-    if ( defined( url_param('tag') ) ) {
+    if (defined(url_param('tag'))) {
 
         # Join the tag tables only when necessary
 
-        if ( url_param('tag') =~ / /) {
-            my @tags = split( / /, url_param('tag') );
+        if (url_param('tag') =~ / /) {
+            my @tags = split(/ /, url_param('tag'));
             my $icount = 1;
 
             foreach (@tags) {
-                push( @parms, $_ );
+                push(@parms, $_);
                 $sql = "$sql inner join $tbl_bookmark_tags 
 						as bt$icount on 
 					  ($tbl_bookmarks.id = 
@@ -900,8 +891,7 @@ sub show_bookmarks {
 					   	and t$icount.name = ?) ";
                 $icount++;
             }
-        }
-        else {
+        } else {
             $sql = "$sql 
 				left join $tbl_bookmark_tags on 
 				  ($tbl_bookmarks.id = 
@@ -909,22 +899,21 @@ sub show_bookmarks {
 				inner join $tbl_tags on 
 			  	  ($tbl_tags.id = $tbl_bookmark_tags.tag_id) 
 				  where ($tbl_tags.name = ?)";
-            push( @parms, url_param('tag') );
+            push(@parms, url_param('tag'));
         }
 
     }
 
     # Search
-    if ( $query ne "" ) {
-        if (   ( get_option("public_searches") eq "yes" )
-            || ( logged_in() eq 1 ) )
-        {
+    if ($query ne "") {
+        if (   (get_option("public_searches") eq "yes")
+            || (logged_in() eq 1)) {
             my $sparm = $query;
-            if ( length($sparm) > 2 ) {
+            if (length($sparm) > 2) {
                 $sql = "$sql where ($tbl_bookmarks.title like ?)";
                 $sparm =~ s/\%//;
                 $sparm = "\%$sparm\%";
-                push( @parms, $sparm );
+                push(@parms, $sparm);
             }
         }
     }
@@ -935,8 +924,8 @@ sub show_bookmarks {
     # paging functionality
     $sql = "$sql limit 50";
 
-    if ( defined( url_param('page') ) ) {
-        my $offset = ( ( url_param('page') - 1 ) * 50 );
+    if (defined(url_param('page'))) {
+        my $offset = ((url_param('page') - 1) * 50);
         $sql = "$sql offset $offset";
     }
 
@@ -944,19 +933,18 @@ sub show_bookmarks {
     $sth->execute(@parms);
 
     $subquery = "";
-    if ( $sth->rows > 0 ) {
-        if ( $sth->rows ne 50 ) { $last_page = 1; }
+    if ($sth->rows > 0) {
+        if ($sth->rows ne 50) {$last_page = 1;}
 
         $subquery = " $tbl_bookmarks.id in (";
 
-        while ( @hr = $sth->fetchrow_array ) {
+        while (@hr = $sth->fetchrow_array) {
             $subquery = $subquery . "$hr[0],";
         }
         chop($subquery);    # Strip off the last delimiter
 
         $subquery = $subquery . ")";
-    }
-    else {
+    } else {
         print "<p>No bookmarks found.</p>";
         return;
     }
@@ -983,29 +971,28 @@ sub show_bookmarks {
 		  ($tbl_bookmarks.md5 = $tbl_pagecache.md5)";
 
     # Don't show private marks for non-logged in users
-    if ( logged_in() eq 0 ) {
-        push( @wheres, "$tbl_bookmarks.access_level" );
-        push( @parms,  "1" );
+    if (logged_in() eq 0) {
+        push(@wheres, "$tbl_bookmarks.access_level");
+        push(@parms,  "1");
     }
 
     my $max = @wheres;
-    if ( $max ne 0 ) {
+    if ($max ne 0) {
         $sql = "$sql where (";
         my $count = 1;
 
         foreach (@wheres) {
             $sql = "$sql $_ = ?";
-            if ( $count < $max ) {
+            if ($count < $max) {
                 $sql = "$sql and ";
             }
             $count++;
         }
 
         $sql = "$sql )";
-        if ( $subquery ne "" ) { $sql = "$sql and $subquery"; }
-    }
-    else {
-        if ( $subquery ne "" ) { $sql = "$sql where $subquery "; }
+        if ($subquery ne "") {$sql = "$sql and $subquery";}
+    } else {
+        if ($subquery ne "") {$sql = "$sql where $subquery ";}
     }
 
     # append sort order.
@@ -1020,26 +1007,24 @@ sub show_bookmarks {
     print '<ul><br />';
 
     my $title = '';
-    if ( defined( url_param('tag') ) ) {
+    if (defined(url_param('tag'))) {
         my $temp = url_param('tag');
-        if ( $temp =~ / / ) {
+        if ($temp =~ / /) {
             my $count = 0;
-            foreach ( split( / /, $temp ) ) {
-                if ( $count++ ne 0 ) { $title = "$title +"; }
+            foreach (split(/ /, $temp)) {
+                if ($count++ ne 0) {$title = "$title +";}
                 $title =
                   "$title <a class=\"bodyTitle\" href=\"$tag_url$_\">$_</a>";
             }
-        }
-        else {
+        } else {
             $title = "<a class=\"bodyTitle\" href=\"$tag_url$temp\">$temp</a>";
         }
-    }
-    else {
+    } else {
         $title = 'Most Recent Bookmarks';
     }
 
-    if ( $query ne '' ) {
-        $title = sprintf( "Search results for \"%s\"", $query );
+    if ($query ne '') {
+        $title = sprintf("Search results for \"%s\"", $query);
     }
 
     print "<span class=\"bodyTitle\">$title</span>";
@@ -1049,8 +1034,8 @@ sub show_bookmarks {
     print "<table class=\"bookmarklist\">";
     print '<tr><td>';
     print "<ul type=\"circle\">\n";
-    while ( @hr = $sth->fetchrow_array ) {
-        if ( $last{id} eq -1 ) {
+    while (@hr = $sth->fetchrow_array) {
+        if ($last{id} eq -1) {
             $last{id}           = $hr[0];
             $last{title}        = $hr[1];
             $last{description}  = $hr[2];
@@ -1062,7 +1047,7 @@ sub show_bookmarks {
             $last{md5}          = $hr[8];
         }
 
-        if ( $hr[0] ne $last{id} ) {
+        if ($hr[0] ne $last{id}) {
 
             # the id changed, so show the last mark.
             show_bookmark(
@@ -1081,17 +1066,16 @@ sub show_bookmarks {
             $last{timestamp}    = $hr[6];
             $last{cachetime}    = $hr[7];
             $last{md5}          = $hr[8];
-        }
-        else {
+        } else {
 
             # Add tag to the current bookmark
-            if ( defined( $hr[5] ) ) {
+            if (defined($hr[5])) {
                 $last{tags} = "$last{tags} $hr[5]";
             }
         }
     }
 
-    if ( $last{id} ne -1 ) {
+    if ($last{id} ne -1) {
         show_bookmark(
             $last{id},           $last{title},     $last{description},
             $last{access_level}, $last{url},       $last{tags},
@@ -1111,19 +1095,18 @@ sub show_bookmark {
 
     print "<div class=\"bookmarklistitem\">";
     print "<li>";
-    if ( $access_level eq 0 ) {
+    if ($access_level eq 0) {
         print "<a href=\"$site_url/insipid.cgi?go=$id\">";
         print "<i>";
         print "$title";
         print "</i>";
-    }
-    else {
+    } else {
         print "<a href=\"$url\">";
         print $title;
     }
 
-    if ( logged_in() eq 1 ) {
-        if ( defined($cachetime) ) {
+    if (logged_in() eq 1) {
+        if (defined($cachetime)) {
             print "</a> - <a href=\"$snapshot_url$md5\">view snapshot";
         }
     }
@@ -1131,43 +1114,38 @@ sub show_bookmark {
     print "</a><br /><div class=\"bookmarkOperations\">";
 
     my $timestr = "";
-    if ( logged_in() eq 1 ) {
-        $timestr = time2str( "%Y-%m-%d %T EST", $timestamp, "EST" );
-    }
-    else {
-        $timestr = time2str( "%Y-%m-%d", $timestamp, "EST" );
+    if (logged_in() eq 1) {
+        $timestr = time2str("%Y-%m-%d %T EST", $timestamp, "EST");
+    } else {
+        $timestr = time2str("%Y-%m-%d", $timestamp, "EST");
     }
 
     print "posted on $timestr ";
 
-    if ( defined($tags) ) {
+    if (defined($tags)) {
         print "to ";
         my $cur;
 
-        foreach $cur ( split( /\ /, $tags ) ) {
+        foreach $cur (split(/\ /, $tags)) {
             print '<a class="bookmarkTag" href="';
             print $tag_url . $cur . '">' . $cur . '</a> ';
         }
     }
 
-    if ( logged_in() eq 1 ) {
+    if (logged_in() eq 1) {
         my $ex = "";
 
-        if ( url_param('tag') )  { $ex = "$ex&tag=" . url_param('tag'); }
-        if ( url_param('page') ) { $ex = "$ex&page=" . url_param('page'); }
-        if ( $query ne "" ) { $ex = "$ex&q=" . $query; }
+        if (url_param('tag'))  {$ex = "$ex&tag=" . url_param('tag');}
+        if (url_param('page')) {$ex = "$ex&page=" . url_param('page');}
+        if ($query ne "") {$ex = "$ex&q=" . $query;}
 
         print "<span class=\"bodytext\">&nbsp;&mdash;&nbsp;";
-        print
-"(<a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=delete_bookmark&id=$id$ex\">delete</a>,&nbsp;";
-        print
-"<a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=edit_bookmark&id=$id$ex\">edit</a>";
-        if ( !defined($cachetime) ) {
-            print
-",&nbsp;<a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=snapshot&id=$id$ex\">snapshot</a>";
+        print "(<a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=delete_bookmark&id=$id$ex\">delete</a>,&nbsp;";
+        print "<a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=edit_bookmark&id=$id$ex\">edit</a>";
+        if (!defined($cachetime)) {
+            print ",&nbsp;<a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=snapshot&id=$id$ex\">snapshot</a>";
         }
-        print
-")<div class=\"bookmarkDescription\">$description</div></span></div></li>\n";
+        print ")<div class=\"bookmarkDescription\">$description</div></span></div></li>\n";
     }
 
     print "</div>\n";
@@ -1182,9 +1160,9 @@ sub get_bookmark_id {
 		$tbl_bookmarks where ($tbl_bookmarks.md5 = ?)";
     my $sth = $dbh->prepare($sql);
 
-    $sth->execute( md5_hex($url) );
+    $sth->execute(md5_hex($url));
 
-    if ( $sth->rows ne 0 ) {
+    if ($sth->rows ne 0) {
         my @r = $sth->fetchrow_array;
         return $r[0];
     }
@@ -1205,11 +1183,11 @@ sub get_bookmark {
     my $sth = $dbh->prepare($sql);
     $sth->execute($id);
     my @r = $sth->fetchrow_array;
-    return ( $r[2], $r[0], $r[1], $r[3] );
+    return ($r[2], $r[0], $r[1], $r[3]);
 }
 
 sub update_bookmark {
-    my ( $id, $url, $title, $description, $access_level, $tags ) = (@_);
+    my ($id, $url, $title, $description, $access_level, $tags) = (@_);
 
     check_access();
 
@@ -1217,10 +1195,10 @@ sub update_bookmark {
 			set url = ?, md5 = ?, title = ?, description = ?, 
 			access_level = ? where (id = ?)";
     my $sth = $dbh->prepare($sql);
-    $sth->execute( $url, md5_hex("$url"), $title, $description, $access_level,
-        $id );
+    $sth->execute($url, md5_hex("$url"), $title, $description, $access_level,
+        $id);
 
-    set_tags( $id, $tags );
+    set_tags($id, $tags);
 }
 
 1;
