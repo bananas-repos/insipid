@@ -1,7 +1,6 @@
 === Open Bugs ===
 
 * Add form shown although not logged in
-* Tag Rename case sensitiv
 * Case-sensitivity in SELECT statements with Postgres really do a number on
   the tag algorithms
 * Tag operations (op=tags) or not working yet.
