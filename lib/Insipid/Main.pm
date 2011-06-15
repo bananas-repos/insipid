@@ -894,7 +894,7 @@ sub show_bookmarks {
 
         # Join the tag tables only when necessary
 
-        if ( url_param('tag') =~ / / ) {
+        if ( url_param('tag') =~ / /) {
             my @tags = split( / /, url_param('tag') );
             my $icount = 1;
 
