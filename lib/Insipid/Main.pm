@@ -114,6 +114,12 @@ sub main {
 
     if ( defined( url_param('op') ) ) {
         if ( url_param('op') eq 'export' ) {
+			
+			if ( logged_in() ne 1 ) {
+                push( @errors,"You have to be logged in to perform that operation." );
+                #return;
+            }
+	
             my $sn = 'n';
             if ( defined( param('snapshots') ) ) {
                 $sn = 'y';
@@ -140,16 +146,14 @@ sub main {
         # JSON
         # JSON Show tags:
         if ( url_param('op') eq 'json_tags' ) {
-            print
-              "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
+            print "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
             send_json_tags();
             exit;
         }
 
         # JSON Show bookmarks:
         if ( url_param('op') eq 'json_posts' ) {
-            print
-              "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
+            print "Content-Type: application/x-javascript;charset=UTF-8\r\n\r\n";
             send_json_posts();
             exit;
         }
@@ -282,9 +286,7 @@ IFORM
         {
 
             if ( logged_in() ne 1 ) {
-                push( @errors,
-                    "You have to be logged in to perform that operation." );
-
+                push( @errors,"You have to be logged in to perform that operation." );
                 #return;
             }
 
