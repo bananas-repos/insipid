@@ -29,6 +29,7 @@ use CGI::Carp qw(fatalsToBrowser);
 use Insipid::Config;
 use Insipid::Database;
 use Insipid::Sessions;
+use Insipid::Util;
 require Exporter;
 
 use Data::Dumper;
@@ -47,18 +48,20 @@ sub tag_operations {
 	
 	check_access();
 	
+	print Dumper param("doDelete");
+	print Dumper param("deleteTag");
+	print Dumper param("moveTo");
+	
 	if(param('save') && param('newName')) {
 		print '<p>Reanming...</p>';
 		
 		my $newTag = param('newName');
 		my $oldTagName = param('rename');
 		my $oldTagId = get_tag_id_by_name($oldTagName);
-		print Dumper "oldtagid: ".$oldTagId;
 		
 		# is the new name already a tag ?
 		# if check then check is the new tagId
 		my $check = get_tag_id_by_name($newTag);
-		print Dumper "newtagid: ".$check;
 		if($check && ($check != $oldTagId)) {
 			my $sql = "SELECT bookmark_id, tag_id 
 						FROM `$tbl_bookmark_tags`
@@ -83,7 +86,6 @@ sub tag_operations {
 			my $sql = "DELETE FROM `$tbl_tags` WHERE id = ?";
 			my $sth = $dbh->prepare($sql);
 			$sth->execute($oldTagId);
-			
 		}
 		else {
 			# just rename the tag
@@ -93,7 +95,17 @@ sub tag_operations {
 		}
 		
 		print '<span style="color: green;">Done !</span>';
+	}
+	elsif(param("doDelete") && param("deleteTag") && param("moveTo")) {
+		print '<p>Delete...</p>';
 		
+		my($delTagName,$moveToTagName) = (param('deleteTag'), param('moveTo'));
+		
+		if($delTagName && $moveToTagName && ($delTagName != $moveToTagName)) {
+			
+		}
+		
+		print '<span style="color: green;">Done !</span>';
 	}
 	
 	print '<h2>Rename Tag</h2>';
@@ -101,16 +113,26 @@ sub tag_operations {
 	print '<select name="rename">';
 	show_tags(1);
 	print '</select>';
-	print '<input type="text" name="newName" value="" /><br />';
+	print '<input type="text" name="newName" value="" />';
 	print '<input type="submit" value="Rename" />';
 	print '<input type=hidden name="op" value="tags">';
 	print '<input type=hidden name="save" value="yes">';
 	print '</form>';
 	
 	print '<h2>Delete Tag</h2>';
-	print '<select name="delete">';
+	print '<form method="post" action="">';
+	print "Delete Tag";
+	print '<select name="deleteTag">';
+	show_tags(1);
+	print '</select><br />';
+	print "and move to:";
+	print '<select name="moveTo">';
 	show_tags(1);
 	print '</select>';
+	print '<input type=hidden name="op" value="tags">';
+	print '<input type=hidden name="doDelete" value="yes">';
+		print '<input type="submit" value="Delete and move" />';
+	print '</form>';
 }
 
 # Display the tag list.  Takes one parameter for the mode - 0 is for the

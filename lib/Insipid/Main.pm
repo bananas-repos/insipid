@@ -290,7 +290,7 @@ IFORM
                     param('description'), param('tags')
                 );
 
-				if($url == '' || $title == '') {
+				if(!$url || !$title) {
 					print "URL or Title can not be empty";
 					exit;
 				}
