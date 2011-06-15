@@ -5,7 +5,6 @@ For 1.0
 - Fix the text/html content type going that's snapshotted
 - Check for duplicate page cache objects before insert (due to all the
   warnings that appear in the log)
-- Fix the missing tag rename and delete functionality
 
 
 Everything else
