@@ -2,6 +2,7 @@
 dbname = insipid_luke
 dbuser = luke
 dbpass = dbpass
+dbhost = 127.0.0.1
 
 # If you'd like the Insipid database tables to use a prefix, uncomment
 # this line.
