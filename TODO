@@ -3,8 +3,6 @@ For 1.0
 - Quote marks screw up adding a bookmark
 - Move htaccess management into the configuration page
 - Fix the text/html content type going that's snapshotted
-- Check for duplicate page cache objects before insert (due to all the
-  warnings that appear in the log)
 
 
 Everything else

@@ -1,9 +1,9 @@
 === Open Bugs ===
 
-* Case-sensitivity in SELECT statements with Postgres really do a number on
-  the tag algorithms
 
 === Fixed in 0.9.21 ===
 
-* Updating options fails with no error message when Postgres is the backend
+* Case-sensitivity in SELECT statements with Postgres really do a number on
+  the tag algorithms
 
+* Updating options fails with no error message when Postgres is the backend

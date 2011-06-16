@@ -1,10 +1,13 @@
-06.2011 CEST jumpin.banana
+version 1.0 ()
++ jumpin.banana
 	* tag suggest was not working correctly.
 	* tag rename feature implemented
 	* tag rename case sensitive problem
 	* add bookmark only if url and title are not empty
 	* tag delete is available now. It moves the selected bookmarks
 		to another one
+	* bookmarks without a tag can be selected now
+	*
 	
 Tue Jul 14 21:38 EST 2009  Luke Reeve   <luke@neuro-tech.net>
 
