@@ -53,9 +53,6 @@ if($@) {
 
 		print STDERR "Creating database\n";
 
-		#print STDERR Dumper(\%INC);
-		#delete $INC{'Insipid/Database.pm'};
-
 		# This means that a database connection was established but the
 		# tables were not found.
 		undef($@);

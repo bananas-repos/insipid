@@ -139,8 +139,11 @@ sub tag_operations {
 	print '</select>';
 	print '<input type=hidden name="op" value="tags">';
 	print '<input type=hidden name="doDelete" value="yes">';
-		print '<input type="submit" value="Delete and move" />';
+	print '<input type="submit" value="Delete and move" />';
 	print '</form>';
+	
+	print '<h2>Show bookmarks without a tag</h2>';
+	print '<p><a href="'.$site_url.'/insipid.cgi?tag=empty">Show me the bookmarks</a></p>';
 }
 
 # Display the tag list.  Takes one parameter for the mode - 0 is for the

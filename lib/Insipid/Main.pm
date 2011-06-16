@@ -856,7 +856,17 @@ sub show_bookmarks {
 
         # Join the tag tables only when necessary
 
-        if (url_param('tag') =~ / /) {
+		if(url_param('tag') eq "empty") {
+			
+			# allow this action only for logged in users
+			check_access();
+			
+			$sql = $sql." left join $tbl_bookmark_tags on 
+			  ($tbl_bookmarks.id = 
+			  	$tbl_bookmark_tags.bookmark_id)
+				WHERE $tbl_bookmark_tags.bookmark_id IS NULL";
+		}
+        elsif (url_param('tag') =~ / /) {
             my @tags = split(/ /, url_param('tag'));
             my $icount = 1;
 
