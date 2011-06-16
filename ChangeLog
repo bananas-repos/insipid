@@ -7,7 +7,9 @@ version 1.0 ()
 	* tag delete is available now. It moves the selected bookmarks
 		to another one
 	* bookmarks without a tag can be selected now
-	*
+	* Fix the text/html content type going that's snapshotted
+		This is not needed. Since we use the charset info
+		to determine utf, we need this information
 	
 Tue Jul 14 21:38 EST 2009  Luke Reeve   <luke@neuro-tech.net>
 

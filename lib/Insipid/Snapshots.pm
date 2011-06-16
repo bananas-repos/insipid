@@ -134,7 +134,7 @@ sub fetch_url {
 		my $sth = $dbh->prepare($sql);
 		my $ct = $res->header('Content-Type');
 		if(length($ct) > 50) { $ct = substr($ct, 0, 50); }
-
+		
 		$sth->bind_param(1, $md5);
 		$sth->bind_param(2, $url);
 		$sth->bind_param(3, $ct);

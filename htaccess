@@ -1,3 +1,5 @@
+Options +FollowSymlinks -Indexes
+
 RewriteEngine On
 RewriteBase /yourwebdirectory
 RewriteRule ^bookmarks/(.*) insipid.cgi?tag=$1 [QSA]
