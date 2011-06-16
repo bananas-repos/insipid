@@ -10,6 +10,7 @@ version 1.0 ()
 	* Fix the text/html content type going that's snapshotted
 		This is not needed. Since we use the charset info
 		to determine utf, we need this information
+	* Insert SQL more save now
 	
 Tue Jul 14 21:38 EST 2009  Luke Reeve   <luke@neuro-tech.net>
 
