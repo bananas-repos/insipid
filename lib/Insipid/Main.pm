@@ -54,6 +54,7 @@ use MIME::Base64;
 use LWP::UserAgent;
 use HTTP::Request;
 use HTTP::Response;
+use Data::Validate::URI qw(is_uri);
 
 my $NL = "<br />\n";
 my @valid;
@@ -292,6 +293,11 @@ IFORM
 
 				if(!$url || !$title) {
 					print "URL or Title can not be empty";
+					exit;
+				}
+				
+				if(!is_uri($url)) {
+					print "This is not a valid URL";
 					exit;
 				}
 
