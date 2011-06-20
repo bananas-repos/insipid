@@ -304,7 +304,7 @@ sub set_tags {
 	    if ($tagcount < 1) {
 			my $sql = "insert into $tbl_tags (name) values(?)";
 			my $sth = $dbh->prepare($sql);
-			$sth->execute($dbh->quote($cur));
+			$sth->execute($cur);
 	    }
 
 	    # and fetch the tag ID

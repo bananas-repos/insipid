@@ -85,7 +85,7 @@ sub add_bookmark {
 	if($epoch eq 0) { $epoch = time; }
 	$sth = $dbh->prepare($sql);
 
-	$sth->execute($url, $md5, $dbh->quote($title), $dbh->quote($description), $access_level, $epoch)
+	$sth->execute($url, $md5, $title, $description, $access_level, $epoch)
 		or die $DBI::errstr;
 	
 	$icount++;
