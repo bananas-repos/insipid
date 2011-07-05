@@ -48,6 +48,8 @@ sub tag_operations {
 	
 	check_access();
 	
+	my ($sql,$sth,$sql1, $sth1, $sql2,$sth2);
+	
 	if(param('save') && param('newName')) {
 		print '<p>Reanming...</p>';
 		
@@ -59,34 +61,34 @@ sub tag_operations {
 		# if check then check is the new tagId
 		my $check = get_tag_id_by_name($newTag);
 		if($check && ($check != $oldTagId)) {
-			my $sql = "SELECT bookmark_id, tag_id 
+			$sql = "SELECT bookmark_id, tag_id 
 						FROM `$tbl_bookmark_tags`
 						WHERE tag_id = ?";
-			my $sth = $dbh->prepare($sql);
+			$sth = $dbh->prepare($sql);
 			$sth->execute($oldTagId);
 			while(my ($bid, $tid) = $sth->fetchrow_array) {
-				my $sql1 = "DELETE FROM `$tbl_bookmark_tags` 
+				$sql1 = "DELETE FROM `$tbl_bookmark_tags` 
 							WHERE bookmark_id = ?
 							AND tag_id = ?";
-				my $sth1 = $dbh->prepare($sql1);
+				$sth1 = $dbh->prepare($sql1);
 				$sth1->execute($bid,$tid);
 				
-				my $sql2 = "INSERT IGNORE INTO `$tbl_bookmark_tags`
+				$sql2 = "INSERT IGNORE INTO `$tbl_bookmark_tags`
 							SET bookmark_id = ?,
 							tag_id = ?";
-				my $sth2 = $dbh->prepare($sql2);
+				$sth2 = $dbh->prepare($sql2);
 				$sth2->execute($bid,$check);
 			}			
 			
 			# remove the old one
-			my $sql = "DELETE FROM `$tbl_tags` WHERE id = ?";
-			my $sth = $dbh->prepare($sql);
+			$sql = "DELETE FROM `$tbl_tags` WHERE id = ?";
+			$sth = $dbh->prepare($sql);
 			$sth->execute($oldTagId);
 		}
 		else {
 			# just rename the tag
-			my $sql = "UPDATE $tbl_tags SET name = ? WHERE id = ?";
-			my $sth = $dbh->prepare($sql);
+			$sql = "UPDATE $tbl_tags SET name = ? WHERE id = ?";
+			$sth = $dbh->prepare($sql);
 			$sth->execute($newTag,$oldTagId);
 		}
 		
@@ -105,10 +107,10 @@ sub tag_operations {
 			my $oldTagId = get_tag_id_by_name($delTagName);
 			my $moveToTagId = get_tag_id_by_name($moveToTagName);
 			if($oldTagId && $moveToTagId) {
-				my $sql = "UPDATE IGNORE `$tbl_bookmark_tags`
+				$sql = "UPDATE IGNORE `$tbl_bookmark_tags`
 							SET `tag_id` = ?
 							WHERE `tag_id` = ?";
-				my $sth = $dbh->prepare($sql);
+				$sth = $dbh->prepare($sql);
 				$sth->execute($moveToTagId,$oldTagId);
 			}
 		}
