@@ -1,3 +1,7 @@
+version 1.1
+    * duplicate / potential match url search
+	* older and newer link at the top no working
+
 version 1.0 ()
 + jumpin.banana
 	* tag suggest was not working correctly.
@@ -11,7 +15,7 @@ version 1.0 ()
 		This is not needed. Since we use the charset info
 		to determine utf, we need this information
 	* Insert SQL more save now
-	
+
 Tue Jul 14 21:38 EST 2009  Luke Reeve   <luke@neuro-tech.net>
 
 	* Fix the option "proxy_host" not being saved correctly.
@@ -37,7 +41,7 @@ Tue Mar 21 19:34 EST 2006  Luke Reeves	<luke@neuro-tech.net>
 
 Tue Feb 21 12:30 EST 2006  Luke Reeves  <luke@neuro-tech.net>
 
-	* Fix up database connectivity for newer PostgreSQL 
+	* Fix up database connectivity for newer PostgreSQL
 	  libraries
 	* Incorporate patch from Paul Boin that allows importing
 	  of regular del.icio.us backups (as opposed to only
@@ -48,12 +52,12 @@ Mon Nov 21 12:41 EST 2005  Luke Reeves  <luke@neuro-tech.net>
 	* Fixed some of the cleanup process for snapshot deletion
 	* Added a "Fetch Related" function, so that the snapshot
 	  tool can grab related objects
-	* Work on the tag tools - delete and rename tags	  
+	* Work on the tag tools - delete and rename tags
 
 Fri Nov 04 09:00 EST 2005  Luke Reeves	<luke@neuro-tech.net>
 
 	* Database fix (thanks to Jutta Horstmann)
-	* Remove export and import to server-side files, since the 
+	* Remove export and import to server-side files, since the
 	  standalone tools can easily accomplish that
 
 Fri Sep 23 07:35 EST 2005  Luke Reeves  <luke@neuro-tech.net>
@@ -88,7 +92,7 @@ Fri Sep 16 12:30 EST 2005  Luke Reeves  <luke@neuro-tech.net>
 	  systems.
 
 Mon Sep 05 22:28 EST 2005  Luke Reeves  <luke@neuro-tech.net>
-	
+
 	* Major code cleanup (splitting the main CGI file into multiple,
 	  more maintainable ones inside of the lib/Insipid directory)
 	* Bugfix for adding duplicate items not being flagged as such
@@ -109,7 +113,7 @@ Thu Jul 21 21:35 EST 2005  Luke Reeves  <luke@neuro-tech.net>
 	  as well as other bug fixes.
 
 Sun Jul 17 15:19 EST 2005  Luke Reeves  <luke@neuro-tech.net>
-	
+
 	* Added the page cache feature, so a user can take snapshots of pages
 	  that have been bookmarked.
 

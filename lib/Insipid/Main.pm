@@ -250,11 +250,11 @@ DOC
                 do_import();
             } else {
                 print <<IFORM;
-	<p>This allows you to import either 
-	<a href="http://www.neuro-tech.net/insipid/">Insipid</a> or 
+	<p>This allows you to import either
+	<a href="http://www.neuro-tech.net/insipid/">Insipid</a> or
 	<a href="http://del.icio.us/">del.icio.us</a> backups.  For del.icio.us, you
 	must first use their API to export your bookmarks to an XML file.  To do this,
-	access the URL "http://username:password\@del.icio.us/api/posts/all?" 
+	access the URL "http://username:password\@del.icio.us/api/posts/all?"
 	(using your username and password).  You can then upload that XML file here.
 	</p>
 	<br />
@@ -295,7 +295,7 @@ IFORM
 					print "URL or Title can not be empty";
 					exit;
 				}
-				
+
 				if(!is_uri($url)) {
 					print "This is not a valid URL";
 					exit;
@@ -437,14 +437,14 @@ FORM
 
             if (param('op') eq 'bookmarklets') {
                 print <<DESC;
-<p>This bookmarklet provides a fast way to add your browser's 
-current page to this Insipid installation.  Either drag the 
-following link to your bookmarks toolbar or right-click on it 
-and choose "Bookmark This Link..." to create a bookmarklet.  
-Then when you're on a page you'd like to save, click on your 
-new "Add to Insipid" button and you'll be brought to a page 
-that allows you to fill out the tags for the bookmark and save 
-it.  Once you've clicked Save you'll be brought back to the 
+<p>This bookmarklet provides a fast way to add your browser's
+current page to this Insipid installation.  Either drag the
+following link to your bookmarks toolbar or right-click on it
+and choose "Bookmark This Link..." to create a bookmarklet.
+Then when you're on a page you'd like to save, click on your
+new "Add to Insipid" button and you'll be brought to a page
+that allows you to fill out the tags for the bookmark and save
+it.  Once you've clicked Save you'll be brought back to the
 page.</p>
 DESC
                 my $ad = <<BLET;
@@ -486,7 +486,7 @@ sub show_options {
     # Save options if they were posted.
     print "<br /><br />";
     if (param('save')) {
-        my $sql = "update $tbl_options set value=? 
+        my $sql = "update $tbl_options set value=?
 			where (name = ?)";
         my $sth = $dbh->prepare($sql);
 
@@ -532,21 +532,27 @@ sub show_options {
     print "</table></form>";
 }
 
-sub show_footer {
+sub show_pageLinks {
     my $older = 2;
+	my $newer = 2;
+	my $returnstr;
+	my $currentPage;
+
     if (defined(url_param('page'))) {
-        $older = url_param('page') + 1;
+		$currentPage = url_param('page');
+        $older = $currentPage + 1;
+		$newer = $currentPage - 1;
     }
 
+	$returnstr = " | ";
+	if($older >= 2 && $currentPage > 1) {
+		$returnstr .= "<a href=\"?page=$newer\">&#171; newer</a>";
+	}
     if ($last_page eq 0) {
-        if ($query ne "") {
-            print " | <a href=\"?page=$older&q=";
-            print $query;
-            print "\">More Results</a>";
-        } else {
-            print " | <a href=\"?page=$older\">older</a>";
-        }
+		$returnstr .= "&nbsp;<a href=\"?page=$older\">older &#187;</a>";
     }
+
+	print $returnstr;
 }
 
 sub do_import {
@@ -824,9 +830,9 @@ sub delete_bookmark {
     check_access();
 
     # Check for cached version to delete.
-    $sql = "select $tbl_pagecache.md5 from $tbl_pagecache 
-		inner join $tbl_bookmarks on 
-		($tbl_pagecache.md5 = $tbl_bookmarks.md5) 
+    $sql = "select $tbl_pagecache.md5 from $tbl_pagecache
+		inner join $tbl_bookmarks on
+		($tbl_pagecache.md5 = $tbl_bookmarks.md5)
 		where ($tbl_bookmarks.id = ?)";
     $sth = $dbh->prepare($sql);
     $sth->execute($id);
@@ -863,12 +869,12 @@ sub show_bookmarks {
         # Join the tag tables only when necessary
 
 		if(url_param('tag') eq "empty") {
-			
+
 			# allow this action only for logged in users
 			check_access();
-			
-			$sql = $sql." left join $tbl_bookmark_tags on 
-			  ($tbl_bookmarks.id = 
+
+			$sql = $sql." left join $tbl_bookmark_tags on
+			  ($tbl_bookmarks.id =
 			  	$tbl_bookmark_tags.bookmark_id)
 				WHERE $tbl_bookmark_tags.bookmark_id IS NULL";
 		}
@@ -878,22 +884,22 @@ sub show_bookmarks {
 
             foreach (@tags) {
                 push(@parms, $_);
-                $sql = "$sql inner join $tbl_bookmark_tags 
-						as bt$icount on 
-					  ($tbl_bookmarks.id = 
+                $sql = "$sql inner join $tbl_bookmark_tags
+						as bt$icount on
+					  ($tbl_bookmarks.id =
 					  	bt$icount.bookmark_id)
-					inner join $tbl_tags as t$icount on 
-					   (t$icount.id = bt$icount.tag_id 
+					inner join $tbl_tags as t$icount on
+					   (t$icount.id = bt$icount.tag_id
 					   	and t$icount.name = ?) ";
                 $icount++;
             }
         } else {
-            $sql = "$sql 
-				left join $tbl_bookmark_tags on 
-				  ($tbl_bookmarks.id = 
-				  	$tbl_bookmark_tags.bookmark_id)	
-				inner join $tbl_tags on 
-			  	  ($tbl_tags.id = $tbl_bookmark_tags.tag_id) 
+            $sql = "$sql
+				left join $tbl_bookmark_tags on
+				  ($tbl_bookmarks.id =
+				  	$tbl_bookmark_tags.bookmark_id)
+				inner join $tbl_tags on
+			  	  ($tbl_tags.id = $tbl_bookmark_tags.tag_id)
 				  where ($tbl_tags.name = ?)";
             push(@parms, url_param('tag'));
         }
@@ -948,20 +954,20 @@ sub show_bookmarks {
     @parms  = ();
     @wheres = ();
 
-    $sql = "select 
-  		  $tbl_bookmarks.id, 
-		  $tbl_bookmarks.title, 
-		  $tbl_bookmarks.description, 
+    $sql = "select
+  		  $tbl_bookmarks.id,
+		  $tbl_bookmarks.title,
+		  $tbl_bookmarks.description,
 		  $tbl_bookmarks.access_level,
 		  $tbl_bookmarks.url,
 		  $tbl_tags.name,
 		  $tbl_bookmarks.date,
 		  $tbl_pagecache.date as cache_date,
 		  $tbl_bookmarks.md5
-		from $tbl_bookmarks 
-		left join $tbl_bookmark_tags on 
+		from $tbl_bookmarks
+		left join $tbl_bookmark_tags on
 		  ($tbl_bookmarks.id = $tbl_bookmark_tags.bookmark_id)
-		left join $tbl_tags on 
+		left join $tbl_tags on
 		  ($tbl_tags.id = $tbl_bookmark_tags.tag_id)
 		left join $tbl_pagecache on
 		  ($tbl_bookmarks.md5 = $tbl_pagecache.md5)";
@@ -1024,7 +1030,7 @@ sub show_bookmarks {
     }
 
     print "<span class=\"bodyTitle\">$title</span>";
-    show_footer();
+    show_pageLinks();
     print '<br /><br />';
 
     print "<table class=\"bookmarklist\">";
@@ -1152,7 +1158,7 @@ sub get_bookmark_id {
     my ($url) = (@_);
 
     # Lookup the URL id first.
-    my $sql = "select $tbl_bookmarks.id from 
+    my $sql = "select $tbl_bookmarks.id from
 		$tbl_bookmarks where ($tbl_bookmarks.md5 = ?)";
     my $sth = $dbh->prepare($sql);
 
@@ -1169,12 +1175,12 @@ sub get_bookmark_id {
 sub get_bookmark {
     my ($id) = (@_);
 
-    my $sql = "select 
-			$tbl_bookmarks.title, 
-			$tbl_bookmarks.description, 
+    my $sql = "select
+			$tbl_bookmarks.title,
+			$tbl_bookmarks.description,
 			$tbl_bookmarks.url,
-			$tbl_bookmarks.access_level 
-			from $tbl_bookmarks 
+			$tbl_bookmarks.access_level
+			from $tbl_bookmarks
 			where ($tbl_bookmarks.id = ?)";
     my $sth = $dbh->prepare($sql);
     $sth->execute($id);
@@ -1187,8 +1193,8 @@ sub update_bookmark {
 
     check_access();
 
-    my $sql = "update $tbl_bookmarks 
-			set url = ?, md5 = ?, title = ?, description = ?, 
+    my $sql = "update $tbl_bookmarks
+			set url = ?, md5 = ?, title = ?, description = ?,
 			access_level = ? where (id = ?)";
     my $sth = $dbh->prepare($sql);
     $sth->execute($url, md5_hex("$url"), $title, $description, $access_level,
