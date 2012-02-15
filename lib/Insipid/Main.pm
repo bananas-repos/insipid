@@ -39,6 +39,7 @@ use Insipid::Sessions;
 use Insipid::Snapshots;
 use Insipid::Tags;
 use Insipid::Util;
+use Insipid::Manage;
 
 use CGI qw/:standard/;
 use CGI::Carp qw(fatalsToBrowser);
@@ -415,6 +416,7 @@ FORM
 
     if (defined(param('op'))) {
         if (logged_in() eq 1) {
+			# used in snapshots
             if (param('op') eq 'fetchrelated') {
                 if (defined(param('id'))) {
                     fetch_related(param('id'));
@@ -462,8 +464,16 @@ BLET
                 exit;
             }
 
+			# show the options
             if (param('op') eq 'options') {
                 show_options();
+                print '</body></html>';
+                exit;
+            }
+
+			# management
+			if (param('op') eq 'manage') {
+                show_management();
                 print '</body></html>';
                 exit;
             }
@@ -794,6 +804,7 @@ sub show_toolbar {
 
     if (logged_in() eq 1) {
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=options\">options</a> | ";
+		print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=manage\">manage</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=tags\">tags</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=import\">import</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=export\">export</a> | ";
