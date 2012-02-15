@@ -18,7 +18,7 @@
 # USA
 #
 
-package Insipid::Manage;
+package Insipid::Stats;
 
 use strict;
 use warnings;
@@ -37,10 +37,10 @@ use Data::Dumper;
 @ISA = qw(Exporter);
 
 @EXPORT = qw(
-show_management
+show_stats
 );
 
-sub show_management {
+sub show_stats {
 
 }
 

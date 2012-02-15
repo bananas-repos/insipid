@@ -39,7 +39,7 @@ use Insipid::Sessions;
 use Insipid::Snapshots;
 use Insipid::Tags;
 use Insipid::Util;
-use Insipid::Manage;
+use Insipid::Stats;
 
 use CGI qw/:standard/;
 use CGI::Carp qw(fatalsToBrowser);
@@ -472,8 +472,8 @@ BLET
             }
 
 			# management
-			if (param('op') eq 'manage') {
-                show_management();
+			if (param('op') eq 'stats') {
+                show_stats();
                 print '</body></html>';
                 exit;
             }
@@ -804,7 +804,7 @@ sub show_toolbar {
 
     if (logged_in() eq 1) {
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=options\">options</a> | ";
-		print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=manage\">manage</a> | ";
+		print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=stats\">stats</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=tags\">tags</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=import\">import</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=export\">export</a> | ";
