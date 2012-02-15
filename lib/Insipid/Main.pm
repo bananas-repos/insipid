@@ -210,7 +210,7 @@ sub main {
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="alternate" type="application/rss+xml" title="RSS" href="$feed_url$tspec" />
 	    <link rel="stylesheet" href="$site_url/insipid.css" type="text/css" title="Standard" />
-		<script type="text/javascript" src="lib/js/jquery.js"></script>
+		<script type="text/javascript" src="$site_url/lib/js/jquery.js"></script>
 	</head>
 	<body marginheight="0" marginwidth="0">
 DOC

@@ -1,6 +1,7 @@
 version 1.1
     * duplicate / potential match url search
 	* older and newer link at the top no working
+	* bug with path to the jquery.js file
 
 version 1.0 ()
 + jumpin.banana
