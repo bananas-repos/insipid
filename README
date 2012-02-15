@@ -4,20 +4,19 @@ Insipid is a web-based bookmark manager similar to the Delicious service.
 This is a heavily modified version of insipid createted by Luke Reeves.
 This release was done by https://github.com/jumpin-banana/insipid
 
-
 Rename the insipid-config.cgi.example to insipid-config.cgi and edit it,
-replacing the example values with those that match your system.  
+replacing the example values with those that match your system.
 
 Create a user and password for the database if you don't have one assigned
 to you by your adiministrator or ISP.  Doing this is beyond the scope of this
 readme file - refer to the server documentation for more help.
 
-Rename the htaccess file to .htaccess and add a "RewriteBase" clause to the 
+Rename the htaccess file to .htaccess and add a "RewriteBase" clause to the
 top, such as:
 
     RewriteBase /~luke/
 
-You can optionally add "insipid.cgi" to the list of files in the 
+You can optionally add "insipid.cgi" to the list of files in the
 DirectoryIndex line (for example, "DirectoryIndex index.cgi insipid.cgi").
 
 The non-standard Perl packages required for use (with their Debian package
@@ -30,8 +29,8 @@ names) are:
     XML::Writer      libxml-writer-perl
 
 Once the configuration is finished, access the insipid.cgi through your
-web browser at the URL you've configured and the database should be 
+web browser at the URL you've configured and the database should be
 automatically configured.
 
-If you ever upgrade Insipid, the database schema will be automatically 
+If you ever upgrade Insipid, the database schema will be automatically
 updated upon access.
