@@ -45,41 +45,41 @@ tag_operations
 );
 
 sub tag_operations {
-	
+
 	check_access();
-	
+
 	my ($sql,$sth,$sql1, $sth1, $sql2,$sth2);
-	
+
 	if(param('save') && param('newName')) {
 		print '<p>Reanming...</p>';
-		
+
 		my $newTag = param('newName');
 		my $oldTagName = param('rename');
 		my $oldTagId = get_tag_id_by_name($oldTagName);
-		
+
 		# is the new name already a tag ?
 		# if check then check is the new tagId
 		my $check = get_tag_id_by_name($newTag);
 		if($check && ($check != $oldTagId)) {
-			$sql = "SELECT bookmark_id, tag_id 
+			$sql = "SELECT bookmark_id, tag_id
 						FROM `$tbl_bookmark_tags`
 						WHERE tag_id = ?";
 			$sth = $dbh->prepare($sql);
 			$sth->execute($oldTagId);
 			while(my ($bid, $tid) = $sth->fetchrow_array) {
-				$sql1 = "DELETE FROM `$tbl_bookmark_tags` 
+				$sql1 = "DELETE FROM `$tbl_bookmark_tags`
 							WHERE bookmark_id = ?
 							AND tag_id = ?";
 				$sth1 = $dbh->prepare($sql1);
 				$sth1->execute($bid,$tid);
-				
+
 				$sql2 = "INSERT IGNORE INTO `$tbl_bookmark_tags`
 							SET bookmark_id = ?,
 							tag_id = ?";
 				$sth2 = $dbh->prepare($sql2);
 				$sth2->execute($bid,$check);
-			}			
-			
+			}
+
 			# remove the old one
 			$sql = "DELETE FROM `$tbl_tags` WHERE id = ?";
 			$sth = $dbh->prepare($sql);
@@ -91,17 +91,17 @@ sub tag_operations {
 			$sth = $dbh->prepare($sql);
 			$sth->execute($newTag,$oldTagId);
 		}
-		
+
 		print '<span style="color: green;">Done !</span>';
 	}
 	elsif(param("doDelete") && param("deleteTag") && param("moveTo")) {
 		print '<p>Delete...</p>';
-		
+
 		# this moves the selected tag and its bookmarks to the new one
 		# the tag is still availbale in the DB
-		
+
 		my($delTagName,$moveToTagName) = (param('deleteTag'), param('moveTo'));
-		
+
 		if($delTagName && $moveToTagName && ($delTagName ne $moveToTagName)) {
 			# get the ones with the old tag
 			my $oldTagId = get_tag_id_by_name($delTagName);
@@ -114,10 +114,10 @@ sub tag_operations {
 				$sth->execute($moveToTagId,$oldTagId);
 			}
 		}
-		
+
 		print '<span style="color: green;">Done !</span>';
 	}
-	
+
 	print '<h2>Rename Tag</h2>';
 	print '<form method="post" action="">';
 	print '<select name="rename">';
@@ -128,7 +128,7 @@ sub tag_operations {
 	print '<input type=hidden name="op" value="tags">';
 	print '<input type=hidden name="save" value="yes">';
 	print '</form>';
-	
+
 	print '<h2>Delete Tag</h2>';
 	print '<form method="post" action="">';
 	print "Delete Tag";
@@ -143,7 +143,7 @@ sub tag_operations {
 	print '<input type=hidden name="doDelete" value="yes">';
 	print '<input type="submit" value="Delete and move" />';
 	print '</form>';
-	
+
 	print '<h2>Show bookmarks without a tag</h2>';
 	print '<p><a href="'.$site_url.'/insipid.cgi?tag=empty">Show me the bookmarks</a></p>';
 }
@@ -155,93 +155,90 @@ sub tag_operations {
 sub show_tags {
 	my ($mode) = shift;
 	if(!defined($mode)) { $mode = 0; }
-	
+
 	my ($sql, $sth);
 	if($mode eq 0) { print "<div id=\"leftside\">"; }
 
-	# If the user has already chosen a tag, get the intersection list
-	if(defined(url_param('tag')) && (logged_in() eq 1)) {
-		$sql = "select $tbl_tags.name,count(*) from $tbl_bookmarks 
-			inner join $tbl_bookmark_tags as bt1 on 
-				($tbl_bookmarks.id = bt1.bookmark_id) 
-			inner join $tbl_tags on 
-				($tbl_tags.id = bt1.tag_id)
-			inner join $tbl_bookmark_tags as bt2 on 
-				($tbl_bookmarks.id = bt2.bookmark_id) 
-			inner join $tbl_tags as t2 on 
-				(t2.id = bt2.tag_id and t2.name = ?)
-			where ($tbl_tags.name != ?)
-			group by $tbl_tags.name";
+	my $tag = url_param('tag');
+
+	#if()) {
+		# find the tags which have been used with this tags too
+		my $tagstring = $tag;
+		chomp($tagstring);
+		$tagstring =~ s/ /','/g;
+
+		# get the bookmarks first which have those tags
+		$sql = "SELECT bm.id FROM $tbl_bookmarks as bm
+				INNER JOIN $tbl_bookmark_tags AS bt ON bm.id = bt.bookmark_id
+				INNER JOIN $tbl_tags AS t ON t.id = bt.tag_id
+			WHERE 1";
+		$sql .= " AND t.name IN ('$tagstring')" if $tag;
+
+		$sql .= " AND (bm.access_level = 1) " if(logged_in() eq 0);
+
 		$sth = $dbh->prepare($sql);
-		$sth->execute(url_param('tag'), url_param('tag'));
+		$sth->execute;
 
 		if($sth->rows ne 0) {
-			print "<div id=\"taglist\" style=\"\">";
-			print "<table cellpadding =\"0\" cellspacing=\"0\" ";
-			print 'class="tagsummarytable"><tbody>';
-			print "<tr><td align=\"center\">";
-			print "<div class=\"inline_title\">Add Tag</div></td>";
-		
-			while(my @rs = $sth->fetchrow_array()) {
-				my $tt = url_param('tag');
-				my $link = "$tag_url$tt+$rs[0]";
-				$tt =~ s/ /\+/g;
-
-				print "<tr><td>&nbsp;<span class=\"tagtabletext\">($rs[1])&nbsp;</span><a href=\"$link\">$rs[0]</a>&nbsp;";
-				print "</tr></td>\n";
+			my @bids;
+			while(my($id) = $sth->fetchrow_array()) {
+				push(@bids,$id);
 			}
 
-			print "</tbody></table></div></div>";
+			if(@bids) {
+				# there are results
+				# get the tags for the tag list
+				my $bids = join(',',@bids);
 
-			return;
+				$sql = "SELECT t.name, count(*) FROM $tbl_bookmarks AS bm
+					INNER JOIN $tbl_bookmark_tags AS bt
+						ON (bm.id = bt.bookmark_id)
+					INNER JOIN $tbl_tags AS t
+						ON (t.id = bt.tag_id)
+					WHERE 1";
+
+				$sql .= " AND bm.id IN ($bids) AND t.name NOT IN ('$tagstring')" if $tag;
+				$sql .= " AND (bm.access_level = 1) " if(logged_in() eq 0);
+
+				$sql .= " GROUP BY t.name
+					ORDER BY t.name";
+				#print $sql;
+				$sth = $dbh->prepare($sql);
+				$sth->execute;
+				if($sth->rows ne 0) {
+
+					if($mode eq 0) {
+						print '<div id="taglist" style="">';
+						print '<table cellpadding="0" cellspacing="0" ';
+						print 'class="tagsummarytable"><tbody>';
+						print '<tr><th colspan="2">Tags</th></tr>';
+					}
+
+
+					while(my @rs = $sth->fetchrow_array()) {
+						my $link = $tag_url.$rs[0];
+
+						if($mode eq 0) {
+							print "<tr><td class=\"tagtabletext\">($rs[1])</td>";
+							print "<td class=\"tagtabletext\"><a href=\"$link\">$rs[0]</a></td></tr>\n";
+						} else {
+							print "<option name=\"$rs[0]\">$rs[0]</option>";
+						}
+					}
+
+					if($mode eq 0) {
+						print "</tbody></table></div>";
+						print "</div>";
+					}
+
+					return;
+				}
+			}
 		}
-	}
+	#}
 
-	# Access_spec contains a where clause to count only public bookmarks 
-	# if the user is not logged in
-	my $access_where = "";
-	if(logged_in() eq 0) {
-		$access_where = " where ($tbl_bookmarks.access_level = 1) ";
-	}
 
-	my $order_clause;
-	$order_clause = "order by $tbl_tags.name";
 
-	$sql = "select $tbl_tags.name, count(*) 
-		   from $tbl_bookmarks  
-		   inner join $tbl_bookmark_tags on
-			($tbl_bookmarks.id = $tbl_bookmark_tags.bookmark_id)
-		   inner join $tbl_tags on
-			($tbl_tags.id = $tbl_bookmark_tags.tag_id)
-		   $access_where
-		   group by $tbl_tags.name
-		   $order_clause"; 
-
-	$sth = $dbh->prepare($sql);
-	$sth->execute;
-
-	if($mode eq 0) {
-		print '<div id="taglist" style="">';
-		print '<table cellpadding="0" cellspacing="0" ';
-		print 'class="tagsummarytable"><tbody>';
-		print '<tr><td align="center"><div class="inline_title">';
-		print 'Tag List</div></td>';
-	}
-	
-	while(my @r = $sth->fetchrow_array) {
-		if($mode eq 0) {
-			print "<tr><td>&nbsp;<span class=\"tagtabletext\">($r[1])";
-			print "&nbsp;</span><a href=\"$tag_url$r[0]\">$r[0]</a>&nbsp;";
-			print "</td></tr>\n";
-		} else {
-			print "<option name=\"$r[0]\">$r[0]</option>";
-		}
-	}
-
-	if($mode eq 0) {
-		print "</tbody></table></div>";
-		print "</div>";
-	}
 }
 
 # Get a string representing a URLs tags
@@ -262,13 +259,13 @@ sub get_tags {
 # Get a list of the tags for a given URL id
 sub get_tags_list {
 	my ($url) = (@_);
-	my $sql = "select $tbl_tags.name from $tbl_tags 
-			inner join $tbl_bookmark_tags on 
-				($tbl_tags.id = $tbl_bookmark_tags.tag_id) 
+	my $sql = "select $tbl_tags.name from $tbl_tags
+			inner join $tbl_bookmark_tags on
+				($tbl_tags.id = $tbl_bookmark_tags.tag_id)
 			inner join $tbl_bookmarks on
 				($tbl_bookmark_tags.bookmark_id = $tbl_bookmarks.id)
 			where ($tbl_bookmarks.url = ?)";
-  
+
 	my $sth = $dbh->prepare($sql);
 	$sth->execute($url);
 
@@ -286,14 +283,14 @@ sub set_tags {
 	my ($bookmark_id, $tag_string) = (@_);
 
 	check_access();
-	
+
 	my @tags = split(" ", $tag_string);
-	
+
 	# Clear old tags first.
 	my $sql = "delete from $tbl_bookmark_tags where (bookmark_id = ?)";
 	my $sth = $dbh->prepare($sql);
 	$sth->execute($bookmark_id);
-	
+
 	foreach my $cur (@tags) {
 	    # check if this tag exists in tags table
 	    my $sql = "select count(id) from $tbl_tags where (name = ?)";
@@ -315,7 +312,7 @@ sub set_tags {
 	    $sth->execute($cur);
 	    my $tid = $sth->fetchrow_array;
 
-	    $sql = "insert into $tbl_bookmark_tags(bookmark_id, tag_id) 
+	    $sql = "insert into $tbl_bookmark_tags(bookmark_id, tag_id)
 		  values( ? , ? )";
 	    $sth = $dbh->prepare($sql);
 	    $sth->execute($bookmark_id, $tid);
@@ -326,9 +323,9 @@ sub set_tags {
 # if so return the tag id
 sub get_tag_id_by_name {
 	my ($tag) = (@_);
-	
+
 	my($tagId, $sql, $sth, @result);
-	
+
 	if($tag) {
 		$sql = "select id from `$tbl_tags` where (name = ?)";
 		$sth = $dbh->prepare($sql);
@@ -336,7 +333,7 @@ sub get_tag_id_by_name {
 		@result = $sth->fetchrow_array();
 		$tagId = $result[0];
 	}
-	
+
 	return $tagId;
 }
 

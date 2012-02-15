@@ -31,12 +31,12 @@ use vars qw($version);
 
 use Exporter ();
 our (@ISA, @EXPORT);
-	
+
 @ISA = qw(Exporter);
-@EXPORT = qw($dbname $dbuser $dbpass $dsn $dbh $dbtype get_option 
+@EXPORT = qw($dbname $dbuser $dbpass $dsn $dbh $dbtype get_option
 	install $version $tag_url $feed_url $full_url $snapshot_url
 	export_options $dbprefix);
-	
+
 our ($dsn, $dbh, $dbname, $dbuser, $dbpass, $dbhost, $snapshot_url,
 	$dbtype, $tag_url, $feed_url, $full_url, $dbprefix);
 
@@ -48,25 +48,25 @@ $dbhost = getconfig('dbhost');
 $dbtype = 'mysql';
 
 $dsn = "DBI:$dbtype:dbname=$dbname;host=$dbhost";
-$dbh = DBI->connect($dsn, $dbuser, $dbpass, { 'RaiseError' => 0}) or die $DBI::errstr;
+$dbh = DBI->connect($dsn, $dbuser, $dbpass, { 'RaiseError' => 1, 'PrintError' => 1}) or die $DBI::errstr;
 
 my %options;
 
 sub export_options {
 	my ($writer) = (@_);
 	my ($sth);
-	
+
 	$writer->startTag('options');
 	$sth = $dbh->prepare("select name, value from $tbl_options");
 	$sth->execute();
 	while(my $row = $sth->fetchrow_hashref) {
 		if($row->{name} ne 'version') {
-			$writer->emptyTag('option', 
+			$writer->emptyTag('option',
 				'name' => $row->{name},
 				'value' => $row->{value});
 		}
 	}
-	
+
 	$writer->endTag('options');
 }
 
@@ -75,7 +75,7 @@ sub dbupgrade {
 	my $sth = $dbh->prepare($sql);
 	$sth->execute($version, 'version');
 
-	$sql = "insert into $tbl_options(name, value, description) 
+	$sql = "insert into $tbl_options(name, value, description)
 			values(?, ?, ?)";
 	$sth = $dbh->prepare($sql);
 	$sth->execute('version', $version, 'Internal Insipid version');
@@ -96,7 +96,7 @@ sub dbupgrade {
 	if($dbh->errstr) {
 		print STDERR $dbh->errstr;
 	}
-	
+
 	return;
 }
 

@@ -23,9 +23,9 @@
 
 #leftside {
 	float:left;
-	padding-right:20;
-	padding-left:20;
-	padding-top:20;
+	padding-right: 20px;
+	padding-left: 20px;
+	padding-top: 20px;
 }
 
 .bodyContent {
@@ -42,31 +42,38 @@
 	background-color: #CCCCCC;
 }
 
-.tagsummarytable{
+.tagsummarytable {
 	border-color:#000000;
 	border-style:solid;
 	-moz-box-sizing: border-box;
 	-moz-border-radius:8px;
-	border-width: mid;
+	border-width: medium;
 	font-size: small;
 	margin-bottom: 15px;
 }
 
-.tagtabletext{
+.tagsummarytable th {
+	background-color: #000;
+	color: #fff;
+}
+.tagsummarytable td {
+	padding: 1px 3px 0 1px;
+}
+
+.tagtabletext {
 	font-family:Arial, Helvetica, sans-serif;
 	text-decoration: none;
-	color:#000000;
-	
+	color: #000000;
 }
 
 .bodytext{
 	font-family:Arial, Helvetica, sans-serif;
-	color: black; 
+	color: black;
 }
 
 /* Used for "Most Recent Bookmarks" */
 .bodyTitle{
-	color: black; 
+	color: black;
 	font-weight: bold;
 }
 
@@ -99,9 +106,9 @@ h3 {
 	padding-top: 10px;
 }
 
-a.tools { 
+a.tools {
 	font-family:Arial, Helvetica, sans-serif;
-	color: black; 
+	color: black;
 	font-weight: bold;
 	line-height:2;
 }
@@ -110,9 +117,9 @@ a.tools:visited {
 	color: black;
 }
 
-a.tools:hover { 
+a.tools:hover {
 	font-family:Arial, Helvetica, sans-serif;
-	color: black; 
+	color: black;
 	font-weight: bold;
 	background:white;
 	text-decoration: none;
@@ -120,23 +127,23 @@ a.tools:hover {
 }
 
 
-.formtext { 
+.formtext {
 	font-family:Arial, Helvetica, sans-serif;
-	text-decoration: none; 
+	text-decoration: none;
 }
 
 
-A { 
+A {
 	font-family:Arial, Helvetica, sans-serif;
-	text-decoration: none; 
+	text-decoration: none;
 }
 
-A:hover { 
+A:hover {
 	font-family:Arial, Helvetica, sans-serif;
-	text-decoration: underline 
+	text-decoration: underline
 }
 
-A:visited { 
+A:visited {
 	font-family:Arial, Helvetica, sans-serif;
 	text-decoration: none;
 	color:blue;
@@ -157,12 +164,14 @@ A:visited {
 }
 
 li{	color:#8888ff; }
-.bookmarklistitem{padding-bottom:8;}
+.bookmarklistitem{
+	padding-bottom:8px;
+}
 
 .bookmarklist{
 	font-size: medium;
 	margin-left: 20px;
-	border-width:mid;
+	border-width: medium;
 	border-color:#CCCCCC;
 	border-style:dotted;
 	padding-right:10px;
