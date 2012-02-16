@@ -44,10 +44,10 @@ show_stats
 );
 
 sub show_stats {
-	&findSimilarities;
+	&groupByDomain;
 }
 
-sub findSimilarities {
+sub groupByDomain {
 	my $url = shift;
 
 	my ($sql, $sth, @row);
