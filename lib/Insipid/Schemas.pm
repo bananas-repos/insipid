@@ -42,7 +42,7 @@ $createMySQL
 # Insipid will check the database version number on each initialization of
 # the options table (every hit essentially) and upgrade the tables if there's
 # any mismatch.
-our $version = "1.0";
+our $version = "1.1";
 
 our $createMySQL = <<CMYSQL;
 CREATE TABLE IF NOT EXISTS $tbl_authentication (
@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS $tbl_options (
         name VARCHAR(255) NOT NULL UNIQUE,
         description TEXT NOT NULL DEFAULT '',
         value TEXT NOT NULL DEFAULT '',
+		pos INT(10) NO NULL,
         PRIMARY KEY(name)
 );
 
@@ -104,44 +105,55 @@ CREATE TABLE IF NOT EXISTS $tbl_pagecache_references (
 INSERT IGNORE INTO $tbl_options VALUES(
   'feed_name',
   'The title of your feed (e.g. My Bookmarks)',
-  'Bookmarks'
+  'Bookmarks',
+  3
+);
+INSERT IGNORE INTO $tbl_options VALUES(
+  'feed_num',
+  'How many feed entries per default (0 = all)',
+  '10',
+  4
 );
 
 INSERT IGNORE INTO $tbl_options VALUES(
   'site_name',
   'The title of the main page (e.g. My Bookmarks)',
-  'My Bookmarks'
+  'My Bookmarks',
+  1
 );
 
 INSERT IGNORE INTO $tbl_options VALUES(
   'public_searches',
   'Allow public searches - when set to yes, any visitor can search your bookmarks.',
-  'no'
+  'no',
+  2
 );
 
 INSERT IGNORE INTO $tbl_options VALUES(
   'proxy_host',
   'The proxy server (if any) to use when making page snapshots.',
-  ''
+  '',
+  20
 );
-
-
 INSERT IGNORE INTO $tbl_options VALUES(
   'proxy_port',
   'Your proxy port number.',
-  '3128'
+  '3128',
+  21
 );
 
 INSERT IGNORE INTO $tbl_options VALUES(
   'version',
   'Internal Insipid version number',
-  '$version'
+  '$version',
+  9999
 );
 
 INSERT IGNORE INTO $tbl_options VALUES(
   'use_rewrite',
   'Use mod_rewrite - disable this if you do not want .htaccess-controlled URLs, or if your Apache does not have the rewrite module installed.',
-  'no'
+  'no',
+  90
 );
 CMYSQL
 

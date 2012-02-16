@@ -70,32 +70,37 @@ sub export_options {
 	$writer->endTag('options');
 }
 
+# this function is special for every version.
+# there is no generic function for upgrades
+# so changes to the DB needs to be saved here too
+# in the next version change this
 sub dbupgrade {
+
+
+	my $sql = "ALTER TABLE `$tbl_options` ADD COLUMN `pos` int(10) NOT NULL AFTER `value`;";
+	my $sth = $dbh->prepare($sql);
+	$sth->execute;
+
+	my $sql = "UPDATE $tbl_options SET pos = ? where (name = ?)";
+	my $sth = $dbh->prepare($sql);
+	$sth->execute(3, 'feed_name');
+	$sth->execute(1, 'site_name');
+	$sth->execute(20, 'proxy_host');
+	$sth->execute(21, 'proxy_port');
+	$sth->execute(2, 'public_searches');
+	$sth->execute(90, 'use_rewrite');
+	$sth->execute(9999, 'version');
+
+
+	$sql = "INSERT INTO `$tbl_options` ( `name`, `value`, `description`, `pos`)
+			VALUES ( 'feed_num', '10', 'How many feed entries per default (0 = all)', '4')";
+	my $sth = $dbh->prepare($sql);
+	$sth->execute;
+
+
 	my $sql = "update $tbl_options set value = ? where (name = ?)";
 	my $sth = $dbh->prepare($sql);
 	$sth->execute($version, 'version');
-
-	$sql = "insert into $tbl_options(name, value, description)
-			values(?, ?, ?)";
-	$sth = $dbh->prepare($sql);
-	$sth->execute('version', $version, 'Internal Insipid version');
-	$sth->execute('use_rewrite', 'yes', 'Use mod_rewrite - disable this if you do not want to use mod_rewrite.');
-
-	# Delete the old sessions table
-	$sql = 'drop table sessions';
-	$sth = $dbh->prepare($sql);
-	$sth->execute();
-
-	# Create the new session table if it's not there.
-	$sql = "create table $tbl_authentication (
-			session_id varchar(32),
-			create_time int,
-			primary key(session_id))";
-	$sth = $dbh->prepare($sql);
-	$sth->execute();
-	if($dbh->errstr) {
-		print STDERR $dbh->errstr;
-	}
 
 	return;
 }

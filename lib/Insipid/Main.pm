@@ -524,7 +524,9 @@ sub show_options {
     }
 
     # Now show em
-    my $sql = "select name, description, value from $tbl_options";
+    my $sql = "SELECT name, description, value
+				FROM $tbl_options
+				ORDER BY `pos`";
     my $sth = $dbh->prepare($sql);
     $sth->execute();
 
