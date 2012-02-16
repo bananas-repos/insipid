@@ -42,27 +42,28 @@ sub send_rss {
 	my $ew = "";
 	my $joins = "";
 	my $title = get_option("feed_name");
-	
-	if(url_param('tag')) {
-                if(url_param('tag') =~ / /) {
-                        my @tags = split(/ /, url_param('tag'));
-                        my $rcount = 1;
+	my $limit = get_option("feed_num");
 
-                        foreach(@tags) {
-                                push(@parms, $_);
-                                $joins = "$joins inner join $tbl_bookmark_tags 
-					as bt$rcount on
-                                          ($tbl_bookmarks.id = bt$rcount.bookmark_id)
-                                        inner join $tbl_tags as t$rcount on
-                                           (t$rcount.id = bt$rcount.tag_id and t$rcount.name = ?) ";
-                                $rcount++;
-                        }
+	if(url_param('tag')) {
+		if(url_param('tag') =~ / /) {
+			my @tags = split(/ /, url_param('tag'));
+			my $rcount = 1;
+
+			foreach(@tags) {
+				push(@parms, $_);
+				$joins = "$joins inner join $tbl_bookmark_tags
+						as bt$rcount on
+						($tbl_bookmarks.id = bt$rcount.bookmark_id)
+						inner join $tbl_tags as t$rcount on
+						(t$rcount.id = bt$rcount.tag_id and t$rcount.name = ?) ";
+				$rcount++;
+			}
 		} else {
 
 			push(@parms, url_param('tag'));
 			$joins = "
-				inner join $tbl_bookmark_tags on 
-					($tbl_bookmarks.id = 
+				inner join $tbl_bookmark_tags on
+					($tbl_bookmarks.id =
 						$tbl_bookmark_tags.bookmark_id)
 				inner join $tbl_tags on
 					($tbl_bookmark_tags.tag_id = $tbl_tags.id)";
@@ -78,7 +79,7 @@ sub send_rss {
 	my $sql = "
 		select $tbl_bookmarks.id, $tbl_bookmarks.title, $tbl_bookmarks.url
 			from $tbl_bookmarks $joins $access_where $ew
-		order by $tbl_bookmarks.date desc limit 30";
+		order by $tbl_bookmarks.date desc limit $limit";
 
 	my $sth = $dbh->prepare($sql);
 	$sth->execute(@parms);
@@ -91,14 +92,13 @@ sub send_rss {
     xmlns:admin="http://webns.net/mvcb/"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:content="http://purl.org/rss/1.0/modules/content/">
-    
+
 <channel>
   <title>$title</title>
   <link>$full_url</link>
-  <description>Aggregated links</description>
+  <description>Personal collection</description>
   <dc:language>en-us</dc:language>
   <dc:creator>Insipid</dc:creator>
-  <dc:rights>Copyright 2006</dc:rights>
 RDFHEADER
 
 	while(my @hr = $sth->fetchrow_array) {
