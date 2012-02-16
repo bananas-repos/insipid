@@ -63,13 +63,11 @@ sub groupByDomain {
 
 	if($sth->rows ne 0) {
 		while(@row = $sth->fetchrow_array()) {
-			#print $row['url']."<br />";
 			my $uri = URI->new($row['url']);
-			#print $uri->host."<br />";
+
 			if($domains{$uri->host}) {
 				$domains{$uri->host}++;
-			}
-			else {
+			} else {
 				$domains{$uri->host} = 1;
 			}
 		}
