@@ -956,8 +956,6 @@ sub show_bookmarks {
         $sql = "$sql offset $offset";
     }
 
-	#print $sql;
-
     $sth = $dbh->prepare($sql);
     $sth->execute(@parms);
 
