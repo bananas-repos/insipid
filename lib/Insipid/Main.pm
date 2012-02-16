@@ -453,28 +453,32 @@ DESC
 	javascript:location.href='$site_url/insipid.cgi?op=add_bookmark&url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)+'&redirect=true'
 BLET
                 print "<ul><li><a href=\"$ad\">Add to Insipid</a></li></ul>";
-                print "</body></html>";
+                #print "</body></html>";
+				print "</td></tr></table><br /></body></html>";
                 exit;
             }
 
             # Configuration and management pages
             if (param('op') eq 'tags') {
                 tag_operations();
-                print '</body></html>';
+                #print '</body></html>';
+				print "</td></tr></table><br /></body></html>";
                 exit;
             }
 
 			# show the options
             if (param('op') eq 'options') {
                 show_options();
-                print '</body></html>';
+                #print '</body></html>';
+				print "</td></tr></table><br /></body></html>";
                 exit;
             }
 
 			# management
 			if (param('op') eq 'stats') {
                 show_stats();
-                print '</body></html>';
+                #print '</body></html>';
+				print "</td></tr></table><br /></body></html>";
                 exit;
             }
         }

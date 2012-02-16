@@ -32,6 +32,8 @@ use Insipid::Sessions;
 use Insipid::Util;
 require Exporter;
 
+use URI;
+
 use Data::Dumper;
 
 @ISA = qw(Exporter);
@@ -41,7 +43,49 @@ show_stats
 );
 
 sub show_stats {
+	&findSimilarities;
+}
 
+sub findSimilarities {
+	my $url = shift;
+
+	my ($sql, $sth, @row);
+	my %domains = ();
+
+	if($url) {
+
+	}
+
+	$sql = "SELECT `url` FROM `$tbl_bookmarks` ORDER BY `url`";
+	$sth = $dbh->prepare($sql);
+	$sth->execute;
+
+	if($sth->rows ne 0) {
+		while(@row = $sth->fetchrow_array()) {
+			#print $row['url']."<br />";
+			my $uri = URI->new($row['url']);
+			#print $uri->host."<br />";
+			if($domains{$uri->host}) {
+				$domains{$uri->host}++;
+			}
+			else {
+				$domains{$uri->host} = 1;
+			}
+		}
+
+		if(%domains) {
+
+
+
+			print "<table cellpadding='2' cellspacing='0'>";
+			print "<tr><th>Domain</th><th>Count</th></tr>";
+			#for(sort keys %domains) {
+			foreach (reverse sort { $domains{$a} <=> $domains{$b} } keys %domains ) {
+				print "<tr><td>$_</td><td>$domains{$_}</td></tr>";
+			}
+			print "</table>";
+		}
+	}
 }
 
 1;
