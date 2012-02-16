@@ -921,9 +921,19 @@ sub show_bookmarks {
 
     }
 
+	# search by domain
+	if(defined(url_param('bydomain'))) {
+		my $sparm = url_param('bydomain');
+		$sql = "$sql where ($tbl_bookmarks.url like ?)";
+        $sparm =~ s/\%//;
+        $sparm = "\%$sparm\%";
+		push(@parms, $sparm);
+	}
+
+
     # Search
     if ($query ne "") {
-        if (   (get_option("public_searches") eq "yes")
+        if ( (get_option("public_searches") eq "yes")
             || (logged_in() eq 1)) {
             my $sparm = $query;
             if (length($sparm) > 2) {
@@ -945,6 +955,8 @@ sub show_bookmarks {
         my $offset = ((url_param('page') - 1) * 50);
         $sql = "$sql offset $offset";
     }
+
+	#print $sql;
 
     $sth = $dbh->prepare($sql);
     $sth->execute(@parms);

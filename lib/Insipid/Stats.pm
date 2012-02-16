@@ -33,6 +33,7 @@ use Insipid::Util;
 require Exporter;
 
 use URI;
+use URI::Escape;
 
 use Data::Dumper;
 
@@ -75,13 +76,12 @@ sub findSimilarities {
 
 		if(%domains) {
 
-
-
 			print "<table cellpadding='2' cellspacing='0'>";
 			print "<tr><th>Domain</th><th>Count</th></tr>";
 			#for(sort keys %domains) {
 			foreach (reverse sort { $domains{$a} <=> $domains{$b} } keys %domains ) {
-				print "<tr><td>$_</td><td>$domains{$_}</td></tr>";
+
+				print "<tr><td><a href='$site_url/insipid.cgi?bydomain=".uri_escape($_)."'>$_</a></td><td>$domains{$_}</td></tr>";
 			}
 			print "</table>";
 		}
