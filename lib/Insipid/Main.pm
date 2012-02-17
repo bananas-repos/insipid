@@ -382,24 +382,31 @@ IFORM
 		  <script type="text/javascript" src="lib/js/tagsSuggest.js"></script>
 	      <br />
 	      <form method="post">
-	      <span class="formtext">$utext</span><br />
-	      <input name="url" $style value="$url" /><br />
-	      <span class="formtext">Title:</span><br />
-	      <input name="title" $style value="$title" /><br />
-	      <span class="formtext">Description:</span><br />
-	      <input name="description" $style value="$description" /><br />
-	      <span class="formtext">Tags:</span><br />
-	      <input name="tags" $style value="$tags" /><br />
-		  <div id="suggestlist"><ul></ul></div>
-	      $snapshot_params
-	      <span class="formtext">Public:</span>
-	      <input type="checkbox" name="access_level" $access_box />
-	      <span class="formtext">Return:</span>
-	      <input type="checkbox" name="redirect" $redir_box />
-	      <input type="hidden" name="save" value="true" />
-	      <input type="hidden" name="op" value="add_bookmark" />
-	      $extra_params
-	      <input type="submit" value="$button" />
+			<span class="formtext">$utext</span><br />
+			<input name="url" $style value="$url" /><br />
+
+			<span class="formtext">Title:</span><br />
+			<input name="title" $style value="$title" /><br />
+
+			<span class="formtext">Description:</span><br />
+			<input name="description" $style value="$description" /><br />
+
+			<span class="formtext">Tags:</span><br />
+			<input name="tags" $style value="$tags" /><br />
+
+			<div id="suggestlist"><ul></ul></div>
+
+			$snapshot_params
+			<span class="formtext">Public:</span>
+			<input type="checkbox" name="access_level" $access_box />
+
+			<span class="formtext">Return:</span>
+			<input type="checkbox" name="redirect" $redir_box />
+			<input type="hidden" name="save" value="true" />
+			<input type="hidden" name="op" value="add_bookmark" />
+
+			$extra_params
+			<input type="submit" value="$button" />
 	      </form>
 FORM
             }
@@ -1222,7 +1229,10 @@ sub update_bookmark {
 
     my $sql = "update $tbl_bookmarks
 			set url = ?, md5 = ?, title = ?, description = ?,
-			access_level = ? where (id = ?)";
+			access_level = ?,
+			linkcheck_status = 1,
+			linkcheck_status = '',
+			where (id = ?)";
     my $sth = $dbh->prepare($sql);
     $sth->execute($url, md5_hex("$url"), $title, $description, $access_level,
         $id);
