@@ -73,7 +73,7 @@ sub groupByDomain {
 			my $uri = URI->new($row[1]);
 
 			if($row[2] eq 0) {
-				print "<li><a href='$site_url/insipid.cgi?op=edit_bookmark&id=$row[0]'>".$row[1]."</a></li>";
+				print "<li><a href='$site_url/insipid.cgi?op=edit_bookmark&id=$row[0]'>".$row[1]."</a> (<a href='$site_url/insipid.cgi?op=delete_bookmark&id=$row[0]'>delete</a>)</li>";
 			}
 
 			if($domainGroup{$uri->host}) {

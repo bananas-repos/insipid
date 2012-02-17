@@ -1231,7 +1231,7 @@ sub update_bookmark {
 			set url = ?, md5 = ?, title = ?, description = ?,
 			access_level = ?,
 			linkcheck_status = 1,
-			linkcheck_status = '',
+			linkcheck_status = ''
 			where (id = ?)";
     my $sth = $dbh->prepare($sql);
     $sth->execute($url, md5_hex("$url"), $title, $description, $access_level,

@@ -18,10 +18,19 @@
 # USA
 #
 
+
+#
+# check exiting bookmark entries if they are available
+# ssl entries will not be checked...
+# if they return a non 200 HTTP Status code they will be marked and visible
+# in the stats overview
+#
+
 use warnings;
 use strict;
 use Getopt::Long;
 use DBI;
+use Crypt::SSLeay;
 use LWP::UserAgent;
 
 BEGIN {
@@ -67,7 +76,11 @@ if($sth->rows ne 0) {
 	$ua->timeout(5);
 	$ua->show_progress(1);
 	$ua->agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11");
-	$ua->proxy(['http'], $opt_proxy) if $opt_proxy;
+
+	$ua->proxy([ 'http', 'https' ], $opt_proxy) if $opt_proxy;
+
+	$ua->ssl_opts('verify_hostname' => 0);
+	$ua->protocols_allowed(undef); #  all are allowed
 
 	$query = "UPDATE `$tbl_bookmarks`
 				SET `linkcheck_status` = ?,
@@ -78,7 +91,11 @@ if($sth->rows ne 0) {
 	while (my $hr = $sth->fetchrow_hashref) {
 		print $hr->{url}." ";
 
-		my $response = $ua->head($hr->{url});
+		# ssl not working correctly so avoid those bookmarks
+		next if $hr->{url} =~ m/https:/g;
+
+		#my $response = $ua->head($hr->{url});
+		my $response = $ua->get($hr->{url});
 		my $status = 0;
 
 		if ($response->is_success) {
