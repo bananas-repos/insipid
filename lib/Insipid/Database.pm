@@ -81,8 +81,8 @@ sub dbupgrade {
 	my $sth = $dbh->prepare($sql);
 	$sth->execute;
 
-	my $sql = "UPDATE $tbl_options SET pos = ? where (name = ?)";
-	my $sth = $dbh->prepare($sql);
+	$sql = "UPDATE $tbl_options SET pos = ? where (name = ?)";
+	$sth = $dbh->prepare($sql);
 	$sth->execute(3, 'feed_name');
 	$sth->execute(1, 'site_name');
 	$sth->execute(20, 'proxy_host');
@@ -94,12 +94,12 @@ sub dbupgrade {
 
 	$sql = "INSERT INTO `$tbl_options` ( `name`, `value`, `description`, `pos`)
 			VALUES ( 'feed_num', '10', 'How many feed entries per default (0 = all)', '4')";
-	my $sth = $dbh->prepare($sql);
+	$sth = $dbh->prepare($sql);
 	$sth->execute;
 
 
-	my $sql = "update $tbl_options set value = ? where (name = ?)";
-	my $sth = $dbh->prepare($sql);
+	$sql = "update $tbl_options set value = ? where (name = ?)";
+	$sth = $dbh->prepare($sql);
 	$sth->execute($version, 'version');
 
 	return;
