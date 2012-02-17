@@ -22,6 +22,7 @@ use warnings;
 use strict;
 use Getopt::Long;
 use DBI;
+use LWP::UserAgent;
 
 BEGIN {
     binmode STDOUT, ':encoding(UTF-8)';
@@ -36,15 +37,17 @@ use Insipid::Bookmarks;
 
 $|=1;
 
-my $opt_help = 0;
+my $opt_help;
 my $opt_link = "all";
+my $opt_proxy;
 
 # if no arguments passed
 &usage if @ARGV < 1;
 
 GetOptions(
-	"help|h"			=> \$opt_help,
-	"link|l"			=> \$opt_link
+	"help|h"		=> \$opt_help,
+	"link=s"		=> \$opt_link,
+	"proxy=s"		=> \$opt_proxy
 ) or die(&usage);
 
 &usage if $opt_help;
@@ -53,11 +56,43 @@ GetOptions(
 #
 # main
 #
-my $query = "SELECT `url` FROM `$tbl_bookmarks`";
-$query .= " WHERE `linkcheck_status` = " if($opt_link == 1);
-$query .= " WHERE `linkcheck_status` = " if($opt_link == 0);
+my $query = "SELECT `id`, `url` FROM `$tbl_bookmarks`";
+$query .= " WHERE `linkcheck_status` = 1" if($opt_link eq "active");
+$query .= " WHERE `linkcheck_status` = 0" if($opt_link eq "inactive");
 
-print $query;
+my $sth = $dbh->prepare($query);
+$sth->execute;
+if($sth->rows ne 0) {
+	my $ua = LWP::UserAgent->new;
+	$ua->timeout(5);
+	$ua->show_progress(1);
+	$ua->agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11");
+	$ua->proxy(['http'], $opt_proxy) if $opt_proxy;
+
+	$query = "UPDATE `$tbl_bookmarks`
+				SET `linkcheck_status` = ?,
+				`linkcheck_date` = ?
+			WHERE `id` = ?";
+	my $sthupdate = $dbh->prepare($query);
+
+	while (my $hr = $sth->fetchrow_hashref) {
+		print $hr->{url}." ";
+
+		my $response = $ua->head($hr->{url});
+		my $status = 0;
+
+		if ($response->is_success) {
+			print "Ok !\n";
+			$status = 1;
+		}
+		else {
+			print $response->status_line."\n";
+		}
+
+		$sthupdate->execute($status,time(),$hr->{id});
+
+	}
+}
 
 
 #
@@ -72,9 +107,10 @@ code. If so set the checkDate and result. Non 200 checks will be marked. Those
 can be checked seperately
 
 	-h, --help		display this help message
-	-l, --link		all = check all links
+	--link=			all = check all links
 				active = check only those which are not marked as inactive
 				inactive = check inactive only
+	--proxy=	proxy address if needed
 
 EOT
 ;

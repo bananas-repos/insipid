@@ -51,35 +51,48 @@ sub groupByDomain {
 	my $url = shift;
 
 	my ($sql, $sth, @row);
-	my %domains = ();
+	my %domainGroup = ();
+	my @invalidDomains;
 
 	if($url) {
 
 	}
 
-	$sql = "SELECT `url` FROM `$tbl_bookmarks` ORDER BY `url`";
+	# keep order otherwise the while will not work
+	$sql = "SELECT `id`, `url`,
+					`linkcheck_status`,
+					`linkcheck_date`
+			FROM `$tbl_bookmarks` ORDER BY `url`";
 	$sth = $dbh->prepare($sql);
 	$sth->execute;
 
 	if($sth->rows ne 0) {
+		print "<h3> Invalid URLs after last linkcheck</h3>";
+		print "<ul>";
 		while(@row = $sth->fetchrow_array()) {
-			my $uri = URI->new($row['url']);
+			my $uri = URI->new($row[1]);
 
-			if($domains{$uri->host}) {
-				$domains{$uri->host}++;
+			if($row[2] eq 0) {
+				print "<li><a href='$site_url/insipid.cgi?op=edit_bookmark&id=$row[0]'>".$row[1]."</a></li>";
+			}
+
+			if($domainGroup{$uri->host}) {
+				$domainGroup{$uri->host}++;
 			} else {
-				$domains{$uri->host} = 1;
+				$domainGroup{$uri->host} = 1;
 			}
 		}
+		print "</ul>";
 
-		if(%domains) {
+		if(%domainGroup) {
 
+			print "<h3>Bookmarks grouped by domain</h3>";
 			print "<table cellpadding='2' cellspacing='0'>";
 			print "<tr><th>Domain</th><th>Count</th></tr>";
 			#for(sort keys %domains) {
-			foreach (reverse sort { $domains{$a} <=> $domains{$b} } keys %domains ) {
+			foreach (reverse sort { $domainGroup{$a} <=> $domainGroup{$b} } keys %domainGroup ) {
 
-				print "<tr><td><a href='$site_url/insipid.cgi?bydomain=".uri_escape($_)."'>$_</a></td><td>$domains{$_}</td></tr>";
+				print "<tr><td><a href='$site_url/insipid.cgi?bydomain=".uri_escape($_)."'>$_</a></td><td>$domainGroup{$_}</td></tr>";
 			}
 			print "</table>";
 		}
