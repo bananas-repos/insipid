@@ -97,6 +97,11 @@ sub dbupgrade {
 	$sth = $dbh->prepare($sql);
 	$sth->execute;
 
+	$sql = "ALTER TABLE `$tbl_bookmarks`
+				ADD COLUMN `linkcheck_status` int(1) NOT NULL AFTER `access_level`,
+				ADD COLUMN `linkcheck_date` int(10) NOT NULL AFTER `linkcheck_status`;";
+	$sth = $dbh->prepare($sql);
+	$sth->execute;
 
 	$sql = "update $tbl_options set value = ? where (name = ?)";
 	$sth = $dbh->prepare($sql);

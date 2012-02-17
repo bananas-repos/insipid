@@ -37,12 +37,14 @@ use Insipid::Bookmarks;
 $|=1;
 
 my $opt_help = 0;
+my $opt_link = "all";
 
 # if no arguments passed
 &usage if @ARGV < 1;
 
 GetOptions(
 	"help|h"			=> \$opt_help,
+	"link|l"			=> \$opt_link
 ) or die(&usage);
 
 &usage if $opt_help;
@@ -51,8 +53,11 @@ GetOptions(
 #
 # main
 #
-my $query = "SELECT `url` ";
+my $query = "SELECT `url` FROM `$tbl_bookmarks`";
+$query .= " WHERE `linkcheck_status` = " if($opt_link == 1);
+$query .= " WHERE `linkcheck_status` = " if($opt_link == 0);
 
+print $query;
 
 
 #
