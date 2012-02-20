@@ -68,6 +68,7 @@ sub groupByDomain {
 
 	if($sth->rows ne 0) {
 		print "<h3> Invalid URLs after last linkcheck</h3>";
+		print "<p>Please keep in mind, that SSL URLs can not be checked at this time !</p>";
 		print "<ul>";
 		while(@row = $sth->fetchrow_array()) {
 			my $uri = URI->new($row[1]);
