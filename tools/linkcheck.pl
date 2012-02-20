@@ -30,7 +30,6 @@ use warnings;
 use strict;
 use Getopt::Long;
 use DBI;
-use Crypt::SSLeay;
 use LWP::UserAgent;
 
 BEGIN {
@@ -38,7 +37,6 @@ BEGIN {
     binmode STDERR, ':encoding(UTF-8)';
 }
 
-#push(@INC, "../lib");
 use lib "../lib";
 use Insipid::Config;
 use Insipid::Database;
@@ -77,7 +75,7 @@ if($sth->rows ne 0) {
 	$ua->show_progress(1);
 	$ua->agent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11");
 
-	$ua->proxy([ 'http', 'https' ], $opt_proxy) if $opt_proxy;
+	$ua->proxy(['http', 'ftp'], $opt_proxy) if $opt_proxy;
 
 	$ua->ssl_opts('verify_hostname' => 0);
 	$ua->protocols_allowed(undef); #  all are allowed
