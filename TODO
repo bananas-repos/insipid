@@ -1,7 +1,6 @@
 TODO / Feature list
 ==========================================================================
 - Optionally use LWP to automatically import Delicious marks
-- Link checker
 - Pageable snapshot list
 - An inbox of links that people submit, either through a public interface
   or XML-RPC (Rest of course)
