@@ -582,6 +582,7 @@ sub do_import {
     my $old_fh  = select(OUTPUT_HANDLE);
     my $cbuffer = "";
     my $pcount  = 0;
+    my $icount  = 0;
     $| = 1;
     select($old_fh);
 
@@ -661,6 +662,7 @@ sub do_import {
                 }
 
                 add_bookmark($url, $title, "", $access_level, $epoch, $tagvalue, 1);
+                $icount++;
             }
 
             # Option
