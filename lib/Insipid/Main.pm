@@ -317,11 +317,18 @@ IFORM
                     update_bookmark(param('id'), $url, $title, $description, $access_level, $tags);
                 } else {
                     add_bookmark($url, $title, $description, $access_level, 0, $tags);
-                    if (param('snapshot')) {
-                        if (param('snapshot') eq 'on') {
-                            $id = get_bookmark_id(param('url'));
-                            do_snapshot($id);
-                        }
+                }
+                if (param('snapshot')) {
+                    if (param('snapshot') eq 'on') {
+                        $id = get_bookmark_id(param('url'));
+                        do_snapshot($id);
+                    }
+                }
+
+                if (param('screenshot')) {
+                    if (param('screenshot') eq 'on') {
+                        $id = get_bookmark_id(param('url'));
+                        my $do = do_screenshot($id);
                     }
                 }
 
@@ -400,12 +407,20 @@ IFORM
 			<div id="suggestlist"><ul></ul></div>
 
 			$snapshot_params
+
 			<span class="formtext">Public:</span>
 			<input type="checkbox" name="access_level" $access_box />
 
 			<span class="formtext">Return:</span>
 			<input type="checkbox" name="redirect" $redir_box />
-			<input type="hidden" name="save" value="true" />
+FORM
+            if($usePhantomjs) {
+                print "<span class='formtext'>Screenshot:</span>";
+                print "<input type='checkbox' name='screenshot' value='on' />";
+			}
+
+            print <<FORM;
+            <input type="hidden" name="save" value="true" />
 			<input type="hidden" name="op" value="add_bookmark" />
 
 			$extra_params
@@ -431,9 +446,8 @@ FORM
             if (defined(param('create_screenshot')) && param('create_screenshot') eq '1') {
 
                 print '<p>Creating screenshot... Please wait...</p>';
-
-                my $output = `$phantomjsPath --proxy=10.0.1.11:80 ./lib/screen.js $url $screnshotNameFile`;
-                if($? == 0) {
+                my $do = do_screenshot($id);
+                if($do == 0) {
                     print '<p style="color: green;">Success !</p>';
                     if(-e $screnshotNameFile) {
                         print "<p>Screenshot available: <a href='$screnshotNameFile'>see it here.</a><p>";
@@ -441,20 +455,9 @@ FORM
                 }
                 else {
                     print "<p>Screenshot creation failed.<p>";
-                    if ($? == -1) {
-                        print "failed to execute: $!\n";
-                    }
-                    elsif ($? & 127) {
-                        printf "child died with signal %d, %s coredump\n",
-                            ($? & 127),  ($? & 128) ? 'with' : 'without';
-                    }
-                    else {
-                        printf "child exited with value %d\n", $? >> 8;
-                    }
                 }
             }
             else {
-
                  if(-e $screnshotNameFile) {
                     print "<p>Screenshot available: <a href='$screnshotNameFile'>see it here.</a> Re-Create to refresh.<p>";
                  }
@@ -564,6 +567,32 @@ BLET
 }    # main
 
 ################################################################
+
+sub do_screenshot {
+    my ($bookmarkID) = (@_);
+
+    my $phantomjsPath = getconfig('phantomPath');
+
+    my ($url, $title, $description, $access_level, $md5) = get_bookmark($bookmarkID);
+    my $screnshotNameFile = "./screenshots/".$md5.".png";
+
+    #my $output = `$phantomjsPath ./lib/screen.js $url $screnshotNameFile`;
+    my $output = `$phantomjsPath --proxy=10.0.1.11:80 ./lib/screen.js $url $screnshotNameFile`;
+    if($? == 0) {
+        return 0;
+    }
+    else {
+        if ($? == -1) {
+            return "failed to execute: $!\n";
+        }
+        elsif ($? & 127) {
+            return printf "child died with signal %d, %s coredump\n", ($? & 127),  ($? & 128) ? 'with' : 'without';
+        }
+        else {
+            return printf "child exited with value %d\n", $? >> 8;
+        }
+    }
+}
 
 sub show_options {
 
@@ -1314,8 +1343,7 @@ sub update_bookmark {
 			linkcheck_status = ''
 			where (id = ?)";
     my $sth = $dbh->prepare($sql);
-    $sth->execute($url, md5_hex("$url"), $title, $description, $access_level,
-        $id);
+    $sth->execute($url, md5_hex("$url"), $title, $description, $access_level,$id);
 
     set_tags($id, $tags);
 }
