@@ -19,3 +19,6 @@ pagepath = /Luke
 username = luke
 userpass = yourpassword
 
+# use phantomjs to create screenshots for a bookmark
+usePhantomjs = 0;
+phantomPath = "./path/to/phantomjs/bin/phantomjs"
