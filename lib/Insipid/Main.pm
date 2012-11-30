@@ -434,6 +434,9 @@ FORM
                 my $output = `$phantomjsPath --proxy=10.0.1.11:80 ./lib/screen.js $url $screnshotNameFile`;
                 if($? == 0) {
                     print '<p style="color: green;">Success !</p>';
+                    if(-e $screnshotNameFile) {
+                        print "<p>Screenshot available: <a href='$screnshotNameFile'>see it here.</a><p>";
+                     }
                 }
                 else {
                     print "<p>Screenshot creation failed.<p>";
