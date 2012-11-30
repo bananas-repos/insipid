@@ -38,4 +38,5 @@ updated upon access.
 Using Screenshots
 If you plan to use the screenshot feature you need to install phantomjs
 http://phantomjs.org/
-and set the path to it in the configuration file
+and set the path to it in the configuration file.
+
