@@ -74,6 +74,8 @@ sub main {
 
     my $username = getconfig('username');
     my $userpass = getconfig('userpass');
+    my $usePhantomjs = getconfig('usePhantomjs');
+    my $phantomjsPath = getconfig('phantomPath');
 
     my $redirect = '';
     my $et       = '';
@@ -411,6 +413,51 @@ IFORM
 FORM
             }
         }
+        elsif(param('op') eq 'screenshot' && $usePhantomjs) {
+            my $id;
+
+            if (defined(param('id')))     {$id = param('id');}
+            if (defined(url_param('id'))) {$id = url_param('id');}
+
+            if ($id eq "-1") {
+                if (defined(param('url'))) {
+                    $id = get_bookmark_id(param('url'));
+                }
+            }
+            my ($url, $title, $description, $access_level, $md5) = get_bookmark($id);
+
+            if (defined(param('create_screenshot')) && param('create_screenshot') eq '1') {
+
+                print '<p>creating screenshot...</p>';
+
+                my $output = `$phantomjsPath --proxy=10.0.1.11:80 ./lib/screen.js $url ./screenshots/$md5.png`;
+
+                if ($? == -1) {
+                    print "failed to execute: $!\n";
+                }
+                elsif ($? & 127) {
+                    printf "child died with signal %d, %s coredump\n",
+                        ($? & 127),  ($? & 128) ? 'with' : 'without';
+                }
+                else {
+                    printf "child exited with value %d\n", $? >> 8;
+                }
+            }
+            else {
+
+             print <<FORM;
+          <br />
+          <p>$title : $url</p>
+          <form method="post">
+            <input type="hidden" name="op" value="screenshot" />
+
+            <span class="formtext">Create screenshot:</span>
+            <input type="checkbox" name="create_screenshot" value="1" />
+            <input type="submit" value="Create" />
+          </form>
+FORM
+            }
+        }
     }
 
     # Late redirects.  TODO: Get rid of this.
@@ -460,7 +507,6 @@ DESC
 	javascript:location.href='$site_url/insipid.cgi?op=add_bookmark&url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)+'&redirect=true'
 BLET
                 print "<ul><li><a href=\"$ad\">Add to Insipid</a></li></ul>";
-                #print "</body></html>";
 				print "</td></tr></table><br /></body></html>";
                 exit;
             }
@@ -468,7 +514,6 @@ BLET
             # Configuration and management pages
             if (param('op') eq 'tags') {
                 tag_operations();
-                #print '</body></html>';
 				print "</td></tr></table><br /></body></html>";
                 exit;
             }
@@ -476,7 +521,6 @@ BLET
 			# show the options
             if (param('op') eq 'options') {
                 show_options();
-                #print '</body></html>';
 				print "</td></tr></table><br /></body></html>";
                 exit;
             }
@@ -484,8 +528,14 @@ BLET
 			# management
 			if (param('op') eq 'stats') {
                 show_stats();
-                #print '</body></html>';
 				print "</td></tr></table><br /></body></html>";
+                exit;
+            }
+
+            # screenshot overview
+            if (param('op') eq 'screenshots') {
+                show_screenshots();
+                print "</td></tr></table><br /></body></html>";
                 exit;
             }
         }
@@ -1131,6 +1181,8 @@ sub show_bookmark {
         $timestamp,    $cachetime, $md5
     ) = (@_);
 
+    my $usePhantomjs = getconfig('usePhantomjs');
+
     print "<div class=\"bookmarklistitem\">";
     print "<li>";
     if ($access_level eq 0) {
@@ -1183,6 +1235,9 @@ sub show_bookmark {
         if (!defined($cachetime)) {
             print ",&nbsp;<a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=snapshot&id=$id$ex\">snapshot</a>";
         }
+        if($usePhantomjs) {
+            print ", <a class=\"bookmarkOp\" href=\"$site_url/insipid.cgi?op=screenshot&id=$id$ex\">screenshot</a>";
+        }
         print ")<div class=\"bookmarkDescription\">$description</div></span></div></li>\n";
     }
 
@@ -1215,13 +1270,14 @@ sub get_bookmark {
 			$tbl_bookmarks.title,
 			$tbl_bookmarks.description,
 			$tbl_bookmarks.url,
-			$tbl_bookmarks.access_level
+			$tbl_bookmarks.access_level,
+            $tbl_bookmarks.md5
 			from $tbl_bookmarks
 			where ($tbl_bookmarks.id = ?)";
     my $sth = $dbh->prepare($sql);
     $sth->execute($id);
     my @r = $sth->fetchrow_array;
-    return ($r[2], $r[0], $r[1], $r[3]);
+    return ($r[2], $r[0], $r[1], $r[3], $r[4]);
 }
 
 sub update_bookmark {
