@@ -40,6 +40,7 @@ use Insipid::Snapshots;
 use Insipid::Tags;
 use Insipid::Util;
 use Insipid::Stats;
+use Insipid::Screenshots;
 
 use CGI qw/:standard/;
 use CGI::Carp qw(fatalsToBrowser);
@@ -545,7 +546,7 @@ BLET
             }
 
             # screenshot overview
-            if (param('op') eq 'screenshots') {
+            if (param('op') eq 'screenshots' && $usePhantomjs) {
                 show_screenshots();
                 print "</td></tr></table><br /></body></html>";
                 exit;
@@ -886,6 +887,7 @@ sub show_toolbar {
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=import\">import</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=export\">export</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=snapshots\">snapshots</a> | ";
+        print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=screenshots\">screenshots</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=logout\">logout</a><br />";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=add_bookmark\">add</a> | ";
         print "<a class=\"tools\" href=\"$site_url/insipid.cgi?op=bookmarklets\">bookmarklets</a> | ";

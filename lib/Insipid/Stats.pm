@@ -35,8 +35,6 @@ require Exporter;
 use URI;
 use URI::Escape;
 
-use Data::Dumper;
-
 @ISA = qw(Exporter);
 
 @EXPORT = qw(

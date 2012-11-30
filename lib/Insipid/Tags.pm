@@ -32,8 +32,6 @@ use Insipid::Sessions;
 use Insipid::Util;
 require Exporter;
 
-use Data::Dumper;
-
 @ISA = qw(Exporter);
 
 @EXPORT = qw(

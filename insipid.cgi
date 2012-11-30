@@ -18,7 +18,6 @@
 # USA
 #
 
-use Data::Dumper;
 use warnings;
 use strict;
 
@@ -38,7 +37,7 @@ eval {
 };
 
 if($@) {
-	my $errstr = $@;	
+	my $errstr = $@;
 	if($errstr =~ /Can\'t locate (.*) in/) {
 		show_error("Couldn't find the module \"$1\".", "You may want to " .
 			"<a href=\"http://search.cpan.org/\">search CPAN</a> " .
@@ -64,7 +63,7 @@ if($@) {
 
 		if($@) {
 			$errstr = $@;
-			show_error("Database error", "There was a problem " . 
+			show_error("Database error", "There was a problem " .
 			"creating the database tables required by Insipid:",
 			$errstr);
 		}
