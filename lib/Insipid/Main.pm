@@ -425,28 +425,37 @@ FORM
                 }
             }
             my ($url, $title, $description, $access_level, $md5) = get_bookmark($id);
+            my $screnshotNameFile = "./screenshots/".$md5.".png";
 
             if (defined(param('create_screenshot')) && param('create_screenshot') eq '1') {
 
-                print '<p>creating screenshot...</p>';
+                print '<p>Creating screenshot... Please wait...</p>';
 
-                my $output = `$phantomjsPath --proxy=10.0.1.11:80 ./lib/screen.js $url ./screenshots/$md5.png`;
-
-                if ($? == -1) {
-                    print "failed to execute: $!\n";
-                }
-                elsif ($? & 127) {
-                    printf "child died with signal %d, %s coredump\n",
-                        ($? & 127),  ($? & 128) ? 'with' : 'without';
+                my $output = `$phantomjsPath --proxy=10.0.1.11:80 ./lib/screen.js $url $screnshotNameFile`;
+                if($? == 0) {
+                    print '<p style="color: green;">Success !</p>';
                 }
                 else {
-                    printf "child exited with value %d\n", $? >> 8;
+                    print "<p>Screenshot creation failed.<p>";
+                    if ($? == -1) {
+                        print "failed to execute: $!\n";
+                    }
+                    elsif ($? & 127) {
+                        printf "child died with signal %d, %s coredump\n",
+                            ($? & 127),  ($? & 128) ? 'with' : 'without';
+                    }
+                    else {
+                        printf "child exited with value %d\n", $? >> 8;
+                    }
                 }
             }
             else {
 
+                 if(-e $screnshotNameFile) {
+                    print "<p>Screenshot available: <a href='$screnshotNameFile'>see it here.</a> Re-Create to refresh.<p>";
+                 }
+
              print <<FORM;
-          <br />
           <p>$title : $url</p>
           <form method="post">
             <input type="hidden" name="op" value="screenshot" />
@@ -904,6 +913,14 @@ sub delete_bookmark {
     my ($sql, $sth, $md5) = ("", "", "");
 
     check_access();
+
+    # delete screenshot
+    my ($url, $title, $description, $access_level, $md5) = get_bookmark($id);
+    if(-e './screenshots/'.$md5.".png") {
+        unlink('./screenshots/'.$md5.".png");
+    }
+
+    $md5 = '';
 
     # Check for cached version to delete.
     $sql = "select $tbl_pagecache.md5 from $tbl_pagecache
