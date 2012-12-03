@@ -654,7 +654,7 @@ sub show_pageLinks {
 	my $currentPage;
 
     if (defined(url_param('page'))) {
-		$currentPage = url_param('page');
+		$currentPage = url_param('page')||'';
         $older = $currentPage + 1;
 		$newer = $currentPage - 1;
     }
