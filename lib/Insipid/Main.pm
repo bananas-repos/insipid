@@ -658,6 +658,11 @@ sub show_pageLinks {
         $older = $currentPage + 1;
 		$newer = $currentPage - 1;
     }
+    else {
+        $currentPage = 1;
+        $older = $currentPage + 1;
+        $newer = $currentPage - 1;
+    }
 
 	$returnstr = " | ";
 	if($older >= 2 && $currentPage > 1) {
