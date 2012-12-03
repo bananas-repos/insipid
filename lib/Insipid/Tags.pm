@@ -154,7 +154,7 @@ sub show_tags {
 	my ($mode) = shift;
 	if(!defined($mode)) { $mode = 0; }
 
-	my ($sql, $sth, $tagstring = '');
+	my ($sql, $sth, $tagstring);
 	if($mode eq 0) { print "<div id=\"leftside\">"; }
 
 	my $tag = url_param('tag');
