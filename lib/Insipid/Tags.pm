@@ -161,7 +161,7 @@ sub show_tags {
 
 	#if()) {
 		# find the tags which have been used with this tags too
-		$tagstring = $tag;
+		$tagstring = $tag||'';
 		chomp($tagstring);
 		$tagstring =~ s/ /','/g;
 
