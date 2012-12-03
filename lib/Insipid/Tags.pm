@@ -154,14 +154,14 @@ sub show_tags {
 	my ($mode) = shift;
 	if(!defined($mode)) { $mode = 0; }
 
-	my ($sql, $sth);
+	my ($sql, $sth, $tagstring = '');
 	if($mode eq 0) { print "<div id=\"leftside\">"; }
 
 	my $tag = url_param('tag');
 
 	#if()) {
 		# find the tags which have been used with this tags too
-		my $tagstring = $tag;
+		$tagstring = $tag;
 		chomp($tagstring);
 		$tagstring =~ s/ /','/g;
 

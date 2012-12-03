@@ -944,7 +944,7 @@ sub show_toolbar {
 
 sub delete_bookmark {
     my ($id) = (@_);
-    my ($sql, $sth, $md5) = ("", "", "");
+    my ($sql, $sth) = ("", "", "");
 
     check_access();
 
