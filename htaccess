@@ -1,4 +1,11 @@
+# add +ExecCGI if this option is not set
 Options +FollowSymlinks -Indexes
+
+# add the following line if you want to lauch inspid without insipid.cgi
+#DirectoryIndex index.cgi insipid.cgi
+
+# add the following line if the addhandler is not set
+#AddHandler cgi-script .cgi .pl
 
 RewriteEngine On
 RewriteBase /yourwebdirectory
