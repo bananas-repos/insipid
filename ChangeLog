@@ -1,3 +1,7 @@
+version 1.6 (tba)
+	* code fixes
+	* new options in htaccess file
+
 version 1.5 (30 Nov. 2012)
     * support phantomjs as a screenshot tool for a bookmark
     * code updates and cleanup

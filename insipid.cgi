@@ -2,6 +2,9 @@
 #
 # Copyright (C) 2008 Luke Reeves
 #
+# Copyright (C) 2012 Johannes Keßler
+# https://github.com/jumpin-banana/insipid
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -78,9 +81,7 @@ sub show_error {
 	print "<html><head><title>Insipid Error</title></head>";
 	print "<body>";
 	print "<h2>$subject</h2>";
-	print "<p><font size=\"+1\"></font></p>";
-	print "<p><font size=\"+1\">$body";
-	print "</font></p>";
+	print "<p>$body</p>";
 
 	if(defined($error)) {
 		print '<pre>' . $error . '</pre>';
