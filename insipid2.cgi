@@ -24,8 +24,15 @@
 use warnings;
 use strict;
 
-if(!-e "insipid-config.cgi") {
-	# TODO: Better error message here.
-	show_error("Configuration file missing", "The \"insipid-config.cgi\"" .
-		" file could not be found.");
+#http://search.cpan.org/~wonko/HTML-Template-2.94/
+use HTML::Template;
+
+# debug. Send errors to the browser
+use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
+
+if(!-e "insipid-config_.cgi") {
+	print $html->header('text/html');
+	print $html->start_html();
+	print $html->h1("Configuration file missing");
+	print $html->end_html();
 }
