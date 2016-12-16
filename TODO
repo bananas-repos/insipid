@@ -1,11 +1,2 @@
 TODO / Feature list
 ==========================================================================
-- Optionally use LWP to automatically import Delicious marks
-- Pageable snapshot list
-- An inbox of links that people submit, either through a public interface
-  or XML-RPC (Rest of course)
-- A way to publish links to friends via their exposed RPC interface
-- Add a new column to the bookmark table for a "Via" field (which can be
-  filled in automatically when a mark is pushed and accepted)
-- Add - (subtractive) filtering
-- Share the iteration code between export and display
