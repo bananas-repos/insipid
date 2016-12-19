@@ -54,16 +54,18 @@ else {
 }
 
 require('config.php');
+require('lib/summoner.class.php');
 
 ## main vars
+$Summoner = new Summoner();
 # database object
 $DB = false;
 # the template data as an array
 $TemplateData = array();
 # the default view
-$View = 'home.html';
+$View = 'home.php';
 # the default script
-$ViewScript = 'home.php';
+$ViewScript = 'home.inc.php';
 
 ## DB connection
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); # throw exeptions
@@ -95,9 +97,9 @@ if(!empty($TemplateData['refresh'])) {
 # header information
 header('Content-type: text/html; charset=UTF-8');
 
-require 'view/_head.html';
+require 'view/_head.php';
 require 'view/'.$View;
-require 'view/_foot.html';
+require 'view/_foot.php';
 
 $DB->close();
 # END
