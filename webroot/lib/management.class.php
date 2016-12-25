@@ -77,6 +77,22 @@ class Management {
         return $ret;
     }
 
+    /**
+     * return the latest addded links
+     * @param number $limit
+     */
+    public function latest($limit=5) {
+        $ret = array();
+
+        $queryStr = "SELECT * FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
+        $query = $this->DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            $ret = $query->fetch_all(MYSQLI_ASSOC);
+        }
+
+        return $ret;
+    }
+
 }
 
 ?>

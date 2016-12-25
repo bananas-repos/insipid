@@ -39,6 +39,7 @@
 	<script src="asset/js/jquery.js"></script>
     <script src="asset/js/what-input.js"></script>
     <script src="asset/js/foundation.min.js"></script>
+    <script src="asset/flexdatalist/jquery.flexdatalist.min.js"></script>
     <script src="asset/js/app.js"></script>
   </body>
 </html>

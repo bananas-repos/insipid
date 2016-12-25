@@ -66,6 +66,22 @@
 </div>
 <?php } ?>
 
+<?php if(!empty($searchResult)) { ?>
+<div class="row">
+	<div class="large-12 columns">
+		<h3>Something has been found...</h3>
+		<ul>
+<?php foreach ($searchResult as $sr) { ?>
+		<li>
+			<a href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
+			<a href="<?php echo $sr['link']; ?>" ><i class="fi-info"></i></a>
+		</li>
+<?php } ?>
+		</ul>
+	</div>
+</div>
+<?php } ?>
+
 <?php if($showAddForm) { ?>
 <form method="post">
 	<input type="hidden" name="password" />
@@ -112,10 +128,12 @@
     	<div class="large-6 columns">
     		<label>
     			Category
-    			<input type="text" name="data[category]" list="categorylist" value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
+    			<input type="text" name="data[category]" list="categorylist"
+    				class="flexdatalist" data-min-length='1' multiple='multiple'
+    				value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
     			<datalist id="categorylist">
 				<?php foreach($existingCategories as $c) { ?>
-					<option value="<?php echo $c; ?>">
+					<option value="<?php echo $c['name']; ?>">
 				<?php } ?>
                 </datalist>
     		</label>
@@ -123,10 +141,12 @@
     	<div class="large-6 columns">
     		<label>
     			Tag
-    			<input type="text" name="data[tag]" list="taglist" value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
+    			<input type="text" name="data[tag]" list="taglist"
+    				class="flexdatalist" data-min-length='1' multiple='multiple'
+    				value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
     			<datalist id="taglist">
     			<?php foreach($existingTags as $t) { ?>
-					<option value="<?php echo $t; ?>">
+					<option value="<?php echo $t['name']; ?>">
 				<?php } ?>
                 </datalist>
     		</label>
@@ -165,10 +185,18 @@
 			<div class="card-divider">
 	    		<h4>Last added</h4>
 	  		</div>
-	  		<img src="assets/img/generic/rectangle-1.jpg">
+	  		<img src="asset/img/insipid.png">
 			<div class="card-section">
-				<p>It has an easy to override visual style, and is appropriately subdued.</p>
-				<a class="button" href="#">I'm a button</a>
+<?php if(!empty($latestLinks)) { ?>
+				<ul>
+<?php foreach ($latestLinks as $ll) { ?>
+					<li>
+						<a href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
+					</li>
+<?php } ?>
+				</ul>
+				<a class="button" href="#">more</a>
+<?php } ?>
 			</div>
 		</div>
 	</div>

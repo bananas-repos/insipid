@@ -35,6 +35,7 @@
     <title>Insipid</title>
     <link rel="stylesheet" href="asset/css/foundation.min.css">
     <link rel="stylesheet" href="asset/foundation-icons/foundation-icons.css">
+    <link rel="stylesheet" href="asset/flexdatalist/jquery.flexdatalist.min.css">
     <link rel="stylesheet" href="asset/css/app.css">
   </head>
   <body>

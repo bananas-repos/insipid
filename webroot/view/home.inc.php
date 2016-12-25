@@ -70,9 +70,15 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
         # try to gather some information automatically
         $linkInfo = Summoner::gatherInfoFromURL($searchValue);
         if(!empty($linkInfo)) {
-            $formData['description'] = $linkInfo['description'];
-            $formData['title'] = $linkInfo['title'];
-            $formData['image'] = $linkInfo['image'];
+            if(isset($linkInfo['description'])) {
+                $formData['description'] = $linkInfo['description'];
+            }
+            if(isset($linkInfo['title'])) {
+                $formData['title'] = $linkInfo['title'];
+            }
+            if(isset($linkInfo['image'])) {
+                $formData['image'] = $linkInfo['image'];
+            }
         }
         # show the add form
         $showAddForm = true;
@@ -120,8 +126,6 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
         $DB->query($queryStr);
         $linkID = $DB->insert_id;
 
-        var_dump($linkID);
-
         if(!empty($linkID)) {
 
             # categories and tag stuff
@@ -166,3 +170,4 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 
 $existingCategories = $Management->categories();
 $existingTags = $Management->tags();
+$latestLinks = $Management->latest();
