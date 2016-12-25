@@ -40,12 +40,14 @@ if((isset($_POST['password']) && !empty($_POST['password'])) || (isset($_POST['u
     $honeypotCheck = true;
 }
 
+# search or new one.
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch']) && $honeypotCheck === false) {
     $searchValue = trim($_POST['data']['searchfield']);
     $isUrl = Summoner::validate($searchValue,'url');
     if($isUrl === true) {
         # search for URL
-        $queryStr = "SELECT * FROM";
+        $queryStr = "SELECT * FROM `".DB_PREFIX."_link`
+                        WHERE `link` = '".$DB->real_escape_string($searchValue)."'";
     }
     elseif(Summoner::validate($searchValue,'text')) {
         # search for this in more then one field
@@ -57,6 +59,10 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
     }
 
     if(!empty($queryStr)) {
+        $query = $DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            $searchResult = $query->fetch_all(MYSQLI_ASSOC);
+        }
     }
 
     # new one?
@@ -71,6 +77,90 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
         # show the add form
         $showAddForm = true;
         $formData['url'] = $searchValue;
+    }
+    elseif(!empty($searchResult)) {
+        # something has been found
+    }
+    else {
+        # nothing found
+        $submitFeedback['message'] = 'Nothing found...';
+        $submitFeedback['status'] = 'error';
+    }
+}
+
+# add a new one
+if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone']) && $honeypotCheck === false) {
+    $fData = $_POST['data'];
+
+    $formData['private'] = 2;
+    if(isset($fData['private'])) {
+        $formData['private'] = 1;
+    }
+
+    $formData['url'] = trim($fData['url']);
+    $formData['description'] = trim($fData['description']);
+    $formData['title'] = trim($fData['title']);
+    $formData['image'] = trim($fData['image']);
+    $formData['category'] = trim($fData['category']);
+    $formData['tag'] = trim($fData['tag']);
+    $username = trim($fData['username']);
+    $password = trim($fData['password']);
+
+    $isUrl = Summoner::validate($formData['url'],'url');
+
+    if($isUrl === true && !empty($formData['title']) && $username === FRONTEND_USERNAME && $password === FRONTEND_PASSWORD) {
+        $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
+                        `link` = '".$DB->real_escape_string($formData['url'])."',
+                        `created` = NOW(),
+                        `status` = '".$DB->real_escape_string($formData['private'])."',
+                        `description` = '".$DB->real_escape_string($formData['description'])."',
+                        `title` = '".$DB->real_escape_string($formData['title'])."',
+                        `image` = '".$DB->real_escape_string($formData['image'])."',
+                        `hash` = '".$DB->real_escape_string(md5($formData['url']))."'";
+        $DB->query($queryStr);
+        $linkID = $DB->insert_id;
+
+        var_dump($linkID);
+
+        if(!empty($linkID)) {
+
+            # categories and tag stuff
+            $catArr = Summoner::prepareTagOrCategorieStr($formData['category']);
+            $tagArr = Summoner::prepareTagOrCategorieStr($formData['tag']);
+
+            if(!empty($catArr)) {
+                foreach($catArr as $c) {
+                    $catObj = new Category($DB);
+                    $catObj->initbystring($c);
+                    $catObj->setRelation($linkID);
+
+                    unset($catObj);
+                }
+            }
+            if(!empty($tagArr)) {
+                foreach($tagArr as $t) {
+                    $tagObj = new Tag($DB);
+                    $tagObj->initbystring($t);
+                    $tagObj->setRelation($linkID);
+
+                    unset($tagObj);
+                }
+            }
+
+            $submitFeedback['message'] = 'Link added successfully.';
+            $submitFeedback['status'] = 'success';
+            $TemplateData['refresh'] = 'index.php?p=showlink&id='.$linkID;
+        }
+        else {
+            $submitFeedback['message'] = 'Something went wrong...';
+            $submitFeedback['status'] = 'error';
+            $showAddForm = true;
+        }
+    }
+    else {
+        $submitFeedback['message'] = 'Please provide a valid URL, title, username and password.';
+        $submitFeedback['status'] = 'error';
+        $showAddForm = true;
     }
 }
 

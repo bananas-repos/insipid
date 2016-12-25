@@ -56,6 +56,9 @@ else {
 require('config.php');
 require('lib/summoner.class.php');
 require('lib/management.class.php');
+require('lib/tag.class.php');
+require('lib/category.class.php');
+require('lib/link.class.php');
 
 ## main vars
 $Summoner = new Summoner();

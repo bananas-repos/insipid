@@ -112,7 +112,7 @@
     	<div class="large-6 columns">
     		<label>
     			Category
-    			<input type="text" name="data[category]" list="categorylist" />
+    			<input type="text" name="data[category]" list="categorylist" value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
     			<datalist id="categorylist">
 				<?php foreach($existingCategories as $c) { ?>
 					<option value="<?php echo $c; ?>">
@@ -123,7 +123,7 @@
     	<div class="large-6 columns">
     		<label>
     			Tag
-    			<input type="text" name="data[tag]" list="taglist" />
+    			<input type="text" name="data[tag]" list="taglist" value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
     			<datalist id="taglist">
     			<?php foreach($existingTags as $t) { ?>
 					<option value="<?php echo $t; ?>">
@@ -150,10 +150,10 @@
 
     <div class="row">
     	<div class="large-8 columns">
-    		<input type="checkbox" name="data[private]" value="1" /><label>Private</label>
+    		<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> /><label>Private</label>
     	</div>
     	<div class="large-4 columns text-right" >
-    		<input type="submit" class="button" value="Add new Link">
+    		<input type="submit" class="button" name="addnewone" value="Add new Link">
     	</div>
     </div>
 </form>

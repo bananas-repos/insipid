@@ -26,7 +26,7 @@
  *
  */
 
-class Tag {
+class Category {
     /**
      * the database object
      * @var object
@@ -34,7 +34,7 @@ class Tag {
     private $DB;
 
     /**
-     * the current loaded tag by DB id
+     * the current loaded category by DB id
      * @var int
      */
     private $id;
@@ -49,7 +49,7 @@ class Tag {
      */
     public function initbystring($string) {
         if(!empty($string)) {
-            $queryStr = "SELECT id FROM `".DB_PREFIX."_tag`
+            $queryStr = "SELECT id FROM `".DB_PREFIX."_category`
                             WHERE `name` = '".$this->DB->real_escape_string($string)."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
@@ -57,7 +57,7 @@ class Tag {
                 $this->id = $result['id'];
             }
             else {
-                $queryStr = "INSERT INTO `".DB_PREFIX."_tag`
+                $queryStr = "INSERT INTO `".DB_PREFIX."_category`
                                 SET `name` = '".$this->DB->real_escape_string($string)."'";
                 $this->DB->query($queryStr);
                 if(!empty($this->DB->insert_id)) {
@@ -78,15 +78,15 @@ class Tag {
     }
 
     /**
-     * set the relation to the given link to the loaded tag
+     * set the relation to the given link to the loaded category
      * @param int $linkid
      * @return boolean
      */
     public function setRelation($linkid) {
         if(!empty($linkid) && !empty($this->id)) {
-            $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
+            $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_categoryrelation`
                             SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
-                                `tagid` = '".$this->DB->real_escape_string($this->id)."'";
+                                `categoryid` = '".$this->DB->real_escape_string($this->id)."'";
             $this->DB->query($queryStr);
         }
     }

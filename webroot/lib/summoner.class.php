@@ -331,6 +331,52 @@ class Summoner {
 
 	    return $mediaInfos;
 	}
+
+	/**
+	 * at creation a category or tag can be a string with multiple values.
+	 * seperated with space or ,
+	 * category and tag is a single string without any seperators
+	 *
+	 * @param string $string
+	 */
+	static function prepareTagOrCategorieStr($string) {
+	    $ret = array();
+
+	    $string = trim($string, ", ");
+	    if(strstr($string, ",")) {
+	        $_t = explode(",", $string);
+	        foreach($_t as $new) {
+	            $ret[$new] = $new;
+	        }
+	        unset($_t);
+	        unset($new);
+
+	        foreach($ret as $e) {
+	            if(strstr($e, " ")) {
+	                unset($ret[$e]);
+	                $_t = explode(" ", $e);
+	                foreach($_t as $new) {
+	                    $new = trim($new);
+	                    if(!empty($new)) {
+	                        $ret[$new] = $new;
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    else {
+	        $_t = explode(" ", $string);
+	        foreach($_t as $new) {
+	            $new = trim($new);
+	            if(!empty($new)) {
+	               $ret[$new] = $new;
+	            }
+	        }
+	    }
+
+
+	    return $ret;
+	}
 }
 
 ?>

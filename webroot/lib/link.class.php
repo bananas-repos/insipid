@@ -26,57 +26,45 @@
  *
  */
 
-class Management {
+class Link {
     /**
      * the database object
      * @var object
      */
     private $DB;
 
+    /**
+     * the current loaded tag by DB id
+     * @var int
+     */
+    private $id;
+
     public function __construct($databaseConnectionObject) {
         $this->DB = $databaseConnectionObject;
     }
 
-    /**
-     * get all the available categories from the DB.
-     * optinal limit
-     * @param int $limit
-     */
-    public function categories($limit=false) {
-        $ret = array();
+    public function create($data) {}
 
-        $queryStr = "SELECT * FROM `".DB_PREFIX."_category` ORDER BY `name`";
-        if(!empty($limit)) {
-            $queryStr .= " LIMIT $limit";
-        }
-        $query = $this->DB->query($queryStr);
-        if(!empty($query)) {
-            $ret = $query->fetch_all(MYSQLI_ASSOC);
+    /**
+     * check if the given URL exists in the DB
+     * if so return the id. If not, return false
+     * @param string $link
+     * @return boolean|int
+     */
+    public function exists($link) {
+        $ret = false;
+
+        if(!empty($link)) {
+            $queryStr = "SELECT * FROM `".DB_PREFIX."_link`
+                        WHERE `link` = '".$this->DB->real_escape_string($link)."'";
+            $query = $this->DB->query($queryStr);
+            if(!empty($query) && $query->num_rows > 0) {
+                $result = $query->fetch_assoc();
+                $ret = $result['id'];
+            }
         }
 
         return $ret;
     }
-
-    /**
-     * get all the available tags from the DB.
-     * optional limit
-     * @param int $limit
-     */
-    public function tags($limit=false) {
-        $ret = array();
-
-        $queryStr = "SELECT * FROM `".DB_PREFIX."_tag` ORDER BY `name`";
-        if(!empty($limit)) {
-            $queryStr .= " LIMIT $limit";
-        }
-        $query = $this->DB->query($queryStr);
-        if(!empty($query)) {
-            $ret = $query->fetch_all(MYSQLI_ASSOC);
-        }
-
-        return $ret;
-    }
-
 }
-
-?>
+ ?>

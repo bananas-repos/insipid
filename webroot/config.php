@@ -32,3 +32,7 @@ define('DB_USERNAME','user');
 define('DB_PASSWORD','test');
 define('DB_NAME','insipid');
 define('DB_PREFIX','insipid'); # a _ is added automatically as seperation
+
+# user config
+define('FRONTEND_USERNAME','luke');
+define('FRONTEND_PASSWORD','thefather');
