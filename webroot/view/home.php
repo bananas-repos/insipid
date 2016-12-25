@@ -202,13 +202,13 @@
 	</div>
 <?php
     if(!empty($orderedCategories)) {
-        foreach ($orderedCategories as $cat) {
-            $links = $Management->linksByCategoryString($cat['category']);
+        foreach ($orderedCategories as $cat=>$date) {
+            $links = $Management->linksByCategoryString($cat);
 ?>
 	<div class="column">
 		<div class="card" data-equalizer-watch>
 			<div class="card-divider">
-				<h4><?php echo $cat['category']; ?></h4>
+				<h4><?php echo $cat; ?></h4>
 			</div>
 			<img src="assets/img/generic/rectangle-1.jpg">
 			<div class="card-section">

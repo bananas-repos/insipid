@@ -98,14 +98,24 @@ class Management {
      */
     public function categoriesByDateAdded() {
         $ret = array();
-        $queryStr = "SELECT category FROM `".DB_PREFIX."_combined`
-                        WHERE `status` = 2
-                        GROUP BY category
-                        ORDER BY created DESC";
-        $query = $this->DB->query($queryStr);
-        if(!empty($query) && $query->num_rows > 0) {
-            $ret = $query->fetch_all(MYSQLI_ASSOC);
+
+        $categories = $this->categories();
+        foreach($categories as $cat) {
+            $queryStr = "SELECT insipid_category.name, insipid_link.created
+                            FROM `insipid_category`
+                            LEFT JOIN insipid_categoryrelation ON insipid_categoryrelation.categoryid = insipid_category.id
+                            LEFT JOIN insipid_link ON insipid_link.id = insipid_categoryrelation.linkid
+                            WHERE insipid_category.id = '".$this->DB->real_escape_string($cat['id'])."'
+                            ORDER BY insipid_link.created DESC
+                            LIMIT 1";
+            $query = $this->DB->query($queryStr);
+            if(!empty($query) && $query->num_rows > 0) {
+                $result = $query->fetch_assoc();
+                $ret[$result['name']] = $result['created'];
+            }
         }
+
+        arsort($ret);
 
         return $ret;
     }
