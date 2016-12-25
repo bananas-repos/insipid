@@ -33,8 +33,14 @@ $queryStr = false;
 $searchResult = false;
 $showAddForm = false;
 $formData = false;
+$honeypotCheck = false;
 
-if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch'])) {
+if((isset($_POST['password']) && !empty($_POST['password'])) || (isset($_POST['username']) && !empty($_POST['username']))) {
+    # those are hidden fields. A robot my input these. A valid user does not.
+    $honeypotCheck = true;
+}
+
+if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch']) && $honeypotCheck === false) {
     $searchValue = trim($_POST['data']['searchfield']);
     $isUrl = Summoner::validate($searchValue,'url');
     if($isUrl === true) {
@@ -55,8 +61,18 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 
     # new one?
     if(empty($searchResult) && $isUrl === true) {
+        # try to gather some information automatically
+        $linkInfo = Summoner::gatherInfoFromURL($searchValue);
+        if(!empty($linkInfo)) {
+            $formData['description'] = $linkInfo['description'];
+            $formData['title'] = $linkInfo['title'];
+            $formData['image'] = $linkInfo['image'];
+        }
         # show the add form
         $showAddForm = true;
         $formData['url'] = $searchValue;
     }
 }
+
+$existingCategories = $Management->categories();
+$existingTags = $Management->tags();

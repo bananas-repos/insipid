@@ -35,6 +35,8 @@
 <div class="row">
 	<div class="large-12 columns">
 		<form method="post">
+			<input type="hidden" name="password" />
+			<input type="hidden" name="username" />
     		<div class="input-group">
     			<span class="input-group-label"><i class="fi-link"></i></span>
     			<input class="input-group-field" type="url" name="data[searchfield]">
@@ -66,6 +68,8 @@
 
 <?php if($showAddForm) { ?>
 <form method="post">
+	<input type="hidden" name="password" />
+	<input type="hidden" name="username" />
 	<div class="row">
     	<div class="large-12 columns">
     		<h3>This URL was not found. Want to add it?</h3>
@@ -82,6 +86,56 @@
     <div class="row">
     	<div class="large-6 columns">
     		<label>
+    			Description
+    			<input type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
+    		</label>
+    	</div>
+    	<div class="large-6 columns">
+			<label>
+				Title
+				<input type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
+			</label>
+    	</div>
+    </div>
+    <div class="row">
+    	<div class="large-6 columns">
+    		<label>
+    			Image Link
+    			<input type="url" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
+    		</label>
+    	</div>
+    	<div class="large-6 columns">
+			<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'image'); ?>" alt="Image from provided link" />
+    	</div>
+    </div>
+    <div class="row">
+    	<div class="large-6 columns">
+    		<label>
+    			Category
+    			<input type="text" name="data[category]" list="categorylist" />
+    			<datalist id="categorylist">
+				<?php foreach($existingCategories as $c) { ?>
+					<option value="<?php echo $c; ?>">
+				<?php } ?>
+                </datalist>
+    		</label>
+    	</div>
+    	<div class="large-6 columns">
+    		<label>
+    			Tag
+    			<input type="text" name="data[tag]" list="taglist" />
+    			<datalist id="taglist">
+    			<?php foreach($existingTags as $t) { ?>
+					<option value="<?php echo $t; ?>">
+				<?php } ?>
+                </datalist>
+    		</label>
+    	</div>
+    </div>
+
+    <div class="row">
+    	<div class="large-6 columns">
+    		<label>
     			Username
     			<input type="text" name="data[username]" />
     		</label>
@@ -95,22 +149,10 @@
     </div>
 
     <div class="row">
-    	<div class="large-6 columns">
-    		<label>
-    			Category
-    			<select name="data[category]"></select>
-    		</label>
+    	<div class="large-8 columns">
+    		<input type="checkbox" name="data[private]" value="1" /><label>Private</label>
     	</div>
-    	<div class="large-6 columns">
-    		<label>
-    			Tag
-    			<select name="data[tag]"></select>
-    		</label>
-    	</div>
-    </div>
-
-    <div class="row">
-    	<div class="large-12 columns">
+    	<div class="large-4 columns text-right" >
     		<input type="submit" class="button" value="Add new Link">
     	</div>
     </div>

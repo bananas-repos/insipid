@@ -55,6 +55,7 @@ else {
 
 require('config.php');
 require('lib/summoner.class.php');
+require('lib/management.class.php');
 
 ## main vars
 $Summoner = new Summoner();
@@ -73,6 +74,9 @@ $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
 $DB->set_charset("utf8mb4");
 $DB->query("SET collation_connection = 'utf8mb4_bin'");
+
+# management needs the DB object
+$Management = new Management($DB);
 
 /*
 if(isset($_GET['p']) && !empty($_GET['p'])) {

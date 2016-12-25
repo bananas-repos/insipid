@@ -156,7 +156,7 @@ class Summoner {
 	 * execute a curl call to the fiven $url
 	 * @param string $curl The request url
 	 */
-	static function curlCall($url,$port=80) {
+	static function curlCall($url,$port=false) {
 		$ret = false;
 
 		$ch = curl_init();
@@ -165,14 +165,18 @@ class Summoner {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_PORT, $port);
+		if(!empty($port)) {
+		  curl_setopt($ch, CURLOPT_PORT, $port);
+		}
 
 		$do = curl_exec($ch);
+
 		if(is_string($do) === true) {
 			$ret = $do;
 		}
 		else {
 			$ret = false;
+			error_log(var_export(curl_error($ch),true));
 		}
 
 		curl_close($ch);
@@ -219,6 +223,113 @@ class Summoner {
 
 	static function ifset($array,$key) {
 	    return isset($array[$key]) ? $array[$key] : false;
+	}
+
+	/**
+	 * try to gather meta information from given URL
+	 * @param string $url
+	 */
+	static function gatherInfoFromURL($url) {
+	    $ret = false;
+
+	    if(self::validate($url,'url')) {
+	        $data = self::curlCall($url);
+	        if(!empty($data)) {
+	            $ret = self::socialMetaInfos($data);
+	        }
+	    }
+
+	    return $ret;
+	}
+
+	/**
+	 * get as much as possible solcial meta infos from given string
+	 * the string is usually a HTML source
+	 * @param string $string
+	 */
+	static function socialMetaInfos($string) {
+	    #http://www.w3bees.com/2013/11/fetch-facebook-og-meta-tags-with-php.html
+	    #http://www.9lessons.info/2014/01/social-meta-tags-for-google-twitter-and.html
+	    #http://ogp.me/
+	    #https://moz.com/blog/meta-data-templates-123
+
+	    $dom = new DomDocument;
+	    # surpress invalid html warnings
+	    @$dom->loadHTML($string);
+
+	    $xpath = new DOMXPath($dom);
+	    $metas = $xpath->query('//*/meta');
+
+	    $mediaInfos = array();
+
+	    # meta tags
+	    foreach($metas as $meta) {
+	        if($meta->getAttribute('property')) {
+	            $prop = $meta->getAttribute('property');
+	            $prop = mb_strtolower($prop);
+
+	            # minimum required information
+	            # http://ogp.me/#metadata
+	            if($prop == "og:title") {
+
+	                $mediaInfos['title'] = $meta->getAttribute('content');
+	            }
+	            elseif($prop == "og:image") {
+	                $mediaInfos['image'] = $meta->getAttribute('content');
+	            }
+	            elseif($prop == "og:url") {
+	                $mediaInfos['link'] = $meta->getAttribute('content');
+	            }
+	            elseif($prop == "og:description") {
+	                $mediaInfos['description'] = $meta->getAttribute('content');
+	            }
+	        }
+	        elseif($meta->getAttribute('name')) {
+	            $name = $meta->getAttribute('name');
+	            $name = mb_strtolower($name);
+
+	            # twitter
+	            # https://dev.twitter.com/cards/overview
+
+	            if($name == "twitter:title") {
+	                $mediaInfos['title'] = $meta->getAttribute('content');
+	            }
+	            elseif($name == "twitter:description") {
+	                $mediaInfos['description'] = $meta->getAttribute('content');
+	            }
+	            elseif($name == "twitter:image") {
+	                $mediaInfos['image'] = $meta->getAttribute('content');
+	            }
+	            elseif($name == "description") {
+	                $mediaInfos['description'] = $meta->getAttribute('content');
+	            }
+
+	        }
+	        elseif($meta->getAttribute('itemprop')) {
+	            $itemprop = $meta->getAttribute('itemprop');
+	            $itemprop = mb_strtolower($itemprop);
+
+	            # google plus
+	            if($itemprop == "name") {
+	                $mediaInfos['title'] = $meta->getAttribute('content');
+	            }
+	            elseif($itemprop == "description") {
+	                $mediaInfos['description'] = $meta->getAttribute('content');
+	            }
+	            elseif($itemprop == "image") {
+	                $mediaInfos['image'] = $meta->getAttribute('content');
+	            }
+
+	        }
+	    }
+
+
+	    if(!isset($mediaInfos['title'])) {
+	        $titleDom = $xpath->query('//html/head/title');
+	        $mediaInfos['title'] = $titleDom->item(0)->nodeValue;
+	    }
+
+	    return $mediaInfos;
 	}
 }
 
