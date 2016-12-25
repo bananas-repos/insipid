@@ -179,9 +179,9 @@
 </form>
 <?php } ?>
 
-<div class="row expanded small-up-3 medium-up-6">
-	<div class="column">
-		<div class="card">
+<div class="row expanded small-up-2 medium-up-3 large-up-4" data-equalizer data-equalize-by-row="true">
+	<div class="column" >
+		<div class="card" data-equalizer-watch>
 			<div class="card-divider">
 	    		<h4>Last added</h4>
 	  		</div>
@@ -200,49 +200,31 @@
 			</div>
 		</div>
 	</div>
-  <div class="column">
-    <div class="card">
-      <img src="assets/img/generic/rectangle-1.jpg">
-      <div class="card-section">
-        <h4>This is a card.</h4>
-        <p>It has an easy to override visual style, and is appropriately subdued.</p>
-      </div>
-    </div>
-  </div>
-  <div class="column">
-    <div class="card">
-      <img src="assets/img/generic/rectangle-1.jpg">
-      <div class="card-section">
-        <h4>This is a card.</h4>
-        <p>It has an easy to override visual style, and is appropriately subdued.</p>
-      </div>
-    </div>
-  </div>
-  <div class="column">
-    <div class="card">
-      <img src="assets/img/generic/rectangle-1.jpg">
-      <div class="card-section">
-        <h4>This is a card.</h4>
-        <p>It has an easy to override visual style, and is appropriately subdued.</p>
-      </div>
-    </div>
-  </div>
-  <div class="column">
-    <div class="card">
-      <img src="assets/img/generic/rectangle-1.jpg">
-      <div class="card-section">
-        <h4>This is a card.</h4>
-        <p>It has an easy to override visual style, and is appropriately subdued.</p>
-      </div>
-    </div>
-  </div>
-  <div class="column">
-    <div class="card">
-      <img src="assets/img/generic/rectangle-1.jpg">
-      <div class="card-section">
-        <h4>This is a card.</h4>
-        <p>It has an easy to override visual style, and is appropriately subdued.</p>
-      </div>
-    </div>
-  </div>
+<?php
+    if(!empty($orderedCategories)) {
+        foreach ($orderedCategories as $cat) {
+            $links = $Management->linksByCategoryString($cat['category']);
+?>
+	<div class="column">
+		<div class="card" data-equalizer-watch>
+			<div class="card-divider">
+				<h4><?php echo $cat['category']; ?></h4>
+			</div>
+			<img src="assets/img/generic/rectangle-1.jpg">
+			<div class="card-section">
+				<ul>
+<?php foreach ($links as $link) { ?>
+					<li>
+						<a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a>
+					</li>
+<?php } ?>
+				</ul>
+				<a class="button" href="#">more</a>
+			</div>
+		</div>
+	</div>
+<?php
+        }
+    }
+?>
 </div>

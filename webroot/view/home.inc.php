@@ -171,3 +171,4 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 $existingCategories = $Management->categories();
 $existingTags = $Management->tags();
 $latestLinks = $Management->latest();
+$orderedCategories = $Management->categoriesByDateAdded();

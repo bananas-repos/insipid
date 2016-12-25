@@ -93,6 +93,38 @@ class Management {
         return $ret;
     }
 
+    /**
+     * get all the categories ordered by link added date
+     */
+    public function categoriesByDateAdded() {
+        $ret = array();
+        $queryStr = "SELECT category FROM `".DB_PREFIX."_combined`
+                        WHERE `status` = 2
+                        GROUP BY category
+                        ORDER BY created DESC";
+        $query = $this->DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            $ret = $query->fetch_all(MYSQLI_ASSOC);
+        }
+
+        return $ret;
+    }
+
+    public function linksByCategoryString($string,$limit=5) {
+        $ret = array();
+
+        $queryStr = "SELECT * FROM `".DB_PREFIX."_combined`
+            WHERE `status` = 2
+                AND `category` = '".$this->DB->real_escape_string($string)."'
+            GROUP BY `hash`
+            ORDER BY `created` DESC";
+        $query = $this->DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            $ret = $query->fetch_all(MYSQLI_ASSOC);
+        }
+
+        return $ret;
+    }
 }
 
 ?>
