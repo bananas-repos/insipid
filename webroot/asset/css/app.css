@@ -1,3 +1,16 @@
 .linkthumbnail {
 	max-height: 200px;
 }
+
+h4 a {
+	color: #000;
+}
+.linkbox {
+	border: 1px solid #ccc;
+	overflow: hidden;
+}
+
+.infolink {
+	padding-left: 10px;
+	color: red;
+}

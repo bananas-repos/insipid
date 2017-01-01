@@ -81,15 +81,13 @@ $DB->query("SET collation_connection = 'utf8mb4_bin'");
 # management needs the DB object
 $Management = new Management($DB);
 
-/*
 if(isset($_GET['p']) && !empty($_GET['p'])) {
-    $_requestMode = trim($_GET['p']);
-    $_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : "dashboard";
+    $_requestPage = trim($_GET['p']);
+    $_requestPage = Summoner::validate($_requestPage,'nospace') ? $_requestPage : "home";
 
-    $ViewScript = $_requestMode.'/'.$_requestMode.'.php';
-    $View = $_requestMode.'/'.$_requestMode.'.html';
+    $ViewScript = $_requestPage.'.inc.php';
+    $View = $_requestPage.'.php';
 }
-*/
 
 # now inlcude the script
 # this sets informatio into $Data and can overwrite $View

@@ -43,6 +43,32 @@ class Link {
         $this->DB = $databaseConnectionObject;
     }
 
+    /**
+     * load all the info we have about a link by given hash
+     * @param string $hash
+     * @return mixed
+     */
+    public function load($hash) {
+        $ret = false;
+
+        if(!empty($hash)) {
+            $queryStr = "SELECT * FROM `".DB_PREFIX."_link`
+                            WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
+            $query = $this->DB->query($queryStr);
+            if(!empty($query) && $query->num_rows == 1) {
+                $ret = $query->fetch_assoc();
+
+                $this->id = $ret['hash'];
+
+                # add stuff
+                $ret['tags'] = $this->_tags();
+                $ret['categories'] = $this->_categories();
+            }
+        }
+
+        return $ret;
+    }
+
     public function create($data) {}
 
     /**
@@ -60,7 +86,45 @@ class Link {
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
                 $result = $query->fetch_assoc();
-                $ret = $result['id'];
+                $ret = $result['hash'];
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * load all the tags we have to the already loaded link
+     * needs $this->load called first
+     */
+    private function _tags() {
+        $ret = array();
+
+        if(!empty($this->id)) {
+            $queryStr = "SELECT DISTINCT(tag) FROM `".DB_PREFIX."_combined`
+                            WHERE `hash` = '".$this->DB->real_escape_string($this->id)."'";
+            $query = $this->DB->query($queryStr);
+            if(!empty($query) && $query->num_rows > 0) {
+                $ret = $query->fetch_all(MYSQLI_ASSOC);
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * load all the categories we have to the already loaded link
+     * needs $this->load called first
+     */
+    private function _categories() {
+        $ret = array();
+
+        if(!empty($this->id)) {
+            $queryStr = "SELECT DISTINCT(category) FROM `".DB_PREFIX."_combined`
+                            WHERE `hash` = '".$this->DB->real_escape_string($this->id)."'";
+            $query = $this->DB->query($queryStr);
+            if(!empty($query) && $query->num_rows > 0) {
+                $ret = $query->fetch_all(MYSQLI_ASSOC);
             }
         }
 

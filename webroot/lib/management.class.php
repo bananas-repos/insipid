@@ -85,6 +85,9 @@ class Management {
         $ret = array();
 
         $queryStr = "SELECT * FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
+        if(!empty($limit)) {
+            $queryStr .= " LIMIT $limit";
+        }
         $query = $this->DB->query($queryStr);
         if(!empty($query) && $query->num_rows > 0) {
             $ret = $query->fetch_all(MYSQLI_ASSOC);
@@ -120,6 +123,12 @@ class Management {
         return $ret;
     }
 
+    /**
+     * find all links by given category string.
+     * Return array sorted by creation date DESC
+     * @param string $string
+     * @param number $limit
+     */
     public function linksByCategoryString($string,$limit=5) {
         $ret = array();
 
@@ -128,6 +137,49 @@ class Management {
                 AND `category` = '".$this->DB->real_escape_string($string)."'
             GROUP BY `hash`
             ORDER BY `created` DESC";
+        if(!empty($limit)) {
+            $queryStr .= " LIMIT $limit";
+        }
+        $query = $this->DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            $ret = $query->fetch_all(MYSQLI_ASSOC);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * find all links by given tag string.
+     * Return array sorted by creation date DESC
+     * @param string $string
+     * @param number $limit
+     */
+    public function linksByTagString($string,$limit=5) {
+        $ret = array();
+
+        $queryStr = "SELECT * FROM `".DB_PREFIX."_combined`
+            WHERE `status` = 2
+                AND `tag` = '".$this->DB->real_escape_string($string)."'
+            GROUP BY `hash`
+            ORDER BY `created` DESC";
+        if(!empty($limit)) {
+            $queryStr .= " LIMIT $limit";
+        }
+        $query = $this->DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            $ret = $query->fetch_all(MYSQLI_ASSOC);
+        }
+
+        return $ret;
+    }
+
+    public function all($limit=false) {
+        $ret = array();
+
+        $queryStr = "SELECT * FROM `".DB_PREFIX."_combined`
+                        WHERE `status` = 2
+                        GROUP BY `hash`
+                        ORDER BY `created` DESC";
         $query = $this->DB->query($queryStr);
         if(!empty($query) && $query->num_rows > 0) {
             $ret = $query->fetch_all(MYSQLI_ASSOC);

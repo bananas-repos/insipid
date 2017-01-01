@@ -39,7 +39,7 @@
 			<input type="hidden" name="username" />
     		<div class="input-group">
     			<span class="input-group-label"><i class="fi-link"></i></span>
-    			<input class="input-group-field" type="url" name="data[searchfield]">
+    			<input class="input-group-field" type="text" name="data[searchfield]">
     			<div class="input-group-button">
     				<input type="submit" class="button" value="Search" name="submitsearch">
     			</div>
@@ -74,7 +74,7 @@
 <?php foreach ($searchResult as $sr) { ?>
 		<li>
 			<a href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
-			<a href="<?php echo $sr['link']; ?>" ><i class="fi-info"></i></a>
+			<a class="infolink" title="more details..." href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="fi-list"></i></a>
 		</li>
 <?php } ?>
 		</ul>
@@ -179,13 +179,12 @@
 </form>
 <?php } ?>
 
-<div class="row expanded small-up-2 medium-up-3 large-up-4" data-equalizer data-equalize-by-row="true">
+<div class="row expanded small-up-2 medium-up-3 large-up-6" data-equalizer data-equalize-by-row="true">
 	<div class="column" >
 		<div class="card" data-equalizer-watch>
 			<div class="card-divider">
-	    		<h4>Last added</h4>
+	    		<h4><a href="index.php?p=overview&m=all">Last added</a></h4>
 	  		</div>
-	  		<img src="asset/img/insipid.png">
 			<div class="card-section">
 <?php if(!empty($latestLinks)) { ?>
 				<ul>
@@ -195,7 +194,6 @@
 					</li>
 <?php } ?>
 				</ul>
-				<a class="button" href="#">more</a>
 <?php } ?>
 			</div>
 		</div>
@@ -208,9 +206,8 @@
 	<div class="column">
 		<div class="card" data-equalizer-watch>
 			<div class="card-divider">
-				<h4><?php echo $cat; ?></h4>
+				<h4><a href="?p=overview&m=category&id=<?php echo urlencode($cat); ?>"><?php echo $cat; ?></a></h4>
 			</div>
-			<img src="assets/img/generic/rectangle-1.jpg">
 			<div class="card-section">
 				<ul>
 <?php foreach ($links as $link) { ?>
@@ -219,7 +216,6 @@
 					</li>
 <?php } ?>
 				</ul>
-				<a class="button" href="#">more</a>
 			</div>
 		</div>
 	</div>

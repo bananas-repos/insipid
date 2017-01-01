@@ -115,6 +115,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
     $isUrl = Summoner::validate($formData['url'],'url');
 
     if($isUrl === true && !empty($formData['title']) && $username === FRONTEND_USERNAME && $password === FRONTEND_PASSWORD) {
+        $hash = md5($formData['url']);
         $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
                         `link` = '".$DB->real_escape_string($formData['url'])."',
                         `created` = NOW(),
@@ -122,7 +123,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
                         `description` = '".$DB->real_escape_string($formData['description'])."',
                         `title` = '".$DB->real_escape_string($formData['title'])."',
                         `image` = '".$DB->real_escape_string($formData['image'])."',
-                        `hash` = '".$DB->real_escape_string(md5($formData['url']))."'";
+                        `hash` = '".$DB->real_escape_string($hash)."'";
         $DB->query($queryStr);
         $linkID = $DB->insert_id;
 
@@ -153,7 +154,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 
             $submitFeedback['message'] = 'Link added successfully.';
             $submitFeedback['status'] = 'success';
-            $TemplateData['refresh'] = 'index.php?p=showlink&id='.$linkID;
+            $TemplateData['refresh'] = 'index.php?p=linkinfo&id='.$hash;
         }
         else {
             $submitFeedback['message'] = 'Something went wrong...';
