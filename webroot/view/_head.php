@@ -32,7 +32,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insipid</title>
+    <title>Insipid. Personal bookmarks.</title>
     <link rel="stylesheet" href="asset/css/foundation.min.css">
     <link rel="stylesheet" href="asset/foundation-icons/foundation-icons.css">
     <link rel="stylesheet" href="asset/flexdatalist/jquery.flexdatalist.min.css">

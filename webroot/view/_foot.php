@@ -30,7 +30,7 @@
 		<div class="row expanded">
 			<div class="large-12 columns">
 				<div class="callout">
-					&copy; <?php echo date('Y'); ?> <a href="https://www.bananas-playground.net/projekt/insipid/" target="_blank">Insipid</a>
+					&copy; 2016 - <?php echo date('Y'); ?> <a href="https://www.bananas-playground.net/projekt/insipid/" target="_blank">Insipid</a>
 				</div>
 			</div>
 		</div>
