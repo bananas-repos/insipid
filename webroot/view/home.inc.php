@@ -51,7 +51,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
     }
     elseif(Summoner::validate($searchValue,'text')) {
         # search for this in more then one field
-        # remove mysql funktion stuff
+        # remove mysql boolean mode stuff
         $searchValue = str_replace("*", "", $searchValue);
         $searchValue = str_replace("+", "", $searchValue);
         $searchValue = str_replace("-", "", $searchValue);
