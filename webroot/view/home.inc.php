@@ -62,16 +62,18 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
         $searchValue = str_replace('"', "", $searchValue);
 
         $queryStr = "SELECT *, MATCH (search)
-                            AGAINST ('*".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE) AS score
+                            AGAINST ('".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE) AS score
                         FROM `".DB_PREFIX."_link`
                         WHERE MATCH (search)
-                            AGAINST ('*".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE)
+                            AGAINST ('".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE)
                         ORDER BY score DESC";
     }
     else {
         $submitFeedback['message'] = 'Invalid input';
         $submitFeedback['status'] = 'error';
     }
+
+    var_dump($queryStr);
 
     if(!empty($queryStr)) {
         $query = $DB->query($queryStr);
