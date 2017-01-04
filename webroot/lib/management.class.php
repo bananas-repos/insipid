@@ -81,7 +81,7 @@ class Management {
      * return the latest addded links
      * @param number $limit
      */
-    public function latest($limit=5) {
+    public function latestLinks($limit=5) {
         $ret = array();
 
         $queryStr = "SELECT * FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
@@ -173,7 +173,11 @@ class Management {
         return $ret;
     }
 
-    public function all($limit=false) {
+    /**
+     * return all links and Info we have from the combined view
+     * @param int $limit
+     */
+    public function links($limit=false) {
         $ret = array();
 
         $queryStr = "SELECT * FROM `".DB_PREFIX."_combined`
@@ -186,6 +190,46 @@ class Management {
         }
 
         return $ret;
+    }
+
+    /**
+     * for simpler management we have the search data in a seperate column
+     * it is not fancy or even technical nice but it damn works
+     */
+    private function _updateSearchIndex() {
+        $allLinks = array();
+        $queryStr = "SELECT hash FROM `".DB_PREFIX."_link`";
+        $query = $this->DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            $allLinks = $query->fetch_all(MYSQLI_ASSOC);
+        }
+
+        if(!empty($allLinks)) {
+            foreach($allLinks as $link) {
+                $LinkObj = new Link($this->DB);
+                $l = $LinkObj->load($link['hash']);
+
+                $searchStr = $l['title'];
+                $searchStr .= ' '.$l['description'];
+                foreach($l['tags'] as $t) {
+                    $searchStr .= ' '.$t['tag'];
+                }
+                foreach($l['categories'] as $c) {
+                    $searchStr .= ' '.$c['category'];
+                }
+
+                # now update the search string
+                $queryStr = "UPDATE `".DB_PREFIX."_link`
+                                SET `search` = '".$this->DB->real_escape_string($searchStr)."'
+                                WHERE `hash` = '".$this->DB->real_escape_string($link['hash'])."'";
+
+                $this->DB->query($queryStr);
+
+                unset($LinkObj,$l,$searchStr,$t,$c,$queryStr);
+            }
+        }
+
+
     }
 }
 

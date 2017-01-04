@@ -339,7 +339,7 @@ class Summoner {
 	 *
 	 * @param string $string
 	 */
-	static function prepareTagOrCategorieStr($string) {
+	static function prepareTagOrCategoryStr($string) {
 	    $ret = array();
 
 	    $string = trim($string, ", ");

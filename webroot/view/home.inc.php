@@ -51,7 +51,22 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
     }
     elseif(Summoner::validate($searchValue,'text')) {
         # search for this in more then one field
+        # remove mysql funktion stuff
+        $searchValue = str_replace("*", "", $searchValue);
+        $searchValue = str_replace("+", "", $searchValue);
+        $searchValue = str_replace("-", "", $searchValue);
+        $searchValue = str_replace("<", "", $searchValue);
+        $searchValue = str_replace(">", "", $searchValue);
+        $searchValue = str_replace("~", "", $searchValue);
+        $searchValue = str_replace("'", "", $searchValue);
+        $searchValue = str_replace('"', "", $searchValue);
 
+        $queryStr = "SELECT *, MATCH (search)
+                            AGAINST ('*".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE) AS score
+                        FROM `".DB_PREFIX."_link`
+                        WHERE MATCH (search)
+                            AGAINST ('*".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE)
+                        ORDER BY score DESC";
     }
     else {
         $submitFeedback['message'] = 'Invalid input';
@@ -116,6 +131,16 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 
     if($isUrl === true && !empty($formData['title']) && $username === FRONTEND_USERNAME && $password === FRONTEND_PASSWORD) {
         $hash = md5($formData['url']);
+
+        # categories and tag stuff
+        $catArr = Summoner::prepareTagOrCategoryStr($formData['category']);
+        $tagArr = Summoner::prepareTagOrCategoryStr($formData['tag']);
+
+        $search = $formData['title'];
+        $search .= ' '.$formData['description'];
+        $search .= ' '.implode(" ",$tagArr);
+        $search .= ' '.implode(" ",$catArr);
+
         $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
                         `link` = '".$DB->real_escape_string($formData['url'])."',
                         `created` = NOW(),
@@ -123,15 +148,14 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
                         `description` = '".$DB->real_escape_string($formData['description'])."',
                         `title` = '".$DB->real_escape_string($formData['title'])."',
                         `image` = '".$DB->real_escape_string($formData['image'])."',
-                        `hash` = '".$DB->real_escape_string($hash)."'";
+                        `hash` = '".$DB->real_escape_string($hash)."',
+                        `search` = '".$DB->real_escape_string($search)."'";
         $DB->query($queryStr);
         $linkID = $DB->insert_id;
 
         if(!empty($linkID)) {
 
-            # categories and tag stuff
-            $catArr = Summoner::prepareTagOrCategorieStr($formData['category']);
-            $tagArr = Summoner::prepareTagOrCategorieStr($formData['tag']);
+
 
             if(!empty($catArr)) {
                 foreach($catArr as $c) {
@@ -171,5 +195,5 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 
 $existingCategories = $Management->categories();
 $existingTags = $Management->tags();
-$latestLinks = $Management->latest();
+$latestLinks = $Management->latestLinks();
 $orderedCategories = $Management->categoriesByDateAdded();

@@ -72,5 +72,5 @@ switch($_requestMode) {
     case 'all':
     default:
         # show all
-        $linkCollection = $Management->all();
+        $linkCollection = $Management->links();
 }
