@@ -73,7 +73,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
         $submitFeedback['status'] = 'error';
     }
 
-    var_dump($queryStr);
+    #var_dump($queryStr);
 
     if(!empty($queryStr)) {
         $query = $DB->query($queryStr);
