@@ -1,8 +1,0 @@
-The inspid-edit-me.sql NEEDS to be edited.
-Open the file and make a search and replace:
-
-search for: `#REPLACEME#
-replace with: `tableprefix
-
-The value tableprefix has to match with the value for DB_PREFIX in config.php
-

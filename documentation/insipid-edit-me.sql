@@ -67,7 +67,8 @@ CREATE TABLE `#REPLACEME#_link` (
   `description` varchar(255) COLLATE utf8mb4_bin NOT NULL,
   `title` varchar(255) COLLATE utf8mb4_bin NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `hash` char(32) COLLATE utf8mb4_bin NOT NULL
+  `hash` char(32) COLLATE utf8mb4_bin NOT NULL,
+  `search` text COLLATE utf8mb4_bin NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -124,6 +125,7 @@ ALTER TABLE `#REPLACEME#_categoryrelation`
 --
 ALTER TABLE `#REPLACEME#_link`
   ADD PRIMARY KEY (`id`),
+  FULLTEXT KEY `search` (`search`),
   ADD UNIQUE KEY `hash` (`hash`);
 
 --

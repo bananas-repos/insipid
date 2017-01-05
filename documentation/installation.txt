@@ -1,1 +1,26 @@
-See the installation folder.
+1.
+Check the requirements first.
+
+2.
+Read this first!!
+
+3.
+Unpack the archive
+
+4.
+Modify webroot/config.php
+
+5.
+Copy and modify documentation/insipid-edit-me.sql and replace the placeholder.
+Open the file and make a search and replace:
+
+search for: `#REPLACEME#
+replace with: `tableprefix
+
+The value tableprefix has to match with the value for DB_PREFIX in config.php
+
+6.
+Import the sql file into your MySQL database
+
+7.
+Copy the content of the webroot folder into your webserver folder
