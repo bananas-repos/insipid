@@ -1,10 +1,9 @@
-verion 2.0alpha - Bright Crucible - (2017-01-05)
+version 2.1alpha - Bright Crucible - (tba)
+	* cleanups
+	
+version 2.0alpha - Bright Crucible - (2017-01-05)
 	* This is a not prodction ready version of the complete rewrite.
 	* It is now written in PHP based on the idea from Luke Reeves
-
-version 1.6 (tba)
-	* code fixes
-	* new options in htaccess file
 
 version 1.5 (30 Nov. 2012)
     * support phantomjs as a screenshot tool for a bookmark

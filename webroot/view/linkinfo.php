@@ -25,7 +25,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
- ?>
+?>
 <?php if(empty($link)) { ?>
 <div class="callout alert">
 	<h5>Error</h5>
@@ -39,7 +39,7 @@
 </div>
 <div class="row expanded">
 	<div class="large-12 columns">
-		<p class="text-right"><a href="index.php" title="... back to home"><i class="fi-home"></i></a></p>
+		<p class="text-right"><a href="index.php" title="... back to home" class="tiny button"><i class="fi-home"></i></a></p>
 	</div>
 </div>
 <div class="row">
@@ -109,6 +109,11 @@
 		      }
             }
 	    ?>
+	</div>
+</div>
+<div class="row">
+	<div class="small-12 medium-12 columns text-right">
+        <a href="index.php?p=edit&m=link&id=<?php echo $link['hash']; ?>" class="button tiny alert"><i class="fi-page-edit"></i> edit</a>
 	</div>
 </div>
 

@@ -25,17 +25,32 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
-?>
-<!doctype html>
-<html class="no-js" lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your personal bookmarks - Insipid</title>
-    <link rel="stylesheet" href="asset/css/foundation.min.css">
-    <link rel="stylesheet" href="asset/foundation-icons/foundation-icons.css">
-    <link rel="stylesheet" href="asset/flexdatalist/jquery.flexdatalist.min.css">
-    <link rel="stylesheet" href="asset/css/app.css">
-  </head>
-  <body>
+$submitFeedback = false;
+$formData = false;
+
+# very simple security check.
+# can be extended in the future.
+Summoner::simpleAuth();
+
+$_requestMode = false;
+if(isset($_GET['m']) && !empty($_GET['m'])) {
+    $_requestMode = trim($_GET['m']);
+    $_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : "all";
+}
+
+$_id = false;
+if(isset($_GET['id']) && !empty($_GET['id'])) {
+    $_id = trim($_GET['id']);
+    $_id = Summoner::validate($_id,'nospace') ? $_id : false;
+}
+
+switch ($_requestMode) {
+    case 'link':
+    default:
+        $linkObj = new Link($DB);
+        $link = $linkObj->load($_id);
+        if(empty($link)) {
+            header("HTTP/1.0 404 Not Found");
+        }
+}
+

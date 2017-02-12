@@ -37,9 +37,9 @@
 <div class="row expanded">
 	<div class="large-12 columns">
 		<p class="text-right">
-			<a href="index.php?p=overview&m=tag" title="all tags"><i class="fi-price-tag"></i></a>
-			<a href="index.php?p=overview&m=category" title="all categories"><i class="fi-ticket"></i></a>
-			<a href="index.php" title="... back to home"><i class="fi-home"></i></a>
+			<a href="index.php?p=overview&m=tag" title="all tags" class="tiny button"><i class="fi-price-tag"></i></a>
+			<a href="index.php?p=overview&m=category" title="all categories" class="tiny button"><i class="fi-ticket"></i></a>
+			<a href="index.php" title="... back to home" class="tiny button"><i class="fi-home"></i></a>
 		</p>
 	</div>
 </div>

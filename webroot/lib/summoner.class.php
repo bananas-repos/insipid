@@ -377,6 +377,20 @@ class Summoner {
 
 	    return $ret;
 	}
+
+	/**
+	 * a very simple HTTP_AUTH authentication.
+	 */
+	static function simpleAuth() {
+	    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
+	        || $_SERVER['PHP_AUTH_USER'] !== FRONTEND_USERNAME || $_SERVER['PHP_AUTH_PW'] !== FRONTEND_PASSWORD
+	        ) {
+	        header('WWW-Authenticate: Basic realm="Insipid edit area"');
+	        header('HTTP/1.0 401 Unauthorized');
+	        echo 'No Access.';
+	        exit;
+	    }
+	}
 }
 
 ?>
