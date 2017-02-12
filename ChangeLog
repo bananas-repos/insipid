@@ -1,15 +1,20 @@
-version 2.1alpha - Bright Crucible - (tba)
+version 2.1 alpha - Guardian of Fire - (tba)
+
 	* cleanups
+	* edit area for a bookmark 
 	
 version 2.0alpha - Bright Crucible - (2017-01-05)
+
 	* This is a not prodction ready version of the complete rewrite.
 	* It is now written in PHP based on the idea from Luke Reeves
 
 version 1.5 (30 Nov. 2012)
+
     * support phantomjs as a screenshot tool for a bookmark
     * code updates and cleanup
 
 version 1.1 (20 Feb. 2012)
+
 	* older and newer link at the top no working
 	* bug with path to the jquery.js file
 	* some statistics
@@ -17,7 +22,8 @@ version 1.1 (20 Feb. 2012)
 	* tool to check the bookmarks
 
 version 1.0 (15. Feb 2012)
-+ jumpin.banana
+
+	* jumpin.banana
 	* tag suggest was not working correctly.
 	* tag rename feature implemented
 	* tag rename case sensitive problem

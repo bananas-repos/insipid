@@ -29,14 +29,9 @@ $submitFeedback = false;
 $formData = false;
 
 # very simple security check.
-# can be extended in the future.
+# can/should be extended in the future.
 Summoner::simpleAuth();
 
-$_requestMode = false;
-if(isset($_GET['m']) && !empty($_GET['m'])) {
-    $_requestMode = trim($_GET['m']);
-    $_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : "all";
-}
 
 $_id = false;
 if(isset($_GET['id']) && !empty($_GET['id'])) {
@@ -44,13 +39,31 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
     $_id = Summoner::validate($_id,'nospace') ? $_id : false;
 }
 
-switch ($_requestMode) {
-    case 'link':
-    default:
-        $linkObj = new Link($DB);
-        $link = $linkObj->load($_id);
-        if(empty($link)) {
-            header("HTTP/1.0 404 Not Found");
-        }
+$linkObj = new Link($DB);
+$link = $linkObj->load($_id);
+if(empty($link)) {
+    header("HTTP/1.0 404 Not Found");
 }
+
+$formData = $link;
+# prepate the tag edit string
+$formData['tag'] = '';
+if(!empty($link['tags'])) {
+    foreach($link['tags'] as $entry) {
+        $formData['tag'] .= $entry['tag'].',';
+    }
+    $formData['tag'] = trim($formData['tag']," ,");
+}
+
+# prepate the category string
+$formData['category'] = '';
+if(!empty($link['categories'])) {
+    foreach($link['categories'] as $entry) {
+        $formData['category'] .= $entry['category'].',';
+    }
+    $formData['category'] = trim($formData['category']," ,");
+}
+
+$existingCategories = $Management->categories();
+$existingTags = $Management->tags();
 

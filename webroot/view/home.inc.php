@@ -157,8 +157,6 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 
         if(!empty($linkID)) {
 
-
-
             if(!empty($catArr)) {
                 foreach($catArr as $c) {
                     $catObj = new Category($DB);

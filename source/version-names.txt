@@ -1,0 +1,35 @@
+Hub 1: Bright Crucible
+Hub 1: Guardian of Fire
+Hub 1: Guardian of Ice
+Hub 1: Guardian of Steel
+Hub 1: Seven Portals (map)
+Hub 1: Winnowing Hall
+
+Hub 2: Caves of Circe
+Hub 2: Darkmere
+Hub 2: Hypostyle
+Hub 2: Sacred Grove
+Hub 2: Shadow Wood (map)
+Hub 2: Wastelands
+
+Hub 3: Deathwind Chapel
+Hub 3: Dragon Chapel
+Hub 3: Griffin Chapel
+Hub 3: Heresiarch's Seminary (map)
+Hub 3: Orchard of Lamentations
+Hub 3: Silent Refectory
+Hub 3: Wolf Chapel
+
+Hub 4: Castle of Grief (map)
+Hub 4: Desolate Garden
+Hub 4: Dungeons
+Hub 4: Effluvium
+Hub 4: Forsaken Outpost
+Hub 4: Gibbet
+
+Hub 5: Dark Crucible
+Hub 5: Menelkir's Tomb
+Hub 5: Necropolis (map)
+Hub 5: Traductus' Tomb
+Hub 5: Vivarium
+Hub 5: Zedek's Tomb

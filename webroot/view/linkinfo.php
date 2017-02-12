@@ -60,6 +60,14 @@
 </div>
 <div class="row">
 	<div class="small-12 medium-2 columns">
+		<p>URL:</p>
+	</div>
+	<div class="small-12 medium-10 columns">
+		<p><a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['link']; ?></a></p>
+	</div>
+</div>
+<div class="row">
+	<div class="small-12 medium-2 columns">
 		<p>
 			Image:<br />
 			<small>If provided</small>
@@ -113,7 +121,7 @@
 </div>
 <div class="row">
 	<div class="small-12 medium-12 columns text-right">
-        <a href="index.php?p=edit&m=link&id=<?php echo $link['hash']; ?>" class="button tiny alert"><i class="fi-page-edit"></i> edit</a>
+        <a href="index.php?p=editlink&id=<?php echo $link['hash']; ?>" class="button tiny alert"><i class="fi-page-edit"></i> edit</a>
 	</div>
 </div>
 
