@@ -2,7 +2,8 @@ version 2.1 alpha - Guardian of Fire - (tba)
 
 	* cleanups
 	* edit area for a bookmark 
-	
+	* documentation and sql setup cleanup
+
 version 2.0alpha - Bright Crucible - (2017-01-05)
 
 	* This is a not prodction ready version of the complete rewrite.
@@ -10,8 +11,8 @@ version 2.0alpha - Bright Crucible - (2017-01-05)
 
 version 1.5 (30 Nov. 2012)
 
-    * support phantomjs as a screenshot tool for a bookmark
-    * code updates and cleanup
+	* support phantomjs as a screenshot tool for a bookmark
+	* code updates and cleanup
 
 version 1.1 (20 Feb. 2012)
 
