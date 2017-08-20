@@ -35,4 +35,14 @@ define('DB_PREFIX','insipid'); # a _ is added automatically as seperation
 
 # user config
 define('FRONTEND_USERNAME','luke');
-define('FRONTEND_PASSWORD','thefather');
+define('FRONTEND_PASSWORD','father');
+
+# settings for importing from e-mail
+# SSL/TLS only
+# imap
+define('EMAIL_SERVER','');
+define('EMAIL_SERVER_USER','');
+define('EMAIL_SERVER_PASS','');
+define('EMAIL_SERVER_PORT',993);
+define('EMAIL_SERVER_MAILBOX','INBOX'); # default INBOX
+define('EMAIL_MARKER','to-insipid- ');

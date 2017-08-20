@@ -1,0 +1,11 @@
+Insipid has a feature to fetch new links from e-mails. 
+Those e-mails are read from a configured IMAP mailbox.
+
+You need to enable the imap functions within PHP and
+have a IMAP mailbox on a SSL/TLS email server.
+
+Set the config variables in the config file.
+Make sure you an individual marker string!
+There is no "security" within this method. Only the special string you can define.
+The new links will be hidden at first. You need to verify them before they are 
+visible in your list.
