@@ -8,7 +8,7 @@ Read this first!!
 Unpack the archive
 
 4.
-Modify webroot/config.php
+Modify webroot/config.default.php and rename it to webroot/config.php
 
 5.
 Copy and modify documentation/insipid-edit-me.sql and replace the placeholder.

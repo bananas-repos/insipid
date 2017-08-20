@@ -45,7 +45,7 @@ if(!empty($_urlToParse)) {
 
 ## set the error reporting
 ini_set('log_errors',true);
-ini_set('error_log','/error.log');
+ini_set('error_log','error.log');
 if(DEBUG === true) {
     ini_set('display_errors',true);
 }
