@@ -30,8 +30,6 @@ class SimpleImap {
 	    imap_close($this->_connection);
 	}
 
-
-
 	/**
 	 * connect to the e-mail server
 	 * with this code SSL/TLS only
@@ -60,50 +58,40 @@ class SimpleImap {
 
 	/**
 	 * process the given mailbox and check for the special messages
+	 * return the bodies from the found messages as an array
+	 * @param string $subjectmarker
 	 */
-	function process() {
+	function bodyFromMessagesWithSubject($subjectmarker) {
+	    $ret = array();
+
 	    $messagecount = imap_num_msg($this->_connection);
 
 	    if($messagecount === false) {
 	        throw new Exception('Can not read the messages in given mailbox');
 	    }
 
-	    $messages = array();
-
+	    $processedmessagescount = 0;
 	    for($i = 1; $i <= $messagecount; $i++) {
-	        $subject = '';
-
-	        # first we check the header.
-
-	        # extract the subject....
-	        $headerinfo = imap_rfc822_parse_headers(imap_fetchheader($this->_connection, $i));
-	        $subjectArr = imap_mime_header_decode($headerinfo->subject);
-	        foreach ($subjectArr as $el) {
-                $subject .= $el->text;
-	        }
+	        $subject = $this->_extractSubject($i);
 
 	        if(!empty($subject)) {
 	            # check the special stuff
 	            $markerextract = substr($subject, 0, strlen(EMAIL_MARKER));
 	            if($markerextract == EMAIL_MARKER) {
+	                $processedmessagescount++;
 	                # valid message
-	                var_dump($subject);
+	                # get the body
+	                $ret[$i] = $this->_extractBody($i);
 	            }
 	        }
-
-	        /*
-	        $messages[] = array(
-	            'index'     => $i,
-	            'header'    => $headerinfo,
-	            'body'      => imap_qprint(imap_body($this->_connection, $i)),
-	            'structure' => imap_fetchstructure($this->_connection, $i)
-	        );
-	        */
 	    }
 
 	    # log messages processed to all messages
+	    error_log("Read ".$messagecount." messages");
+	    error_log("Processed ".$processedmessagescount." messages");
 
-	    #var_dump($messages);
+	    return $ret;
+
 	}
 
 	/**
@@ -115,6 +103,7 @@ class SimpleImap {
 	public function mailboxStatus() {
 	    if($this->_connection !== false) {
 	        $status = imap_status($this->_connection, $this->_connectionstring.$this->_mailbox, SA_ALL);
+
 	        var_dump("messages ".$status->messages);
 	        var_dump("recent ".$status->recent);
 	        var_dump("unseen ".$status->unseen);
@@ -136,6 +125,75 @@ class SimpleImap {
 	}
 
 
+	/**
+	 * extract the subject from the email headers and decode
+	 * A subject can be split into multiple parts...
+	 *
+	 * @param int $messagenum
+	 * @return string
+	 */
+	private function _extractSubject($messagenum) {
+	    $ret = '';
+
+	    $headerinfo = imap_rfc822_parse_headers(imap_fetchheader($this->_connection, $messagenum));
+	    $subjectArr = imap_mime_header_decode($headerinfo->subject);
+	    foreach ($subjectArr as $el) {
+	        $ret .= $el->text;
+	    }
+
+	    return $ret;
+	}
+
+	/**
+	 * extract the body of the given message
+	 * @see http://php.net/manual/en/function.imap-fetchstructure.php
+	 *
+	 * @param int $messagenum
+	 * @return string
+	 */
+	private function _extractBody($messagenum) {
+	    $ret = '';
+
+	    $emailstructure = imap_fetchstructure($this->_connection, $messagenum);
+
+	    # simple or multipart?
+	    if(isset($emailstructure->parts)) {
+	        exit("multipart todo");
+	    }
+	    else {
+	        $body = imap_body($this->_connection, $messagenum);
+	    }
+
+	    # encoding
+    	switch ($emailstructure->encoding) {
+            case ENC8BIT: # 1 8BIT
+                $ret = quoted_printable_decode(imap_8bit($body));
+            break;
+
+            case ENCBINARY: # 2 BINARY
+                $ret = imap_binary($body);
+            break;
+
+            case ENCBASE64: # 3 BASE64
+                $ret = imap_base64($body);
+            break;
+
+            case ENCQUOTEDPRINTABLE: # 4 QUOTED-PRINTABLE
+                $ret = quoted_printable_decode($body);
+            break;
+
+            case ENC7BIT: # 0 7BIT
+                $ret = imap_qprint($body);
+            break;
+
+            case ENCOTHER: # 5 OTHER
+
+            default: # UNKNOWN
+                $ret = $body;
+        }
+
+	    return $ret;
+	}
 
 
 	// move the message to a new folder

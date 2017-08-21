@@ -9,3 +9,8 @@ Make sure you an individual marker string!
 There is no "security" within this method. Only the special string you can define.
 The new links will be hidden at first. You need to verify them before they are 
 visible in your list.
+
+Syntax of the email body:
+
+absolute-link|multiple,category,strings|multiple,tag,strings\n
+new-absolute-link|multiple,category,strings|multiple,tag,strings\n

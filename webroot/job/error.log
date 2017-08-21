@@ -71,3 +71,11 @@ Stack trace:
 [20-Aug-2017 21:06:15 Europe/Berlin] PHP Notice:  Trying to get property of non-object in /home/banana/code/insipid/webroot/lib/simple-imap.class.php on line 77
 [20-Aug-2017 21:06:15 Europe/Berlin] PHP Notice:  Trying to get property of non-object in /home/banana/code/insipid/webroot/lib/simple-imap.class.php on line 77
 [20-Aug-2017 21:06:15 Europe/Berlin] PHP Notice:  Trying to get property of non-object in /home/banana/code/insipid/webroot/lib/simple-imap.class.php on line 77
+[21-Aug-2017 21:35:20 Europe/Berlin] PHP Warning:  imap_utf7_decode(): Invalid modified UTF-7 character: `' in /home/banana/code/insipid/webroot/lib/simple-imap.class.php on line 168
+[21-Aug-2017 21:35:20 Europe/Berlin] PHP Warning:  imap_utf7_decode(): Invalid modified UTF-7 character: `' in /home/banana/code/insipid/webroot/lib/simple-imap.class.php on line 168
+[21-Aug-2017 21:57:07 Europe/Berlin] Read 19 messages
+[21-Aug-2017 21:57:07 Europe/Berlin] Processed 2 messages
+[21-Aug-2017 21:57:33 Europe/Berlin] Read 19 messages
+[21-Aug-2017 21:57:33 Europe/Berlin] Processed 2 messages
+[21-Aug-2017 21:58:00 Europe/Berlin] Read 19 messages
+[21-Aug-2017 21:58:00 Europe/Berlin] Processed 2 messages

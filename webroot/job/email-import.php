@@ -65,20 +65,29 @@ $DB->query("SET collation_connection = 'utf8mb4_bin'");
 
 # the email reader
 $EmailReader = new SimpleImap();
+$emaildata = array();
 try {
     $EmailReader->connect();
     #if(DEBUG === true) {$EmailReader->mailboxStatus();}
 }
 catch (Exception $e) {
     error_log('Email server connection failed: '.var_export($e->getMessage(),true));
+    exit();
 }
 
 try {
-    $EmailReader->process();
+    $emaildata = $EmailReader->bodyFromMessagesWithSubject(EMAIL_MARKER);
 }
 catch (Exception $e) {
     error_log('Can not process email messages: '.var_export($e->getMessage(),true));
+    exit();
 }
+
+# process the emaildata and then move the emails
+var_dump($emaildata);
+
+# move them to the processed / archive folder
+#$EmailReader->move()
 
 $DB->close();
 # END
