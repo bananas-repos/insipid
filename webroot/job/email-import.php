@@ -55,6 +55,13 @@ else {
 
 require('../config.php');
 require('../lib/simple-imap.class.php');
+require('../lib/summoner.class.php');
+require('../lib/tag.class.php');
+require('../lib/category.class.php');
+require('../lib/link.class.php');
+
+$DB = false;
+$Summoner = new Summoner();
 
 ## DB connection
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); # throw exeptions
@@ -85,6 +92,106 @@ catch (Exception $e) {
 
 # process the emaildata and then move the emails
 var_dump($emaildata);
+
+if(!empty($emaildata)) {
+
+    $links = array();
+    foreach($emaildata as $ed) {
+        $links = array_replace($links,$Summoner::extractEmailLinks($ed));
+    }
+
+    $newdata = array();
+    if(!empty($links)) {
+        var_dump($links);
+
+
+        foreach($links as $linkstring) {
+
+            # defaults
+            $newdata['link'] = $linkstring;
+            $newdata['description'] = '';
+            $newdata['title'] = '';
+            $newdata['image'] = '';
+            $newdata['status'] = '3'; # moderation required
+            $search = '';
+            $tagArr = array();
+            $catArr = array();
+            $hash = '';
+
+            if(strstr($linkstring, "|")) {
+                $_t = explode("|", $linkstring);
+                $newdata['link'] = $_t[0];
+
+                $catArr = Summoner::prepareTagOrCategoryStr($_t[1]);
+                if(isset($_t[2])) {
+                    $tagArr = Summoner::prepareTagOrCategoryStr($_t[2]);
+                }
+            }
+
+            $hash = md5($newdata['link']);
+
+            $linkInfo = Summoner::gatherInfoFromURL($newdata['link']);
+            if(!empty($linkInfo)) {
+                if(isset($linkInfo['description'])) {
+                    $newdata['description'] = $linkInfo['description'];
+                }
+                if(isset($linkInfo['title'])) {
+                    $newdata['title'] = $linkInfo['title'];
+                }
+                if(isset($linkInfo['image'])) {
+                    $newdata['image'] = $linkInfo['image'];
+                }
+            }
+
+            $search = $newdata['title'];
+            $search .= ' '.$newdata['description'];
+            $search .= ' '.implode(" ",$tagArr);
+            $search .= ' '.implode(" ",$catArr);
+
+            $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
+                    `link` = '".$DB->real_escape_string($newdata['link'])."',
+                    `created` = NOW(),
+                    `status` = '".$DB->real_escape_string($newdata['status'])."',
+                    `description` = '".$DB->real_escape_string($newdata['description'])."',
+                    `title` = '".$DB->real_escape_string($newdata['title'])."',
+                    `image` = '".$DB->real_escape_string($newdata['image'])."',
+                    `hash` = '".$DB->real_escape_string($hash)."',
+                    `search` = '".$DB->real_escape_string($search)."'";
+            var_dump($newdata);
+            var_dump($queryStr);
+
+            /*
+            $DB->query($queryStr);
+            $linkID = $DB->insert_id;
+
+            if(!empty($linkID)) {
+
+                if(!empty($catArr)) {
+                    foreach($catArr as $c) {
+                        $catObj = new Category($DB);
+                        $catObj->initbystring($c);
+                        $catObj->setRelation($linkID);
+
+                        unset($catObj);
+                    }
+                }
+                if(!empty($tagArr)) {
+                    foreach($tagArr as $t) {
+                        $tagObj = new Tag($DB);
+                        $tagObj->initbystring($t);
+                        $tagObj->setRelation($linkID);
+
+                        unset($tagObj);
+                    }
+                }
+            }
+            */
+
+
+        }
+    }
+
+}
 
 # move them to the processed / archive folder
 #$EmailReader->move()

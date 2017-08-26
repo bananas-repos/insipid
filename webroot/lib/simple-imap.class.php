@@ -76,8 +76,8 @@ class SimpleImap {
 
 	        if(!empty($subject)) {
 	            # check the special stuff
-	            $markerextract = substr($subject, 0, strlen(EMAIL_MARKER));
-	            if($markerextract == EMAIL_MARKER) {
+	            $markerextract = substr($subject, 0, strlen($subjectmarker));
+	            if($markerextract == $subjectmarker) {
 	                $processedmessagescount++;
 	                # valid message
 	                # get the body
@@ -195,6 +195,7 @@ class SimpleImap {
 	    return $ret;
 	}
 
+	/*
 
 	// move the message to a new folder
 	function move($msg_index, $folder='INBOX.Processed') {
@@ -217,7 +218,7 @@ class SimpleImap {
 
 		return $this->_inbox[0];
 	}
-
+*/
 
 
 	/**

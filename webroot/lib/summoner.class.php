@@ -391,6 +391,33 @@ class Summoner {
 	        exit;
 	    }
 	}
+
+	/**
+	 * extract from given string (was email body) any links we want to add
+	 * should be in the right format
+	 * return an array with links and the infos about them
+	 *
+	 * new-absolute-link|multiple,category,strings|multiple,tag,strings\n
+	 *
+	 * @param string $string
+	 * @return array $ret
+	 */
+	static function extractEmailLinks($string) {
+	    $ret = array();
+
+	    #this matches a valid URL. An URL with | is still valid...
+	    $urlpattern  = '#(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))#';
+
+	    preg_match_all($urlpattern, $string, $matches);
+	    if(isset($matches[0]) && !empty($matches[0])) {
+	        foreach($matches[0] as $match) {
+	            $ret[md5($match)] = $match;
+	        }
+	    }
+
+
+	    return $ret;
+	}
 }
 
 ?>
