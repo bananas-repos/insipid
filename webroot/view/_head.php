@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2018 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -27,15 +27,13 @@
  */
 ?>
 <!doctype html>
-<html class="no-js" lang="en" dir="ltr">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Your personal bookmarks - Insipid</title>
-    <link rel="stylesheet" href="asset/css/foundation.min.css">
-    <link rel="stylesheet" href="asset/foundation-icons/foundation-icons.css">
-    <link rel="stylesheet" href="asset/flexdatalist/jquery.flexdatalist.min.css">
-    <link rel="stylesheet" href="asset/css/app.css">
+
+    <link rel="stylesheet" href="asset/css/style.css">
   </head>
   <body>
