@@ -25,56 +25,70 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
- ?>
-<div class="row">
-	<div class="large-12 columns">
-		<p>&nbsp;</p>
-		<form method="post">
-			<input type="hidden" name="password" />
-			<input type="hidden" name="username" />
-    		<div class="input-group">
-    			<span class="input-group-label"><i class="fi-link"></i></span>
-    			<input class="input-group-field" type="text" name="data[searchfield]">
-    			<div class="input-group-button">
-    				<input type="submit" class="button" value="Search" name="submitsearch">
+?>
+
+<section class="section">
+    <div class="columns">
+    	<div class="column">
+    		<form method="post">
+    			<input type="hidden" name="password" />
+    			<input type="hidden" name="username" />
+				<div class="field has-addons">
+    				<div class="control is-expanded">
+        				<div class="control has-icons-left">
+        					<input class="input" type="text" name="data[searchfield]" placeholder="Search your bookmarks">
+        					<span class="icon is-small is-left">
+          						<i class="ion-link"></i>
+        					</span>
+    					</div>
+    				</div>
+    				<div class="control">
+    					<input type="submit" class="button is-info" value="Search" name="submitsearch">
+    				</div>
     			</div>
-    		</div>
-    	</form>
+        	</form>
+        </div>
     </div>
-</div>
+</section>
 
 <?php if(!empty($submitFeedback)) { ?>
-<div class="row">
-	<div class="large-12 columns">
+<section>
+<div class="columns">
+	<div class="column">
 <?php if($submitFeedback['status'] == "error") { ?>
-		<div class="callout alert">
-			<h5>Error</h5>
-			<p><?php echo $submitFeedback['message']; ?></p>
+		<div class="notification is-danger">
+			<?php echo $submitFeedback['message']; ?>
 		</div>
 <?php } else { ?>
-		<div class="callout success">
-			<h5>Success</h5>
+		<div class="notification is-success">
 			<p><?php echo $submitFeedback['message']; ?></p>
 		</div>
 <?php } ?>
 	</div>
 </div>
+</section>
 <?php } ?>
 
 <?php if(!empty($searchResult)) { ?>
-<div class="row">
-	<div class="large-12 columns">
-		<h3>Something has been found...</h3>
-		<ul>
+<section>
+    <div class="columns">
+    	<div class="column">
+    		<div class="content">
+        		<h3>Something has been found...</h3>
+        		<div class="field is-grouped is-grouped-multiline">
 <?php foreach ($searchResult as $sr) { ?>
-		<li>
-			<a href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
-			<a class="infolink" title="more details..." href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="fi-list"></i></a>
-		</li>
+					<div class="control">
+						<div class="tags has-addons">
+        					<a class="tag is-dark" href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
+        					<a class="tag is-info" title="more details..." href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-gear-a"></i></a>
+        				</div>
+        			</div>
 <?php } ?>
-		</ul>
-	</div>
-</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</section>
 <?php } ?>
 
 <?php if($showAddForm) { ?>
@@ -174,48 +188,44 @@
 </form>
 <?php } ?>
 
-<div class="row expanded small-up-2 medium-up-3 large-up-6" data-equalizer data-equalize-by-row="true">
-	<div class="column" >
-		<div class="card" data-equalizer-watch>
-			<div class="card-divider">
+<section class="section">
+	<div class="columns">
+    	<div class="column">
+    		<div class="content">
 	    		<h4><a href="index.php?p=overview&m=all">Last added</a></h4>
-	  		</div>
-			<div class="card-section">
 <?php if(!empty($latestLinks)) { ?>
-				<ul>
+				<div class="tags">
 <?php foreach ($latestLinks as $ll) { ?>
-					<li>
-						<a href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
-					</li>
+					<a class="tag is-medium" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
 <?php } ?>
-				</ul>
+				</div>
 <?php } ?>
 			</div>
 		</div>
 	</div>
+</section>
+
+
+<section class="section">
+	<div class="columns is-multiline">
 <?php
     if(!empty($orderedCategories)) {
         foreach ($orderedCategories as $cat=>$date) {
             $links = $Management->linksByCategoryString($cat);
 ?>
-	<div class="column">
-		<div class="card" data-equalizer-watch>
-			<div class="card-divider">
-				<h4><a href="?p=overview&m=category&id=<?php echo urlencode($cat); ?>"><?php echo $cat; ?></a></h4>
-			</div>
-			<div class="card-section">
-				<ul>
+    	<div class="column is-one-quarter">
+    		<div class="content">
+    			<h4><a href="?p=overview&m=category&id=<?php echo urlencode($cat); ?>"><?php echo $cat; ?></a></h4>
+				<div class="tags">
 <?php foreach ($links as $link) { ?>
-					<li>
-						<a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a>
-					</li>
+					<a class="tag" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a>
 <?php } ?>
-				</ul>
+				</div>
 			</div>
 		</div>
-	</div>
 <?php
         }
     }
 ?>
-</div>
+	</div>
+</section>

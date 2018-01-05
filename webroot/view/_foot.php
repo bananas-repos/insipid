@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2018 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -26,20 +26,17 @@
  *
  */
 ?>
-	<section>
-		<div class="row expanded">
-			<div class="large-12 columns">
-				<div class="callout">
+	<footer>
+		<div class="columns">
+    		<div class="column">
+				<div class="content has-text-centered">
 					&copy; 2016 - <?php echo date('Y'); ?> <a href="https://www.bananas-playground.net/projekt/insipid/" target="_blank">Insipid</a>
 				</div>
 			</div>
 		</div>
-	</section>
+	</footer>
 
-	<script src="asset/js/jquery.js"></script>
-    <script src="asset/js/what-input.js"></script>
-    <script src="asset/js/foundation.min.js"></script>
-    <script src="asset/flexdatalist/jquery.flexdatalist.min.js"></script>
-    <script src="asset/js/app.js"></script>
-  </body>
+	</div>
+
+	</body>
 </html>
