@@ -52,7 +52,7 @@
 </section>
 
 <?php if(!empty($submitFeedback)) { ?>
-<section>
+<section class="section">
 <div class="columns">
 	<div class="column">
 <?php if($submitFeedback['status'] == "error") { ?>
@@ -70,7 +70,7 @@
 <?php } ?>
 
 <?php if(!empty($searchResult)) { ?>
-<section>
+<section class="section">
     <div class="columns">
     	<div class="column">
     		<div class="content">
@@ -92,36 +92,51 @@
 <?php } ?>
 
 <?php if($showAddForm) { ?>
-<form method="post">
-	<input type="hidden" name="password" />
-	<input type="hidden" name="username" />
-	<div class="row">
-    	<div class="large-12 columns">
-    		<h3>This URL was not found. Want to add it?</h3>
+<section class="section">
+	<form method="post">
+    	<input type="hidden" name="password" />
+    	<input type="hidden" name="username" />
+    	<div class="columns">
+        	<div class="column">
+        		<div class="content">
+        			<h3>This URL was not found. Want to add it?</h3>
+    		    </div>
+    		    <div class="field has-addons">
+    				<div class="control is-expanded">
+        				<div class="control has-icons-left">
+        					<input type="url" name="data[url]" class="input" value="<?php echo Summoner::ifset($formData, 'url'); ?>" />
+        					<span class="icon is-small is-left">
+          						<i class="ion-link"></i>
+        					</span>
+        				</div>
+        			</div>
+        		</div>
+    		</div>
     	</div>
-    </div>
-    <div class="row">
-    	<div class="large-12 columns">
-    		<label>
-    			New URL
-    			<input type="url" name="data[url]" value="<?php echo Summoner::ifset($formData, 'url'); ?>" />
-    		</label>
+
+    	<div class="columns">
+    		<div class="column is-half">
+        		<div class="field">
+        			<label class="label">Title</label>
+        			<div class="control">
+    					<input class="input" type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
+    				</div>
+    			</div>
+        	</div>
+        	<div class="column is-half">
+        		<div class="field">
+        			<label class="label">Description</label>
+            		<div class="control">
+            			<input class="input" type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
+            		</div>
+            	</div>
+        	</div>
         </div>
-    </div>
-    <div class="row">
-    	<div class="large-6 columns">
-    		<label>
-    			Description
-    			<input type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
-    		</label>
-    	</div>
-    	<div class="large-6 columns">
-			<label>
-				Title
-				<input type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
-			</label>
-    	</div>
-    </div>
+
+	</form>
+</section>
+
+
     <div class="row">
     	<div class="large-6 columns">
     		<label>
