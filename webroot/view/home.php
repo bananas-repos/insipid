@@ -211,11 +211,7 @@
 <link rel="stylesheet" href="asset/css/jquery.flexdatalist.min.css">
 <script type="text/javascript" src="asset/js/jquery.min.js"></script>
 <script type="text/javascript" src="asset/js/jquery.flexdatalist.min.js"></script>
-<script type="text/javascript">
-$('.flexdatalist').flexdatalist({
-    minLength: 1
-});
-</script>
+
 
 <?php } ?>
 
