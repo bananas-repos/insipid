@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2018 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -133,74 +133,90 @@
         	</div>
         </div>
 
+        <div class="columns">
+        	<div class="column is-half">
+        		<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'image'); ?>" alt="Image from provided link" />
+        	</div>
+    		<div class="column is-half">
+    			<div class="field">
+    				<label class="label">Image Link</label>
+    				<div class="control">
+    					<input class="input" type="url" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+
+    	<div class="columns">
+        	<div class="column is-half">
+        		<label class="label">Category</label>
+        		<div class="control">
+        			<input type="text" name="data[category]" list="categorylist"
+        				class="flexdatalist input" data-min-length='1' multiple='multiple'
+        				value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
+        			<datalist id="categorylist">
+    				<?php foreach($existingCategories as $c) { ?>
+    					<option value="<?php echo $c['name']; ?>"><?php echo $c['name']; ?></option>
+    				<?php } ?>
+                    </datalist>
+        		</div>
+        	</div>
+        	<div class="column is-half">
+        		<label class="label">Tag</label>
+        		<div class="control">
+        			<input type="text" name="data[tag]" list="taglist"
+        				class="flexdatalist input" data-min-length='1' multiple='multiple'
+        				value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
+        			<datalist id="taglist">
+        			<?php foreach($existingTags as $t) { ?>
+    					<option value="<?php echo $t['name']; ?>"><?php echo $t['name']; ?></option>
+    				<?php } ?>
+                    </datalist>
+        		</div>
+        	</div>
+        </div>
+
+        <div class="columns">
+        	<div class="column is-half">
+        		<label class="label">Username</label>
+        		<div class="control">
+    				<input class="input" type="text" name="data[username]" />
+    			</div>
+        	</div>
+        	<div class="column is-half">
+        		<label class="label">Password</label>
+        		<div class="control">
+    				<input class="input" type="password" name="data[password]" />
+    			</div>
+        	</div>
+        </div>
+
+        <div class="columns">
+        	<div class="column is-half">
+        		<label class="checkbox is-pulled-right">
+        			<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
+        			Private
+        		</label>
+        	</div>
+        	<div class="column is-half">
+        		<div class="control">
+        			<input type="submit" class="button is-primary" name="addnewone" value="Add new Link">
+        		</div>
+        	</div>
+        </div>
+
 	</form>
 </section>
 
+<link rel="stylesheet" href="asset/css/jquery.flexdatalist.min.css">
+<script type="text/javascript" src="asset/js/jquery.min.js"></script>
+<script type="text/javascript" src="asset/js/jquery.flexdatalist.min.js"></script>
+<script type="text/javascript">
+$('.flexdatalist').flexdatalist({
+    minLength: 1
+});
+</script>
 
-    <div class="row">
-    	<div class="large-6 columns">
-    		<label>
-    			Image Link
-    			<input type="url" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
-    		</label>
-    	</div>
-    	<div class="large-6 columns">
-			<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'image'); ?>" alt="Image from provided link" />
-    	</div>
-    </div>
-    <div class="row">
-    	<div class="large-6 columns">
-    		<label>
-    			Category
-    			<input type="text" name="data[category]" list="categorylist"
-    				class="flexdatalist" data-min-length='1' multiple='multiple'
-    				value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
-    			<datalist id="categorylist">
-				<?php foreach($existingCategories as $c) { ?>
-					<option value="<?php echo $c['name']; ?>">
-				<?php } ?>
-                </datalist>
-    		</label>
-    	</div>
-    	<div class="large-6 columns">
-    		<label>
-    			Tag
-    			<input type="text" name="data[tag]" list="taglist"
-    				class="flexdatalist" data-min-length='1' multiple='multiple'
-    				value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
-    			<datalist id="taglist">
-    			<?php foreach($existingTags as $t) { ?>
-					<option value="<?php echo $t['name']; ?>">
-				<?php } ?>
-                </datalist>
-    		</label>
-    	</div>
-    </div>
-
-    <div class="row">
-    	<div class="large-6 columns">
-    		<label>
-    			Username
-    			<input type="text" name="data[username]" />
-    		</label>
-    	</div>
-    	<div class="large-6 columns">
-    		<label>
-    			Password
-    			<input type="password" name="data[password]" />
-    		</label>
-    	</div>
-    </div>
-
-    <div class="row">
-    	<div class="large-8 columns">
-    		<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> /><label>Private</label>
-    	</div>
-    	<div class="large-4 columns text-right" >
-    		<input type="submit" class="button" name="addnewone" value="Add new Link">
-    	</div>
-    </div>
-</form>
 <?php } ?>
 
 <section class="section">

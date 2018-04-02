@@ -152,6 +152,12 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
                         `image` = '".$DB->real_escape_string($formData['image'])."',
                         `hash` = '".$DB->real_escape_string($hash)."',
                         `search` = '".$DB->real_escape_string($search)."'";
+
+        var_dump($catArr);
+        var_dump($tagArr);
+        var_dump($queryStr);
+        exit();
+
         $DB->query($queryStr);
         $linkID = $DB->insert_id;
 
