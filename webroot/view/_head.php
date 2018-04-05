@@ -32,6 +32,9 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<meta name="robots" content="noindex,nofollow" />
+
 		<title>Your personal bookmarks - Insipid</title>
 
         <link rel="stylesheet" href="asset/css/bulma.min.css">

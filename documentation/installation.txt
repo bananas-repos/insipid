@@ -23,4 +23,10 @@ The value tableprefix has to match with the value for DB_PREFIX in config.php
 Import the sql file into your MySQL database
 
 7.
-Copy the content of the webroot folder into your webserver folder
+Edit the robots.txt file to your needs.
+
+8.
+Copy the content of the webroot folder into your webserver folder.
+
+9.
+If you want to fully restrict your contents activate the user/password restriction in the config.

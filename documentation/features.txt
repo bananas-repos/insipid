@@ -8,3 +8,5 @@ Bookmarks are put into categories and should have tags.
 New links will be checked and tried to get as much as possible information automatically.
 
 If you enable the email importer, emails contents will be automatically added to the database.
+
+Public or private links. Also a complete user auth option to make your data "private".
