@@ -178,21 +178,6 @@
 
         <div class="columns">
         	<div class="column is-half">
-        		<label class="label">Username</label>
-        		<div class="control">
-    				<input class="input" type="text" name="data[username]" />
-    			</div>
-        	</div>
-        	<div class="column is-half">
-        		<label class="label">Password</label>
-        		<div class="control">
-    				<input class="input" type="password" name="data[password]" />
-    			</div>
-        	</div>
-        </div>
-
-        <div class="columns">
-        	<div class="column is-half">
         		<label class="checkbox is-pulled-right">
         			<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
         			Private

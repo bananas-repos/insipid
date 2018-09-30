@@ -115,6 +115,10 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone']) && $honeypotCheck === false) {
     $fData = $_POST['data'];
 
+    # very simple security check.
+    # can/should be extended in the future.
+    Summoner::simpleAuth();
+
     $formData['private'] = 2;
     if(isset($fData['private'])) {
         $formData['private'] = 1;
@@ -126,12 +130,10 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
     $formData['image'] = trim($fData['image']);
     $formData['category'] = trim($fData['category']);
     $formData['tag'] = trim($fData['tag']);
-    $username = trim($fData['username']);
-    $password = trim($fData['password']);
 
     $isUrl = Summoner::validate($formData['url'],'url');
 
-    if($isUrl === true && !empty($formData['title']) && $username === FRONTEND_USERNAME && $password === FRONTEND_PASSWORD) {
+    if($isUrl === true && !empty($formData['title'])) {
         $hash = md5($formData['url']);
 
         # categories and tag stuff
@@ -195,7 +197,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
         }
     }
     else {
-        $submitFeedback['message'] = 'Please provide a valid URL, title, username and password.';
+        $submitFeedback['message'] = 'Please provide a valid URL and title.';
         $submitFeedback['status'] = 'error';
         $showAddForm = true;
     }

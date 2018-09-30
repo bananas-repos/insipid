@@ -71,6 +71,13 @@ $View = 'home.php';
 # the default script
 $ViewScript = 'home.inc.php';
 
+# if the USE_PAGE_AUTH option is set
+if(defined("USE_PAGE_AUTH") && USE_PAGE_AUTH === true) {
+    # very simple security check.
+    # can/should be extended in the future.
+    Summoner::simpleAuth();
+}
+
 ## DB connection
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); # throw exeptions
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);

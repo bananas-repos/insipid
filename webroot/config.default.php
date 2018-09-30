@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2018 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -36,6 +36,10 @@ define('DB_PREFIX','insipid'); # a _ is added automatically as seperation
 # user config
 define('FRONTEND_USERNAME','luke');
 define('FRONTEND_PASSWORD','father');
+
+# complete restricted access not only the private links or the edit functions
+# username and password see above
+define("USE_PAGE_AUTH",false);
 
 # settings for importing from e-mail
 # SSL/TLS only
