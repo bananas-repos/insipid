@@ -26,102 +26,137 @@
  *
  */
 ?>
+
 <?php if(empty($link)) { ?>
-<div class="callout alert">
-	<h5>Error</h5>
-	<p>Something went wrong...</p>
-</div>
+<section class="section">
+    <div class="columns">
+    	<div class="column">
+    		<div class="notification is-danger">
+    			<h5>Error</h5>
+    			<p>Something went wrong...</p>
+    		</div>
+    	</div>
+    </div>
+</section>
 <?php } ?>
-<div class="row">
-	<div class="large-12 columns">
-		<h1 class="text-center"><?php echo $link['title']; ?></h1>
+
+<section class="section">
+	<div class="columns">
+    	<div class="column">
+    		<p class="has-text-right">
+    			<a href="index.php" title="... back to home" class="button">
+    				<i class="icon ion-md-home"></i>
+    			</a>
+    		</p>
+    	</div>
+    </div>
+
+	<div class="columns">
+    	<div class="column">
+			<h1 class="is-size-2"><?php echo $link['title']; ?></h1>
+		</div>
 	</div>
-</div>
-<div class="row expanded">
-	<div class="large-12 columns">
-		<p class="text-right"><a href="index.php" title="... back to home" class="tiny button"><i class="fi-home"></i></a></p>
+</section>
+
+<section class="section">
+	<div class="columns">
+		<div class="column is-one-third">
+			<p>Title:</p>
+		</div>
+		<div class="column is-two-third">
+			<p><?php echo $link['title']; ?></p>
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-2 columns">
-		<p>Title:</p>
-	</div>
-	<div class="small-12 medium-10 columns">
-		<p><?php echo $link['title']; ?></p>
-	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-2 columns">
-		<p>Description:</p>
-	</div>
-	<div class="small-12 medium-10 columns">
-		<p><?php echo $link['description']; ?></p>
-	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-2 columns">
-		<p>URL:</p>
-	</div>
-	<div class="small-12 medium-10 columns">
-		<p><a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['link']; ?></a></p>
-	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-2 columns">
-		<p>
-			Image:<br />
-			<small>If provided</small>
-		</p>
-	</div>
-	<div class="small-12 medium-10 columns">
-		<p>
-			<img class="linkthumbnail" src="<?php echo $link['image']; ?>" alt="Image if provided">
-		</p>
-	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-2 columns">
-		<p>Date added:</p>
-	</div>
-	<div class="small-12 medium-10 columns">
-		<p><?php echo $link['created']; ?></p>
-	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-2 columns">
-		<p>Tags:</p>
-	</div>
-	<div class="small-12 medium-10 columns">
-		<?php
-            if(!empty($link['tags'])) {
-		      foreach($link['tags'] as $v) {
-        ?>
-        	<a href="index.php?p=overview&m=tag&id=<?php echo urlencode($v['tag']); ?>" class="button tiny"><i class="fi-price-tag"></i> <?php echo $v['tag']; ?></a>
-        <?php
-		      }
-            }
-	    ?>
-	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-2 columns">
-		<p>Category:</p>
-	</div>
-	<div class="small-12 medium-10 columns">
-		<?php
-            if(!empty($link['categories'])) {
-		      foreach($link['categories'] as $v) {
-        ?>
-        	<a href="index.php?p=overview&m=category&id=<?php echo urlencode($v['category']); ?>" class="button tiny"><i class="fi-ticket"></i> <?php echo $v['category']; ?></a>
-        <?php
-		      }
-            }
-	    ?>
-	</div>
-</div>
-<div class="row">
-	<div class="small-12 medium-12 columns text-right">
-        <a href="index.php?p=editlink&id=<?php echo $link['hash']; ?>" class="button tiny alert"><i class="fi-page-edit"></i> edit</a>
-	</div>
-</div>
+	<div class="columns">
+    	<div class="column is-one-third">
+    		<p>Description:</p>
+    	</div>
+    	<div class="column is-two-third">
+    		<p><?php echo $link['description']; ?></p>
+    	</div>
+    </div>
+    <div class="columns">
+    	<div class="column is-one-third">
+    		<p>URL:</p>
+    	</div>
+    	<div class="column is-two-third">
+    		<p><a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['link']; ?></a></p>
+    	</div>
+    </div>
+    <div class="columns">
+    	<div class="column is-one-third">
+    		<p>
+    			Image: (<small>If provided</small>)
+    		</p>
+    	</div>
+    	<div class="column is-two-third">
+    		<p>
+    			<img class="linkthumbnail" src="<?php echo $link['image']; ?>" alt="Image if provided">
+    		</p>
+    	</div>
+    </div>
+    <div class="columns">
+    	<div class="column is-one-third">
+    		<p>Date added:</p>
+    	</div>
+    	<div class="column is-two-third">
+    		<p><?php echo $link['created']; ?></p>
+    	</div>
+    </div>
+    <div class="columns">
+    	<div class="column is-one-third">
+    		<p>Tags:</p>
+    	</div>
+    	<div class="column is-two-third">
+    		<?php
+                if(!empty($link['tags'])) {
+    		      foreach($link['tags'] as $v) {
+            ?>
+            	<a href="index.php?p=overview&m=tag&id=<?php echo urlencode($v['tag']); ?>" class="button is-small">
+            		<span class="icon"><i class="ion-md-pricetag"></i></span>
+            		<span><?php echo $v['tag']; ?></span>
+            	</a>
+            <?php
+    		      }
+                }
+    	    ?>
+    	</div>
+    </div>
+    <div class="columns">
+    	<div class="column is-one-third">
+    		<p>Category:</p>
+    	</div>
+    	<div class="column is-two-third">
+    		<?php
+                if(!empty($link['categories'])) {
+    		      foreach($link['categories'] as $v) {
+            ?>
+            	<a href="index.php?p=overview&m=category&id=<?php echo urlencode($v['category']); ?>" class="button is-small">
+            		<span class="icon"><i class="ion-md-list"></i></span>
+            		<span><?php echo $v['category']; ?></span>
+            	</a>
+            <?php
+    		      }
+                }
+    	    ?>
+    	</div>
+    </div>
+    <div class="columns">
+    	<div class="column">
+            <a href="index.php?p=editlink&id=<?php echo $link['hash']; ?>" class="button is-small is-danger">
+            	<span class="icon">
+            		<i class="ion-md-create"></i>
+            	</span>
+            	<span>edit</span>
+            </a>
+    	</div>
+    </div>
+</section>
+
+
+
+
+
+
+
 
