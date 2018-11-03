@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2018 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -40,26 +40,62 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 }
 
 $linkObj = new Link($DB);
-$link = $linkObj->load($_id);
-if(empty($link)) {
+$linkObj->load($_id);
+$linkData = $linkObj->getData();
+if(empty($linkData)) {
     header("HTTP/1.0 404 Not Found");
 }
 
-$formData = $link;
-# prepate the tag edit string
+if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink'])) {
+    $fData = $_POST['data'];
+
+    $formData['private'] = 2;
+    if(isset($fData['private'])) {
+        $formData['private'] = 1;
+    }
+
+    $formData['description'] = trim($fData['description']);
+    $formData['title'] = trim($fData['title']);
+    $formData['image'] = trim($fData['image']);
+    $formData['category'] = trim($fData['category']);
+    $formData['tag'] = trim($fData['tag']);
+
+    if(!empty($formData['title'])) {
+        $update = $linkObj->update($formData);
+
+        if($update === true) {
+            $submitFeedback['message'] = 'Link updated successfully.';
+            $submitFeedback['status'] = 'success';
+            // update link info
+            $linkObj->reload();
+            $linkData = $linkObj->getData();
+        }
+        else {
+            $submitFeedback['message'] = 'Something went wrong...';
+            $submitFeedback['status'] = 'error';
+        }
+    }
+    else {
+        $submitFeedback['message'] = 'Please provide a title.';
+        $submitFeedback['status'] = 'error';
+    }
+}
+
+$formData = $linkData;
+# prepate the tag string
 $formData['tag'] = '';
-if(!empty($link['tags'])) {
-    foreach($link['tags'] as $entry) {
-        $formData['tag'] .= $entry['tag'].',';
+if(!empty($linkData['tags'])) {
+    foreach($linkData['tags'] as $k=>$v) {
+        $formData['tag'] .= $v.',';
     }
     $formData['tag'] = trim($formData['tag']," ,");
 }
 
 # prepate the category string
 $formData['category'] = '';
-if(!empty($link['categories'])) {
-    foreach($link['categories'] as $entry) {
-        $formData['category'] .= $entry['category'].',';
+if(!empty($linkData['categories'])) {
+    foreach($linkData['categories'] as $k=>$v) {
+        $formData['category'] .= $v.',';
     }
     $formData['category'] = trim($formData['category']," ,");
 }

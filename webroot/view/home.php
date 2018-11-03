@@ -152,7 +152,8 @@
         		<label class="label">Category</label>
         		<div class="control">
         			<input type="text" name="data[category]" list="categorylist"
-        				class="flexdatalist input" data-min-length='1' multiple='multiple'
+        				class="flexdatalist input" multiple='multiple'
+        				data-min-length="0" data-cache="0"
         				value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
         			<datalist id="categorylist">
     				<?php foreach($existingCategories as $c) { ?>
@@ -165,7 +166,8 @@
         		<label class="label">Tag</label>
         		<div class="control">
         			<input type="text" name="data[tag]" list="taglist"
-        				class="flexdatalist input" data-min-length='1' multiple='multiple'
+        				class="flexdatalist input" multiple='multiple'
+        				data-min-length="0" data-cache="0"
         				value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
         			<datalist id="taglist">
         			<?php foreach($existingTags as $t) { ?>

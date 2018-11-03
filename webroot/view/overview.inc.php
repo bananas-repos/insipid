@@ -47,26 +47,26 @@ switch($_requestMode) {
         if(!empty($_id)) {
             $linkCollection = $Management->linksByTagString($_id,false);
             if(!empty($linkCollection)) {
-                $subHeadline = $linkCollection[0]['tag'];
+                $subHeadline = $linkCollection[0]['tag'].' <i class="ion-md-pricetag"></i>';
             }
         }
         else {
             # show all the tags we have
             $tagCollection = $Management->tags();
-            $subHeadline = 'All the tags <i class="fi-price-tag"></i>';
+            $subHeadline = 'All the tags <i class="ion-md-pricetag"></i>';
         }
     break;
     case 'category':
         if(!empty($_id)) {
             $linkCollection = $Management->linksByCategoryString($_id,false);
             if(!empty($linkCollection)) {
-                $subHeadline = $linkCollection[0]['category'];
+                $subHeadline = $linkCollection[0]['category'].' <i class="ion-md-list"></i>';
             }
         }
         else {
             # show all the categories we have
             $categoryCollection = $Management->categories();
-            $subHeadline = 'All the categories <i class="fi-ticket"></i>';
+            $subHeadline = 'All the categories <i class="ion-md-list"></i>';
         }
     break;
     case 'all':

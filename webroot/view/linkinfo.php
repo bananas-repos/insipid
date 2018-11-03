@@ -27,7 +27,7 @@
  */
 ?>
 
-<?php if(empty($link)) { ?>
+<?php if(empty($linkData)) { ?>
 <section class="section">
     <div class="columns">
     	<div class="column">
@@ -53,7 +53,7 @@
 
 	<div class="columns">
     	<div class="column">
-			<h1 class="is-size-2"><?php echo $link['title']; ?></h1>
+			<h1 class="is-size-2"><?php echo $linkData['title']; ?></h1>
 		</div>
 	</div>
 </section>
@@ -64,7 +64,7 @@
 			<p>Title:</p>
 		</div>
 		<div class="column is-two-third">
-			<p><?php echo $link['title']; ?></p>
+			<p><?php echo $linkData['title']; ?></p>
 		</div>
 	</div>
 	<div class="columns">
@@ -72,7 +72,7 @@
     		<p>Description:</p>
     	</div>
     	<div class="column is-two-third">
-    		<p><?php echo $link['description']; ?></p>
+    		<p><?php echo $linkData['description']; ?></p>
     	</div>
     </div>
     <div class="columns">
@@ -80,7 +80,7 @@
     		<p>URL:</p>
     	</div>
     	<div class="column is-two-third">
-    		<p><a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['link']; ?></a></p>
+    		<p><a href="<?php echo $linkData['link']; ?>" target="_blank"><?php echo $linkData['link']; ?></a></p>
     	</div>
     </div>
     <div class="columns">
@@ -91,7 +91,7 @@
     	</div>
     	<div class="column is-two-third">
     		<p>
-    			<img class="linkthumbnail" src="<?php echo $link['image']; ?>" alt="Image if provided">
+    			<img class="linkthumbnail" src="<?php echo $linkData['image']; ?>" alt="Image if provided...">
     		</p>
     	</div>
     </div>
@@ -100,7 +100,7 @@
     		<p>Date added:</p>
     	</div>
     	<div class="column is-two-third">
-    		<p><?php echo $link['created']; ?></p>
+    		<p><?php echo $linkData['created']; ?></p>
     	</div>
     </div>
     <div class="columns">
@@ -109,12 +109,12 @@
     	</div>
     	<div class="column is-two-third">
     		<?php
-                if(!empty($link['tags'])) {
-    		      foreach($link['tags'] as $v) {
+                if(!empty($linkData['tags'])) {
+    		      foreach($linkData['tags'] as $k=>$v) {
             ?>
             	<a href="index.php?p=overview&m=tag&id=<?php echo urlencode($v['tag']); ?>" class="button is-small">
             		<span class="icon"><i class="ion-md-pricetag"></i></span>
-            		<span><?php echo $v['tag']; ?></span>
+            		<span><?php echo $v; ?></span>
             	</a>
             <?php
     		      }
@@ -128,12 +128,12 @@
     	</div>
     	<div class="column is-two-third">
     		<?php
-                if(!empty($link['categories'])) {
-    		      foreach($link['categories'] as $v) {
+                if(!empty($linkData['categories'])) {
+    		      foreach($linkData['categories'] as $k=>$v) {
             ?>
             	<a href="index.php?p=overview&m=category&id=<?php echo urlencode($v['category']); ?>" class="button is-small">
             		<span class="icon"><i class="ion-md-list"></i></span>
-            		<span><?php echo $v['category']; ?></span>
+            		<span><?php echo $v; ?></span>
             	</a>
             <?php
     		      }
@@ -143,7 +143,7 @@
     </div>
     <div class="columns">
     	<div class="column">
-            <a href="index.php?p=editlink&id=<?php echo $link['hash']; ?>" class="button is-small is-danger">
+            <a href="index.php?p=editlink&id=<?php echo $linkData['hash']; ?>" class="button is-small is-danger">
             	<span class="icon">
             		<i class="ion-md-create"></i>
             	</span>

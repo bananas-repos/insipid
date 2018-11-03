@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2018 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -34,10 +34,10 @@ class Link {
     private $DB;
 
     /**
-     * the current loaded tag by DB id
-     * @var int
+     * the current loaded link data
+     * @var array
      */
-    private $id;
+    private $_data;
 
     public function __construct($databaseConnectionObject) {
         $this->DB = $databaseConnectionObject;
@@ -51,6 +51,8 @@ class Link {
     public function load($hash) {
         $ret = false;
 
+        $this->_data = array();
+
         if(!empty($hash)) {
             $queryStr = "SELECT * FROM `".DB_PREFIX."_link`
                             WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
@@ -58,24 +60,101 @@ class Link {
             if(!empty($query) && $query->num_rows == 1) {
                 $ret = $query->fetch_assoc();
 
-                $this->id = $ret['hash'];
+                $this->_data = $ret;
 
                 # add stuff
-                $ret['tags'] = $this->_tags();
-                $ret['categories'] = $this->_categories();
+                $this->_tags();
+                $this->_categories();
             }
+        }
+
+        return $this->_data;
+    }
+
+    public function getData($key=false) {
+        $ret = $this->_data;
+
+        if(!empty($key) && isset($this->_data[$key])) {
+            $ret = $this->_data[$key];
         }
 
         return $ret;
     }
 
-    public function create($data) {}
+    /**
+     * reload the current id from DB
+     */
+    public function reload() {
+        $this->load($this->_data['hash']);
+    }
+
+    /**
+     * create a new link with the given data
+     * @param array $data
+     */
+    public function create($data) {
+    }
+
+    /**
+     * update the current loaded link with the given data
+     * @param array $data
+     * @return boolean|int
+     */
+    public function update($data) {
+
+        $ret = false;
+
+        if(isset($data['title']) && !empty($data['title'])) {
+
+            # categories and tag stuff
+            $catArr = Summoner::prepareTagOrCategoryStr($data['category']);
+            $tagArr = Summoner::prepareTagOrCategoryStr($data['tag']);
+
+            $search = $data['title'];
+            $search .= ' '.$data['description'];
+            $search .= ' '.implode(" ",$tagArr);
+            $search .= ' '.implode(" ",$catArr);
+
+            $queryStr = "UPDATE `".DB_PREFIX."_link` SET
+                            `status` = '".$this->DB->real_escape_string($data['private'])."',
+                            `description` = '".$this->DB->real_escape_string($data['description'])."',
+                            `title` = '".$this->DB->real_escape_string($data['title'])."',
+                            `image` = '".$this->DB->real_escape_string($data['image'])."',
+                            `search` = '".$this->DB->real_escape_string($search)."'
+                          WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
+
+            $query = $this->DB->query($queryStr);
+
+            $catObj = new Category($this->DB);
+            $tagObj = new Tag($this->DB);
+            // clean the relations first
+            $this->_removeTagRelation(false);
+            $this->_removeCategoryRelation(false);
+
+            if(!empty($catArr)) {
+                foreach($catArr as $c) {
+                    $catObj->initbystring($c);
+                    $catObj->setRelation($this->_data['id']);
+                }
+            }
+            if(!empty($tagArr)) {
+                foreach($tagArr as $t) {
+                    $tagObj->initbystring($t);
+                    $tagObj->setRelation($this->_data['id']);
+                }
+            }
+
+            $ret = true;
+        }
+
+        return $ret;
+    }
 
     /**
      * check if the given URL exists in the DB
-     * if so return the id. If not, return false
+     * if so return the hash. If not, return false
      * @param string $link
-     * @return boolean|int
+     * @return string
      */
     public function exists($link) {
         $ret = false;
@@ -100,16 +179,21 @@ class Link {
     private function _tags() {
         $ret = array();
 
-        if(!empty($this->id)) {
+        if(!empty($this->_data['hash'])) {
             $queryStr = "SELECT DISTINCT(tag) FROM `".DB_PREFIX."_combined`
-                            WHERE `hash` = '".$this->DB->real_escape_string($this->id)."'";
+                            WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
-                $ret = $query->fetch_all(MYSQLI_ASSOC);
+                while($result = $query->fetch_assoc()) {
+                    if($result['tag'] !== NULL) {
+                        $ret[] = $result['tag'];
+                    }
+                }
+
             }
         }
 
-        return $ret;
+        $this->_data['tags'] = $ret;
     }
 
     /**
@@ -119,16 +203,64 @@ class Link {
     private function _categories() {
         $ret = array();
 
-        if(!empty($this->id)) {
+        if(!empty($this->_data['hash'])) {
             $queryStr = "SELECT DISTINCT(category) FROM `".DB_PREFIX."_combined`
-                            WHERE `hash` = '".$this->DB->real_escape_string($this->id)."'";
+                            WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
-                $ret = $query->fetch_all(MYSQLI_ASSOC);
+            while($result = $query->fetch_assoc()) {
+                    if($result['category'] !== NULL) {
+                        $ret[] = $result['category'];
+                    }
+                }
             }
         }
 
-        return $ret;
+        $this->_data['categories'] = $ret;
+    }
+
+    /**
+     * remove all or given tag relation to the current loaded link
+     * @param mixed $tagid
+     */
+    private function _removeTagRelation($tagid) {
+        if(!empty($this->_data['id'])) {
+            $queryStr = false;
+            if($tagid === false) {
+                $queryStr = "DELETE FROM `".DB_PREFIX."_tagrelation`
+                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
+            }
+            elseif(is_numeric($tagid)) {
+                $queryStr = "DELETE FROM `".DB_PREFIX."_tagrelation`
+                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'
+                                AND `tagid` = '".$this->DB->real_escape_string($tagid)."'";
+            }
+            if(!empty($queryStr)) {
+                $this->DB->query($queryStr);
+            }
+        }
+    }
+
+    /**
+     * remove all or given category relation to the current loaded link
+     * @param mixed $categoryid
+     */
+    private function _removeCategoryRelation($categoryid) {
+        if(!empty($this->_data['id'])) {
+            $queryStr = false;
+            if($categoryid === false) {
+                $queryStr = "DELETE FROM `".DB_PREFIX."_categoryrelation`
+                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
+            }
+            elseif(is_numeric($categoryid)) {
+                $queryStr = "DELETE FROM `".DB_PREFIX."_categoryrelation`
+                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'
+                                AND `categoryid` = '".$this->DB->real_escape_string($categoryid)."'";
+            }
+            if(!empty($queryStr)) {
+                $this->DB->query($queryStr);
+            }
+        }
     }
 }
  ?>

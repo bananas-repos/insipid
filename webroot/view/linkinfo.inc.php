@@ -38,7 +38,7 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 }
 
 $linkObj = new Link($DB);
-$link = $linkObj->load($_id);
-if(empty($link)) {
+$linkData = $linkObj->load($_id);
+if(empty($linkData)) {
     header("HTTP/1.0 404 Not Found");
 }

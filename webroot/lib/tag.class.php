@@ -48,6 +48,7 @@ class Tag {
      * @param string $string
      */
     public function initbystring($string) {
+        $this->id = false;
         if(!empty($string)) {
             $queryStr = "SELECT id FROM `".DB_PREFIX."_tag`
                             WHERE `name` = '".$this->DB->real_escape_string($string)."'";

@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2018 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -27,128 +27,147 @@
  */
 ?>
 
-<?php if(empty($link)) { ?>
-<div class="callout alert">
-	<h5>Error</h5>
-	<p>Something went wrong...</p>
-</div>
+<section class="section">
+<?php if(empty($linkData)) { ?>
+    <div class="columns">
+    	<div class="column">
+    		<div class="notification is-danger">
+    			<h5>Error</h5>
+    			<p>Something went wrong...</p>
+    		</div>
+    	</div>
+    </div>
 <?php } ?>
-
 <?php if(!empty($submitFeedback)) { ?>
-<div class="row">
-	<div class="large-12 columns">
+	<div class="columns">
+		<div class="column">
 <?php if($submitFeedback['status'] == "error") { ?>
-		<div class="callout alert">
-			<h5>Error</h5>
-			<p><?php echo $submitFeedback['message']; ?></p>
-		</div>
+    		<div class="notification is-danger">
+    			<h5>Error</h5>
+    			<p><?php echo $submitFeedback['message']; ?></p>
+    		</div>
 <?php } else { ?>
-		<div class="callout success">
-			<h5>Success</h5>
-			<p><?php echo $submitFeedback['message']; ?></p>
+    		<div class="notification is-success">
+    			<h5>Success</h5>
+    			<p><?php echo $submitFeedback['message']; ?></p>
+    		</div>
+<?php } ?>
 		</div>
-<?php } ?>
 	</div>
-</div>
 <?php } ?>
 
-<div class="row">
-	<div class="large-12 columns">
-		<h1 class="text-center"><?php echo $link['title']; ?></h1>
-	</div>
-</div>
-<div class="row expanded">
-	<div class="large-12 columns">
-		<p class="text-right"><a href="index.php" title="... back to home" class="tiny button"><i class="fi-home"></i></a></p>
-	</div>
-</div>
-
-<form method="post">
-	<div class="row">
-    	<div class="small-12 medium-2 columns">
-    		<p>Date added:</p>
-    	</div>
-    	<div class="small-12 medium-10 columns">
-    		<p><?php echo $link['created']; ?></p>
-    	</div>
-    </div>
-    <div class="row">
-    	<div class="small-12 medium-2 columns">
-    		<p>Title:</p>
-    	</div>
-    	<div class="small-12 medium-10 columns">
-    		<input type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
-    	</div>
-    </div>
-    <div class="row">
-    	<div class="small-12 medium-2 columns">
-    		<p>Description:</p>
-    	</div>
-    	<div class="small-12 medium-10 columns">
-    		<input type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
-    	</div>
-    </div>
-    <div class="row">
-    	<div class="small-12 medium-2 columns">
-    		<p>URL:</p>
-    	</div>
-    	<div class="small-12 medium-10 columns">
-    		<p><?php echo $link['link']; ?></p>
-    	</div>
-    </div>
-    <div class="row">
-    	<div class="small-12 medium-2 columns">
-    		<p>
-    			Image:<br />
-    			<small>If provided</small>
+	<div class="columns">
+    	<div class="column">
+    		<p class="has-text-right">
+    			<a href="index.php" title="... back to home" class="button">
+    				<i class="icon ion-md-home"></i>
+    			</a>
     		</p>
-    	</div>
-    	<div class="small-12 medium-10 columns">
-    		<p>
-    			<img class="linkthumbnail" src="<?php echo $link['image']; ?>" alt="Image if provided">
-    		</p>
-    		<input type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
     	</div>
     </div>
 
-    <div class="row">
-    	<div class="small-12 medium-2 columns">
-    		<p>Tags:</p>
-    	</div>
-    	<div class="small-12 medium-10 columns">
-    	    <input type="text" name="data[tag]" list="taglist"
-				class="flexdatalist" data-min-length='1' multiple='multiple'
-				value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
-			<datalist id="taglist">
-			<?php foreach($existingTags as $t) { ?>
-				<option value="<?php echo $t['name']; ?>">
-			<?php } ?>
-            </datalist>
-            <br />
-    	</div>
-    </div>
-    <div class="row">
-    	<div class="small-12 medium-2 columns">
-    		<p>Category:</p>
-    	</div>
-    	<div class="small-12 medium-10 columns">
-    	    <input type="text" name="data[category]" list="categorylist"
-				class="flexdatalist" data-min-length='1' multiple='multiple'
-				value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
-			<datalist id="categorylist">
-			<?php foreach($existingCategories as $c) { ?>
-				<option value="<?php echo $c['name']; ?>">
-			<?php } ?>
-            </datalist>
-            <br />
-    	</div>
-    </div>
-    <div class="row">
-    	<div class="large-8 columns">
-    		<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> /><label>Private</label>
-    	</div>
-    	<div class="large-4 columns text-right" >
-    		<input type="submit" class="button" name="editlink" value="Update">
-    	</div>
-    </div>
-</form>
+	<div class="columns">
+    	<div class="column">
+			<h1 class="is-size-2"><?php echo $linkData['title']; ?></h1>
+		</div>
+	</div>
+</section>
+
+<section class="section">
+
+    <form method="post">
+    	<div class="columns">
+        	<div class="column is-one-quarter">
+        		<p>Date added:</p>
+        	</div>
+        	<div class="column">
+        		<p><?php echo $linkData['created']; ?></p>
+        	</div>
+        </div>
+        <div class="columns">
+        	<div class="column is-one-quarter">
+        		<p>Title:</p>
+        	</div>
+        	<div class="column">
+        		<input class="input" type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
+        	</div>
+        </div>
+        <div class="columns">
+        	<div class="column is-one-quarter">
+        		<p>Description:</p>
+        	</div>
+        	<div class="column">
+        		<input class="input" type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
+        	</div>
+        </div>
+        <div class="columns">
+        	<div class="column is-one-quarter">
+        		<p>URL:</p>
+        	</div>
+        	<div class="column">
+        		<p><?php echo $linkData['link']; ?></p>
+        	</div>
+        </div>
+        <div class="columns">
+        	<div class="column is-one-quarter">
+        		<p>
+        			Image: (<small>If provided</small>)
+        		</p>
+        	</div>
+        	<div class="column">
+        		<p>
+        			<img class="linkthumbnail" src="<?php echo $linkData['image']; ?>" alt="Image if provided...">
+        		</p>
+        		<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
+        	</div>
+        </div>
+
+        <div class="columns">
+        	<div class="column is-one-quarter">
+        		<p>Tags:</p>
+        	</div>
+        	<div class="column">
+        	    <input type="text" name="data[tag]" list="taglist"
+    				class="flexdatalist input" multiple='multiple'
+    				data-min-length="0" data-cache="0" data-selection-required='true'
+    				data-toggle-selected="true"
+    				value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
+    			<datalist id="taglist">
+    			<?php foreach($existingTags as $t) { ?>
+    				<option value="<?php echo $t['name']; ?>"><?php echo $t['name']; ?></option>
+    			<?php } ?>
+                </datalist>
+        	</div>
+        </div>
+        <div class="columns">
+        	<div class="column is-one-quarter">
+        		<p>Category:</p>
+        	</div>
+        	<div class="column">
+        	    <input type="text" name="data[category]" list="categorylist"
+    				class="flexdatalist input" multiple='multiple'
+    				data-min-length="0" data-cache="0" data-selection-required='true'
+    				data-toggle-selected="true"
+    				value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
+    			<datalist id="categorylist">
+    			<?php foreach($existingCategories as $c) { ?>
+    				<option value="<?php echo $c['name']; ?>"><?php echo $c['name']; ?></option>
+    			<?php } ?>
+                </datalist>
+        	</div>
+        </div>
+        <div class="columns">
+        	<div class="column is-half">
+        		<label>Private</label>
+        		<input class="checkbox" type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
+        	</div>
+        	<div class="column is-half">
+        		<input type="submit" class="button is-primary" name="editlink" value="Update">
+        	</div>
+        </div>
+    </form>
+</section>
+
+<link rel="stylesheet" href="asset/css/jquery.flexdatalist.min.css">
+<script type="text/javascript" src="asset/js/jquery.min.js"></script>
+<script type="text/javascript" src="asset/js/jquery.flexdatalist.min.js"></script>
