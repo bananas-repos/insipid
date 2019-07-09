@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -37,11 +37,12 @@ class Management {
         $this->DB = $databaseConnectionObject;
     }
 
-    /**
-     * get all the available categories from the DB.
-     * optinal limit
-     * @param int $limit
-     */
+	/**
+	 * get all the available categories from the DB.
+	 * optional limit
+	 * @param bool | int $limit
+	 * @return array
+	 */
     public function categories($limit=false) {
         $ret = array();
 
@@ -57,11 +58,12 @@ class Management {
         return $ret;
     }
 
-    /**
-     * get all the available tags from the DB.
-     * optional limit
-     * @param int $limit
-     */
+	/**
+	 * get all the available tags from the DB.
+	 * optional limit
+	 * @param bool | int $limit
+	 * @return array
+	 */
     public function tags($limit=false) {
         $ret = array();
 
@@ -77,10 +79,11 @@ class Management {
         return $ret;
     }
 
-    /**
-     * return the latest addded links
-     * @param number $limit
-     */
+	/**
+	 * return the latest addded links
+	 * @param int $limit
+	 * @return array
+	 */
     public function latestLinks($limit=5) {
         $ret = array();
 
@@ -123,16 +126,28 @@ class Management {
         return $ret;
     }
 
-    /**
-     * find all links by given category string.
-     * Return array sorted by creation date DESC
-     * @param string $string
-     * @param number $limit
-     */
+	/**
+	 * find all links by given category string.
+	 * Return array sorted by creation date DESC
+	 * @param string $string
+	 * @param int $limit
+	 * @return array
+	 */
     public function linksByCategoryString($string,$limit=5) {
         $ret = array();
 
-        $queryStr = "SELECT * FROM `".DB_PREFIX."_combined`
+        $queryStr = "SELECT 
+				any_value(`id`) as id,
+ 				any_value(`link`) as link,
+ 				any_value(`created`) as created,
+ 				any_value(`status`) as status,
+ 				any_value(`description`) as description,
+ 				any_value(`title`) as title,
+ 				any_value(`image`) as image,
+ 				any_value(`hash`) as hash,
+ 				any_value(`tag`) as tag,
+ 				any_value(`category`) as category
+			FROM `".DB_PREFIX."_combined`
             WHERE `status` = 2
                 AND `category` = '".$this->DB->real_escape_string($string)."'
             GROUP BY `hash`
@@ -148,16 +163,28 @@ class Management {
         return $ret;
     }
 
-    /**
-     * find all links by given tag string.
-     * Return array sorted by creation date DESC
-     * @param string $string
-     * @param number $limit
-     */
+	/**
+	 * find all links by given tag string.
+	 * Return array sorted by creation date DESC
+	 * @param string $string
+	 * @param int $limit
+	 * @return array
+	 */
     public function linksByTagString($string,$limit=5) {
         $ret = array();
 
-        $queryStr = "SELECT * FROM `".DB_PREFIX."_combined`
+        $queryStr = "SELECT
+				any_value(`id`) as id,
+ 				any_value(`link`) as link,
+ 				any_value(`created`) as created,
+ 				any_value(`status`) as status,
+ 				any_value(`description`) as description,
+ 				any_value(`title`) as title,
+ 				any_value(`image`) as image,
+ 				any_value(`hash`) as hash,
+ 				any_value(`tag`) as tag,
+ 				any_value(`category`) as category 
+			FROM `".DB_PREFIX."_combined`
             WHERE `status` = 2
                 AND `tag` = '".$this->DB->real_escape_string($string)."'
             GROUP BY `hash`
@@ -173,17 +200,29 @@ class Management {
         return $ret;
     }
 
-    /**
-     * return all links and Info we have from the combined view
-     * @param int $limit
-     */
+	/**
+	 * return all links and Info we have from the combined view
+	 * @param bool | int $limit
+	 * @return array
+	 */
     public function links($limit=false) {
         $ret = array();
 
-        $queryStr = "SELECT * FROM `".DB_PREFIX."_combined`
-                        WHERE `status` = 2
-                        GROUP BY `hash`
-                        ORDER BY `created` DESC";
+        $queryStr = "SELECT
+				any_value(`id`) as id,
+ 				any_value(`link`) as link,
+ 				any_value(`created`) as created,
+ 				any_value(`status`) as status,
+ 				any_value(`description`) as description,
+ 				any_value(`title`) as title,
+ 				any_value(`image`) as image,
+ 				any_value(`hash`) as hash,
+ 				any_value(`tag`) as tag,
+ 				any_value(`category`) as category 
+			FROM `".DB_PREFIX."_combined`
+            WHERE `status` = 2
+            GROUP BY `hash`
+            ORDER BY `created` DESC";
         $query = $this->DB->query($queryStr);
         if(!empty($query) && $query->num_rows > 0) {
             $ret = $query->fetch_all(MYSQLI_ASSOC);
@@ -193,7 +232,7 @@ class Management {
     }
 
     /**
-     * for simpler management we have the search data in a seperate column
+     * for simpler management we have the search data in a separate column
      * it is not fancy or even technical nice but it damn works
      */
     private function _updateSearchIndex() {

@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -96,8 +96,8 @@ if(isset($_GET['p']) && !empty($_GET['p'])) {
     $View = $_requestPage.'.php';
 }
 
-# now inlcude the script
-# this sets informatio into $Data and can overwrite $View
+# now include the script
+# this sets information into $Data and can overwrite $View
 if(file_exists('view/'.$ViewScript)) {
     require 'view/'.$ViewScript;
 }
