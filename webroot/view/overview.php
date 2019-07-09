@@ -61,13 +61,15 @@
 	<div class="column is-one-quarter">
 		<div class="card">
 			<div class="card-image">
-    		<?php if(!empty($link['image'])) { ?>
     			<figure class="image is-4by3">
           		<a href="<?php echo $link['link']; ?>" target="_blank">
+            <?php if(!empty($link['image'])) { ?>
             	<img class="" src= "<?php echo $link['image']; ?>">
+			<?php } else { ?>
+                <img class="" src= "asset/img/no-link-picture.png">
+            <?php } ?>
             	</a>
             	</figure>
-    		<?php } ?>
 			</div>
 			<div class="card-content">
 				<div class="content">
