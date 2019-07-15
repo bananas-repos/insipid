@@ -112,7 +112,7 @@
                 if(!empty($linkData['tags'])) {
     		      foreach($linkData['tags'] as $k=>$v) {
             ?>
-            	<a href="index.php?p=overview&m=tag&id=<?php echo urlencode($v['tag']); ?>" class="button is-small">
+            	<a href="index.php?p=overview&m=tag&id=<?php echo urlencode($k); ?>" class="button is-small">
             		<span class="icon"><i class="ion-md-pricetag"></i></span>
             		<span><?php echo $v; ?></span>
             	</a>
@@ -131,7 +131,7 @@
                 if(!empty($linkData['categories'])) {
     		      foreach($linkData['categories'] as $k=>$v) {
             ?>
-            	<a href="index.php?p=overview&m=category&id=<?php echo urlencode($v['category']); ?>" class="button is-small">
+            	<a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>" class="button is-small">
             		<span class="icon"><i class="ion-md-list"></i></span>
             		<span><?php echo $v; ?></span>
             	</a>

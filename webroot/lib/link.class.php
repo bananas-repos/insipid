@@ -54,8 +54,17 @@ class Link {
         $this->_data = array();
 
         if(!empty($hash)) {
-            $queryStr = "SELECT * FROM `".DB_PREFIX."_link`
-                            WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
+            $queryStr = "SELECT
+				any_value(`id`) as id,
+				any_value(`link`) as link,
+				any_value(`created`) as created,
+				any_value(`status`) as status,
+				any_value(`description`) as description,
+				any_value(`title`) as title,
+				any_value(`image`) as image,
+				any_value(`hash`) as hash
+				FROM `".DB_PREFIX."_link`
+                WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows == 1) {
                 $ret = $query->fetch_assoc();
@@ -160,8 +169,10 @@ class Link {
         $ret = false;
 
         if(!empty($link)) {
-            $queryStr = "SELECT * FROM `".DB_PREFIX."_link`
-                        WHERE `link` = '".$this->DB->real_escape_string($link)."'";
+            $queryStr = "SELECT 
+				any_value(`hash`) as hash
+ 				FROM `".DB_PREFIX."_link`
+                WHERE `link` = '".$this->DB->real_escape_string($link)."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
                 $result = $query->fetch_assoc();
@@ -180,13 +191,15 @@ class Link {
         $ret = array();
 
         if(!empty($this->_data['hash'])) {
-            $queryStr = "SELECT DISTINCT(tag) FROM `".DB_PREFIX."_combined`
-                            WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
+            $queryStr = "SELECT 
+				DISTINCT(tag) as tag
+				FROM `".DB_PREFIX."_combined`
+				WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
                 while($result = $query->fetch_assoc()) {
                     if($result['tag'] !== NULL) {
-                        $ret[] = $result['tag'];
+                        $ret[$result['tag']] = $result['tag'];
                     }
                 }
 
@@ -204,13 +217,14 @@ class Link {
         $ret = array();
 
         if(!empty($this->_data['hash'])) {
-            $queryStr = "SELECT DISTINCT(category) FROM `".DB_PREFIX."_combined`
-                            WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
+            $queryStr = "SELECT 
+				DISTINCT(category) FROM `".DB_PREFIX."_combined`
+                WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
             while($result = $query->fetch_assoc()) {
                     if($result['category'] !== NULL) {
-                        $ret[] = $result['category'];
+                        $ret[$result['category']] = $result['category'];
                     }
                 }
             }
@@ -227,13 +241,15 @@ class Link {
         if(!empty($this->_data['id'])) {
             $queryStr = false;
             if($tagid === false) {
-                $queryStr = "DELETE FROM `".DB_PREFIX."_tagrelation`
-                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
+                $queryStr = "DELETE 
+					FROM `".DB_PREFIX."_tagrelation`
+                    WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
             }
             elseif(is_numeric($tagid)) {
-                $queryStr = "DELETE FROM `".DB_PREFIX."_tagrelation`
-                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'
-                                AND `tagid` = '".$this->DB->real_escape_string($tagid)."'";
+                $queryStr = "DELETE 
+					FROM `".DB_PREFIX."_tagrelation`
+                    WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'
+                    AND `tagid` = '".$this->DB->real_escape_string($tagid)."'";
             }
             if(!empty($queryStr)) {
                 $this->DB->query($queryStr);
@@ -249,13 +265,15 @@ class Link {
         if(!empty($this->_data['id'])) {
             $queryStr = false;
             if($categoryid === false) {
-                $queryStr = "DELETE FROM `".DB_PREFIX."_categoryrelation`
-                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
+                $queryStr = "DELETE 
+					FROM `".DB_PREFIX."_categoryrelation`
+                    WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
             }
             elseif(is_numeric($categoryid)) {
-                $queryStr = "DELETE FROM `".DB_PREFIX."_categoryrelation`
-                            WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'
-                                AND `categoryid` = '".$this->DB->real_escape_string($categoryid)."'";
+                $queryStr = "DELETE
+					FROM `".DB_PREFIX."_categoryrelation`
+					WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'
+                    AND `categoryid` = '".$this->DB->real_escape_string($categoryid)."'";
             }
             if(!empty($queryStr)) {
                 $this->DB->query($queryStr);
