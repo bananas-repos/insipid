@@ -50,21 +50,10 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
                         WHERE `link` = '".$DB->real_escape_string($searchValue)."'";
     }
     elseif(Summoner::validate($searchValue,'text')) {
-        # search for this in more then one field
-        # remove mysql boolean mode stuff
-        $searchValue = str_replace("*", "", $searchValue);
-        $searchValue = str_replace("+", "", $searchValue);
-        $searchValue = str_replace("-", "", $searchValue);
-        $searchValue = str_replace("<", "", $searchValue);
-        $searchValue = str_replace(">", "", $searchValue);
-        $searchValue = str_replace("~", "", $searchValue);
-        $searchValue = str_replace("'", "", $searchValue);
-        $searchValue = str_replace('"', "", $searchValue);
-
         $queryStr = "SELECT *, 
-        	MATCH (search) AGAINST ('".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE) AS score
+        	MATCH (`search`) AGAINST ('".$DB->real_escape_string($searchValue)."' IN BOOLEAN MODE) AS score
 			FROM `".DB_PREFIX."_link`
-			WHERE MATCH (search) AGAINST ('".$DB->real_escape_string($searchValue)."*' IN BOOLEAN MODE)
+			WHERE MATCH (`search`) AGAINST ('".$DB->real_escape_string($searchValue)."' IN BOOLEAN MODE)
 			ORDER BY score DESC";
     }
     else {

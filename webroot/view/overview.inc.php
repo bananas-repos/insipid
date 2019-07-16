@@ -53,20 +53,20 @@ switch($_requestMode) {
         else {
             # show all the tags we have
             $tagCollection = $Management->tags(false, true);
-            $subHeadline = 'All the tags <i class="ion-md-pricetag"></i>';
+            $subHeadline = 'All the tags <i class="ion-md-pricetags"></i>';
         }
     break;
     case 'category':
         if(!empty($_id)) {
             $linkCollection = $Management->linksByCategory($_id,false,false);
             if(!empty($linkCollection)) {
-                $subHeadline = $linkCollection[0]['category'].' <i class="ion-md-list"></i>';
+                $subHeadline = $linkCollection[0]['category'].' <i class="ion-md-filing"></i>';
             }
         }
         else {
             # show all the categories we have
             $categoryCollection = $Management->categories(false, true);
-            $subHeadline = 'All the categories <i class="ion-md-list"></i>';
+            $subHeadline = 'All the categories <i class="ion-md-filing"></i>';
         }
     break;
     case 'all':

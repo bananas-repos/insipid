@@ -32,10 +32,10 @@
 		<div class="column">
 			<p class="has-text-right">
 				<a href="index.php?p=overview&m=tag" title="all tags" class="button">
-					<span class="icon"><i class="ion-md-pricetag"></i></span>
+					<span class="icon"><i class="ion-md-pricetags"></i></span>
 				</a>
 				<a href="index.php?p=overview&m=category" title="all categories" class="button">
-					<span class="icon"><i class="ion-md-list"></i></span>
+					<span class="icon"><i class="ion-md-filing"></i></span>
 				</a>
 				<a href="index.php" title="... back to home" class="button">
 					<span class="icon"><i class="ion-md-home"></i></span>

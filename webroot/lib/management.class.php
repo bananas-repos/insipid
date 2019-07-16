@@ -342,8 +342,6 @@ class Management {
                 unset($LinkObj,$l,$searchStr,$t,$c,$queryStr);
             }
         }
-
-
     }
 }
 
