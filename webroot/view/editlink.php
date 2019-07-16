@@ -81,7 +81,10 @@
         		<p>Date added:</p>
         	</div>
         	<div class="column">
-        		<p><?php echo $linkData['created']; ?></p>
+        		<p>
+					<?php echo $linkData['created']; ?>
+					(Last update: <?php echo $linkData['updated']; ?>)
+				</p>
         	</div>
         </div>
         <div class="columns">
