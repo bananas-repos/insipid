@@ -34,7 +34,7 @@ if(isset($_GET['m']) && !empty($_GET['m'])) {
 $_id = false;
 if(isset($_GET['id']) && !empty($_GET['id'])) {
     $_id = trim($_GET['id']);
-    $_id = Summoner::validate($_id,'nospace') ? $_id : false;
+    $_id = Summoner::validate($_id,'digit') ? $_id : false;
 }
 
 $linkCollection = array();
@@ -45,27 +45,27 @@ $categoryCollection = array();
 switch($_requestMode) {
     case 'tag':
         if(!empty($_id)) {
-            $linkCollection = $Management->linksByTagString($_id,false);
+            $linkCollection = $Management->linksByTag($_id,false,false);
             if(!empty($linkCollection)) {
                 $subHeadline = $linkCollection[0]['tag'].' <i class="ion-md-pricetag"></i>';
             }
         }
         else {
             # show all the tags we have
-            $tagCollection = $Management->tags();
+            $tagCollection = $Management->tags(false, true);
             $subHeadline = 'All the tags <i class="ion-md-pricetag"></i>';
         }
     break;
     case 'category':
         if(!empty($_id)) {
-            $linkCollection = $Management->linksByCategoryString($_id,false);
+            $linkCollection = $Management->linksByCategory($_id,false,false);
             if(!empty($linkCollection)) {
                 $subHeadline = $linkCollection[0]['category'].' <i class="ion-md-list"></i>';
             }
         }
         else {
             # show all the categories we have
-            $categoryCollection = $Management->categories();
+            $categoryCollection = $Management->categories(false, true);
             $subHeadline = 'All the categories <i class="ion-md-list"></i>';
         }
     break;

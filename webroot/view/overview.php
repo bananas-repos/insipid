@@ -46,7 +46,6 @@
 
 	<div class="columns">
 		<div class="column">
-    		<h1 class="is-size-1">All of your links</h1>
     		<?php if(!empty($subHeadline)) { ?>
     		<h2 class="is-size-2"><?php echo $subHeadline; ?></h2>
     		<?php } ?>
@@ -88,21 +87,35 @@
 <?php } if(!empty($tagCollection)) { ?>
 <div class="columns">
 	<div class="column">
-		<ul>
-		<?php foreach ($tagCollection as $t) { ?>
-			<li><a href="index.php?p=overview&m=tag&id=<?php echo urlencode($t['name']); ?>"><?php echo $t['name']; ?></a></li>
+		<table class="table">
+			<tr>
+				<th>Name</th>
+				<th># of links</th>
+			</tr>
+		<?php foreach ($tagCollection as $k=>$v) { ?>
+			<tr>
+				<td><a href="index.php?p=overview&m=tag&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
+				<td><?php echo $v['amount']; ?></td>
+			</tr>
 		<?php } ?>
-		</ul>
+		</table>
 	</div>
 </div>
 <?php } if(!empty($categoryCollection)) { ?>
 <div class="columns">
 	<div class="column">
-		<ul>
-		<?php foreach ($categoryCollection as $c) { ?>
-			<li><a href="index.php?p=overview&m=category&id=<?php echo urlencode($c['name']); ?>"><?php echo $c['name']; ?></a></li>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th># of links</th>
+            </tr>
+		<?php foreach ($categoryCollection as $k=>$v) { ?>
+			<tr>
+                <td><a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
+                <td><?php echo $v['amount']; ?></td>
+            </tr>
 		<?php } ?>
-		</ul>
+        </table>
 	</div>
 </div>
 <?php } ?>

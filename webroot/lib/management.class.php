@@ -33,6 +33,19 @@ class Management {
      */
     private $DB;
 
+    protected $COMBINED_SELECT_VALUES = "any_value(`id`) as id,
+ 				any_value(`link`) as link,
+ 				any_value(`created`) as created,
+ 				any_value(`status`) as `status`,
+ 				any_value(`description`) as description,
+ 				any_value(`title`) as title,
+ 				any_value(`image`) as image,
+ 				any_value(`hash`) as hash,
+ 				any_value(`tag`) as tag,
+ 				any_value(`category`) as category,
+ 				any_value(`categoryId`) as categoryId,
+ 				any_value(`tagId`) as tagId";
+
     public function __construct($databaseConnectionObject) {
         $this->DB = $databaseConnectionObject;
     }
@@ -40,19 +53,47 @@ class Management {
 	/**
 	 * get all the available categories from the DB.
 	 * optional limit
+	 * optional stats
 	 * @param bool | int $limit
+	 * @param bool $stats
 	 * @return array
 	 */
-    public function categories($limit=false) {
+    public function categories($limit=false, $stats=false) {
         $ret = array();
+		$statsInfo = array();
 
-        $queryStr = "SELECT * FROM `".DB_PREFIX."_category` ORDER BY `name`";
+		if($stats === true) {
+			$queryStr = "SELECT 
+				COUNT(*) as amount,
+				any_value(categoryid) as categoryId
+				FROM `".DB_PREFIX."_categoryrelation` 
+				GROUP BY categoryid";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query)) {
+				while($result = $query->fetch_assoc()) {
+					$statsInfo[$result['categoryId']] = $result['amount'];
+				}
+			}
+		}
+
+        $queryStr = "SELECT
+ 			any_value(`id`) as id,
+ 			any_value(`name`) as name
+ 			FROM `".DB_PREFIX."_category` 
+ 			ORDER BY `name` ASC";
         if(!empty($limit)) {
             $queryStr .= " LIMIT $limit";
         }
         $query = $this->DB->query($queryStr);
         if(!empty($query)) {
-            $ret = $query->fetch_all(MYSQLI_ASSOC);
+        	while($result = $query->fetch_assoc()) {
+        		if($stats === true) {
+					$ret[$result['id']] = array('name' => $result['name'], 'amount' => $statsInfo[$result['id']]);
+				}
+				else {
+					$ret[$result['id']] = array('name' => $result['name']);
+				}
+			}
         }
 
         return $ret;
@@ -61,26 +102,54 @@ class Management {
 	/**
 	 * get all the available tags from the DB.
 	 * optional limit
+	 * optional stats
 	 * @param bool | int $limit
+	 * @param bool $stats
 	 * @return array
 	 */
-    public function tags($limit=false) {
+    public function tags($limit=false, $stats=false) {
         $ret = array();
+		$statsInfo = array();
 
-        $queryStr = "SELECT * FROM `".DB_PREFIX."_tag` ORDER BY `name`";
+		if($stats === true) {
+			$queryStr = "SELECT 
+				COUNT(*) as amount,
+				any_value(`tagid`) as tagId
+				FROM `".DB_PREFIX."_tagrelation` 
+				GROUP BY tagId";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query)) {
+				while($result = $query->fetch_assoc()) {
+					$statsInfo[$result['tagId']] = $result['amount'];
+				}
+			}
+		}
+
+        $queryStr = "SELECT
+        	any_value(`id`) as id,
+ 			any_value(`name`) as name
+ 			FROM `".DB_PREFIX."_tag` 
+ 			ORDER BY `name` ASC";
         if(!empty($limit)) {
             $queryStr .= " LIMIT $limit";
         }
         $query = $this->DB->query($queryStr);
         if(!empty($query)) {
-            $ret = $query->fetch_all(MYSQLI_ASSOC);
+			while($result = $query->fetch_assoc()) {
+				if($stats === true) {
+					$ret[$result['id']] = array('name' => $result['name'], 'amount' => $statsInfo[$result['id']]);
+				}
+				else {
+					$ret[$result['id']] = array('name' => $result['name']);
+				}
+			}
         }
 
         return $ret;
     }
 
 	/**
-	 * return the latest addded links
+	 * return the latest added links
 	 * @param int $limit
 	 * @return array
 	 */
@@ -106,51 +175,44 @@ class Management {
         $ret = array();
 
         $categories = $this->categories();
-        foreach($categories as $cat) {
-            $queryStr = "SELECT insipid_category.name, insipid_link.created
-                            FROM `insipid_category`
-                            LEFT JOIN insipid_categoryrelation ON insipid_categoryrelation.categoryid = insipid_category.id
-                            LEFT JOIN insipid_link ON insipid_link.id = insipid_categoryrelation.linkid
-                            WHERE insipid_category.id = '".$this->DB->real_escape_string($cat['id'])."'
-                            ORDER BY insipid_link.created DESC
-                            LIMIT 1";
-            $query = $this->DB->query($queryStr);
-            if(!empty($query) && $query->num_rows > 0) {
-                $result = $query->fetch_assoc();
-                $ret[$result['name']] = $result['created'];
-            }
+        foreach($categories as $k=>$v) {
+			$latestLink = $this->latestLinkForCategory($k);
+			if(!empty($latestLink)) {
+				array_push($ret, array('created' => $latestLink[0]['created'], 'id' => $k, 'name' => $v['name']));
+			}
         }
 
-        arsort($ret);
+		$_created  = array_column($ret, 'created');
+		array_multisort($_created, SORT_DESC, $ret);
 
         return $ret;
     }
 
 	/**
-	 * find all links by given category string.
+	 * find all links by given category string or id.
 	 * Return array sorted by creation date DESC
+	 * @param int $id
 	 * @param string $string
 	 * @param int $limit
 	 * @return array
 	 */
-    public function linksByCategoryString($string,$limit=5) {
+    public function linksByCategory($id,$string,$limit=5) {
         $ret = array();
 
-        $queryStr = "SELECT 
-				any_value(`id`) as id,
- 				any_value(`link`) as link,
- 				any_value(`created`) as created,
- 				any_value(`status`) as status,
- 				any_value(`description`) as description,
- 				any_value(`title`) as title,
- 				any_value(`image`) as image,
- 				any_value(`hash`) as hash,
- 				any_value(`tag`) as tag,
- 				any_value(`category`) as category
+        $queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
 			FROM `".DB_PREFIX."_combined`
-            WHERE `status` = 2
-                AND `category` = '".$this->DB->real_escape_string($string)."'
-            GROUP BY `hash`
+            WHERE `status` = 2";
+		if(!empty($id) && is_numeric($id)) {
+			$queryStr .= " AND `categoryId` = '" . $this->DB->real_escape_string($id) . "'";
+		}
+		elseif(!empty($string) && is_string($string)) {
+			$queryStr .= " AND `category` = '" . $this->DB->real_escape_string($string) . "'";
+		}
+		else {
+			return $ret;
+		}
+
+		$queryStr .= "GROUP BY `hash`
             ORDER BY `created` DESC";
         if(!empty($limit)) {
             $queryStr .= " LIMIT $limit";
@@ -164,30 +226,30 @@ class Management {
     }
 
 	/**
-	 * find all links by given tag string.
+	 * find all links by given tag string or id.
 	 * Return array sorted by creation date DESC
+	 * @param int $id
 	 * @param string $string
 	 * @param int $limit
 	 * @return array
 	 */
-    public function linksByTagString($string,$limit=5) {
+    public function linksByTag($id,$string,$limit=5) {
         $ret = array();
 
-        $queryStr = "SELECT
-				any_value(`id`) as id,
- 				any_value(`link`) as link,
- 				any_value(`created`) as created,
- 				any_value(`status`) as status,
- 				any_value(`description`) as description,
- 				any_value(`title`) as title,
- 				any_value(`image`) as image,
- 				any_value(`hash`) as hash,
- 				any_value(`tag`) as tag,
- 				any_value(`category`) as category 
+		$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
 			FROM `".DB_PREFIX."_combined`
-            WHERE `status` = 2
-                AND `tag` = '".$this->DB->real_escape_string($string)."'
-            GROUP BY `hash`
+            WHERE `status` = 2";
+		if(!empty($id) && is_numeric($id)) {
+			$queryStr .= " AND `tagId` = '" . $this->DB->real_escape_string($id) . "'";
+		}
+		elseif(!empty($string) && is_string($string)) {
+			$queryStr .= " AND `tag` = '" . $this->DB->real_escape_string($string) . "'";
+		}
+		else {
+			return $ret;
+		}
+
+		$queryStr .= "GROUP BY `hash`
             ORDER BY `created` DESC";
         if(!empty($limit)) {
             $queryStr .= " LIMIT $limit";
@@ -208,17 +270,7 @@ class Management {
     public function links($limit=false) {
         $ret = array();
 
-        $queryStr = "SELECT
-				any_value(`id`) as id,
- 				any_value(`link`) as link,
- 				any_value(`created`) as created,
- 				any_value(`status`) as status,
- 				any_value(`description`) as description,
- 				any_value(`title`) as title,
- 				any_value(`image`) as image,
- 				any_value(`hash`) as hash,
- 				any_value(`tag`) as tag,
- 				any_value(`category`) as category 
+        $queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
 			FROM `".DB_PREFIX."_combined`
             WHERE `status` = 2
             GROUP BY `hash`
@@ -230,6 +282,29 @@ class Management {
 
         return $ret;
     }
+
+	/**
+	 * return the latest added link for given category id
+	 * @param int $categoryid
+	 * @return array
+	 */
+    public function latestLinkForCategory($categoryid) {
+    	$ret = array();
+
+    	if(!empty($categoryid) && is_numeric($categoryid)) {
+			$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
+			FROM `".DB_PREFIX."_combined`
+            WHERE `status` = 2
+            AND `categoryId` = '" . $this->DB->real_escape_string($categoryid) . "' 
+            ORDER BY `created` DESC
+            LIMIT 1";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$ret = $query->fetch_all(MYSQLI_ASSOC);
+			}
+		}
+    	return $ret;
+	}
 
     /**
      * for simpler management we have the search data in a separate column

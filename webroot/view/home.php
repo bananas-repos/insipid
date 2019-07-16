@@ -224,12 +224,12 @@
 	<div class="columns is-multiline">
 <?php
     if(!empty($orderedCategories)) {
-        foreach ($orderedCategories as $cat=>$date) {
-            $links = $Management->linksByCategoryString($cat);
+        foreach ($orderedCategories as $k=>$v) {
+            $links = $Management->linksByCategory($v['id'],false);
 ?>
     	<div class="column is-one-quarter">
     		<div class="content">
-    			<h4><a href="?p=overview&m=category&id=<?php echo urlencode($cat); ?>"><?php echo $cat; ?></a></h4>
+    			<h4><a href="?p=overview&m=category&id=<?php echo urlencode($v['id']); ?>"><?php echo $v['name']; ?></a></h4>
 				<div class="tags">
 <?php foreach ($links as $link) { ?>
 					<a class="tag" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a>

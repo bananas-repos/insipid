@@ -81,7 +81,7 @@ class Category {
     /**
      * set the relation to the given link to the loaded category
      * @param int $linkid
-     * @return boolean
+     * @return void
      */
     public function setRelation($linkid) {
         if(!empty($linkid) && !empty($this->id)) {
