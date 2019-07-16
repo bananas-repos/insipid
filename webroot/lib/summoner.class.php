@@ -58,12 +58,12 @@ class Summoner {
 
 		switch ($mode) {
 			case 'mail':
-			    if(filter_var($input,FILTER_VALIDATE_EMAIL) === $input) {
-			        return true;
-			    }
-                else {
-                    return false;
-			    }
+				if(filter_var($input,FILTER_VALIDATE_EMAIL) === $input) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			break;
 
 			case 'url':
@@ -137,14 +137,14 @@ class Summoner {
 	static function is_utf8($string) {
 	   // From http://w3.org/International/questions/qa-forms-utf-8.html
 	   return preg_match('%^(?:
-	         [\x09\x0A\x0D\x20-\x7E]            # ASCII
-	       | [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
-	       |  \xE0[\xA0-\xBF][\x80-\xBF]        # excluding overlongs
-	       | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}  # straight 3-byte
-	       |  \xED[\x80-\x9F][\x80-\xBF]        # excluding surrogates
-	       |  \xF0[\x90-\xBF][\x80-\xBF]{2}     # planes 1-3
-	       | [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
-	       |  \xF4[\x80-\x8F][\x80-\xBF]{2}     # plane 16
+			 [\x09\x0A\x0D\x20-\x7E]            # ASCII
+		   | [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
+		   |  \xE0[\xA0-\xBF][\x80-\xBF]        # excluding overlongs
+		   | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}  # straight 3-byte
+		   |  \xED[\x80-\x9F][\x80-\xBF]        # excluding surrogates
+		   |  \xF0[\x90-\xBF][\x80-\xBF]{2}     # planes 1-3
+		   | [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
+		   |  \xF4[\x80-\x8F][\x80-\xBF]{2}     # plane 16
 	   )*$%xs', $string);
 	}
 
@@ -262,7 +262,7 @@ class Summoner {
 	 * @return bool
 	 */
 	static function ifset($array,$key) {
-	    return isset($array[$key]) ? $array[$key] : false;
+		return isset($array[$key]) ? $array[$key] : false;
 	}
 
 	/**
@@ -271,16 +271,16 @@ class Summoner {
 	 * @return array|bool
 	 */
 	static function gatherInfoFromURL($url) {
-	    $ret = false;
+		$ret = false;
 
-	    if(self::validate($url,'url')) {
-	        $data = self::curlCall($url);
-	        if(!empty($data)) {
-	            $ret = self::socialMetaInfos($data);
-	        }
-	    }
+		if(self::validate($url,'url')) {
+			$data = self::curlCall($url);
+			if(!empty($data)) {
+				$ret = self::socialMetaInfos($data);
+			}
+		}
 
-	    return $ret;
+		return $ret;
 	}
 
 	/**
@@ -290,88 +290,88 @@ class Summoner {
 	 * @return array
 	 */
 	static function socialMetaInfos($string) {
-	    #http://www.w3bees.com/2013/11/fetch-facebook-og-meta-tags-with-php.html
-	    #http://www.9lessons.info/2014/01/social-meta-tags-for-google-twitter-and.html
-	    #http://ogp.me/
-	    #https://moz.com/blog/meta-data-templates-123
+		#http://www.w3bees.com/2013/11/fetch-facebook-og-meta-tags-with-php.html
+		#http://www.9lessons.info/2014/01/social-meta-tags-for-google-twitter-and.html
+		#http://ogp.me/
+		#https://moz.com/blog/meta-data-templates-123
 
-	    $dom = new DomDocument;
-	    # surpress invalid html warnings
-	    @$dom->loadHTML($string);
+		$dom = new DomDocument;
+		# surpress invalid html warnings
+		@$dom->loadHTML($string);
 
-	    $xpath = new DOMXPath($dom);
-	    $metas = $xpath->query('//*/meta');
+		$xpath = new DOMXPath($dom);
+		$metas = $xpath->query('//*/meta');
 
-	    $mediaInfos = array();
+		$mediaInfos = array();
 
-	    # meta tags
-	    foreach($metas as $meta) {
-	        if($meta->getAttribute('property')) {
-	            $prop = $meta->getAttribute('property');
-	            $prop = mb_strtolower($prop);
+		# meta tags
+		foreach($metas as $meta) {
+			if($meta->getAttribute('property')) {
+				$prop = $meta->getAttribute('property');
+				$prop = mb_strtolower($prop);
 
-	            # minimum required information
-	            # http://ogp.me/#metadata
-	            if($prop == "og:title") {
+				# minimum required information
+				# http://ogp.me/#metadata
+				if($prop == "og:title") {
 
-	                $mediaInfos['title'] = $meta->getAttribute('content');
-	            }
-	            elseif($prop == "og:image") {
-	                $mediaInfos['image'] = $meta->getAttribute('content');
-	            }
-	            elseif($prop == "og:url") {
-	                $mediaInfos['link'] = $meta->getAttribute('content');
-	            }
-	            elseif($prop == "og:description") {
-	                $mediaInfos['description'] = $meta->getAttribute('content');
-	            }
-	        }
-	        elseif($meta->getAttribute('name')) {
-	            $name = $meta->getAttribute('name');
-	            $name = mb_strtolower($name);
+					$mediaInfos['title'] = $meta->getAttribute('content');
+				}
+				elseif($prop == "og:image") {
+					$mediaInfos['image'] = $meta->getAttribute('content');
+				}
+				elseif($prop == "og:url") {
+					$mediaInfos['link'] = $meta->getAttribute('content');
+				}
+				elseif($prop == "og:description") {
+					$mediaInfos['description'] = $meta->getAttribute('content');
+				}
+			}
+			elseif($meta->getAttribute('name')) {
+				$name = $meta->getAttribute('name');
+				$name = mb_strtolower($name);
 
-	            # twitter
-	            # https://dev.twitter.com/cards/overview
+				# twitter
+				# https://dev.twitter.com/cards/overview
 
-	            if($name == "twitter:title") {
-	                $mediaInfos['title'] = $meta->getAttribute('content');
-	            }
-	            elseif($name == "twitter:description") {
-	                $mediaInfos['description'] = $meta->getAttribute('content');
-	            }
-	            elseif($name == "twitter:image") {
-	                $mediaInfos['image'] = $meta->getAttribute('content');
-	            }
-	            elseif($name == "description") {
-	                $mediaInfos['description'] = $meta->getAttribute('content');
-	            }
+				if($name == "twitter:title") {
+					$mediaInfos['title'] = $meta->getAttribute('content');
+				}
+				elseif($name == "twitter:description") {
+					$mediaInfos['description'] = $meta->getAttribute('content');
+				}
+				elseif($name == "twitter:image") {
+					$mediaInfos['image'] = $meta->getAttribute('content');
+				}
+				elseif($name == "description") {
+					$mediaInfos['description'] = $meta->getAttribute('content');
+				}
 
-	        }
-	        elseif($meta->getAttribute('itemprop')) {
-	            $itemprop = $meta->getAttribute('itemprop');
-	            $itemprop = mb_strtolower($itemprop);
+			}
+			elseif($meta->getAttribute('itemprop')) {
+				$itemprop = $meta->getAttribute('itemprop');
+				$itemprop = mb_strtolower($itemprop);
 
-	            # google plus
-	            if($itemprop == "name") {
-	                $mediaInfos['title'] = $meta->getAttribute('content');
-	            }
-	            elseif($itemprop == "description") {
-	                $mediaInfos['description'] = $meta->getAttribute('content');
-	            }
-	            elseif($itemprop == "image") {
-	                $mediaInfos['image'] = $meta->getAttribute('content');
-	            }
+				# google plus
+				if($itemprop == "name") {
+					$mediaInfos['title'] = $meta->getAttribute('content');
+				}
+				elseif($itemprop == "description") {
+					$mediaInfos['description'] = $meta->getAttribute('content');
+				}
+				elseif($itemprop == "image") {
+					$mediaInfos['image'] = $meta->getAttribute('content');
+				}
 
-	        }
-	    }
+			}
+		}
 
 
-	    if(!isset($mediaInfos['title'])) {
-	        $titleDom = $xpath->query('//html/head/title');
-	        $mediaInfos['title'] = $titleDom->item(0)->nodeValue;
-	    }
+		if(!isset($mediaInfos['title'])) {
+			$titleDom = $xpath->query('//html/head/title');
+			$mediaInfos['title'] = $titleDom->item(0)->nodeValue;
+		}
 
-	    return $mediaInfos;
+		return $mediaInfos;
 	}
 
 	/**
@@ -383,56 +383,56 @@ class Summoner {
 	 * @return array
 	 */
 	static function prepareTagOrCategoryStr($string) {
-	    $ret = array();
+		$ret = array();
 
-	    $string = trim($string, ", ");
-	    if(strstr($string, ",")) {
-	        $_t = explode(",", $string);
-	        foreach($_t as $new) {
-	            $ret[$new] = $new;
-	        }
-	        unset($_t);
-	        unset($new);
+		$string = trim($string, ", ");
+		if(strstr($string, ",")) {
+			$_t = explode(",", $string);
+			foreach($_t as $new) {
+				$ret[$new] = $new;
+			}
+			unset($_t);
+			unset($new);
 
-	        foreach($ret as $e) {
-	            if(strstr($e, " ")) {
-	                unset($ret[$e]);
-	                $_t = explode(" ", $e);
-	                foreach($_t as $new) {
-	                    $new = trim($new);
-	                    if(!empty($new)) {
-	                        $ret[$new] = $new;
-	                    }
-	                }
-	            }
-	        }
-	    }
-	    else {
-	        $_t = explode(" ", $string);
-	        foreach($_t as $new) {
-	            $new = trim($new);
-	            if(!empty($new)) {
-	               $ret[$new] = $new;
-	            }
-	        }
-	    }
+			foreach($ret as $e) {
+				if(strstr($e, " ")) {
+					unset($ret[$e]);
+					$_t = explode(" ", $e);
+					foreach($_t as $new) {
+						$new = trim($new);
+						if(!empty($new)) {
+							$ret[$new] = $new;
+						}
+					}
+				}
+			}
+		}
+		else {
+			$_t = explode(" ", $string);
+			foreach($_t as $new) {
+				$new = trim($new);
+				if(!empty($new)) {
+				   $ret[$new] = $new;
+				}
+			}
+		}
 
 
-	    return $ret;
+		return $ret;
 	}
 
 	/**
 	 * a very simple HTTP_AUTH authentication.
 	 */
 	static function simpleAuth() {
-	    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
-	        || $_SERVER['PHP_AUTH_USER'] !== FRONTEND_USERNAME || $_SERVER['PHP_AUTH_PW'] !== FRONTEND_PASSWORD
-	        ) {
-	        header('WWW-Authenticate: Basic realm="Insipid edit area"');
-	        header('HTTP/1.0 401 Unauthorized');
-	        echo 'No Access.';
-	        exit;
-	    }
+		if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
+			|| $_SERVER['PHP_AUTH_USER'] !== FRONTEND_USERNAME || $_SERVER['PHP_AUTH_PW'] !== FRONTEND_PASSWORD
+			) {
+			header('WWW-Authenticate: Basic realm="Insipid edit area"');
+			header('HTTP/1.0 401 Unauthorized');
+			echo 'No Access.';
+			exit;
+		}
 	}
 
 	/**
@@ -444,20 +444,20 @@ class Summoner {
 	 * @return array $ret
 	 */
 	static function extractEmailLinks($string) {
-	    $ret = array();
+		$ret = array();
 
-	    #this matches a valid URL. An URL with | is still valid...
-	    $urlpattern  = '#(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))#';
+		#this matches a valid URL. An URL with | is still valid...
+		$urlpattern  = '#(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))#';
 
-	    preg_match_all($urlpattern, $string, $matches);
-	    if(isset($matches[0]) && !empty($matches[0])) {
-	        foreach($matches[0] as $match) {
-	            $ret[md5($match)] = $match;
-	        }
-	    }
+		preg_match_all($urlpattern, $string, $matches);
+		if(isset($matches[0]) && !empty($matches[0])) {
+			foreach($matches[0] as $match) {
+				$ret[md5($match)] = $match;
+			}
+		}
 
 
-	    return $ret;
+		return $ret;
 	}
 }
 

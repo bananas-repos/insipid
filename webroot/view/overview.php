@@ -30,25 +30,25 @@
 <section class="section">
 	<div class="columns">
 		<div class="column">
-    		<p class="has-text-right">
-    			<a href="index.php?p=overview&m=tag" title="all tags" class="button">
-    				<span class="icon"><i class="ion-md-pricetag"></i></span>
-    			</a>
-    			<a href="index.php?p=overview&m=category" title="all categories" class="button">
-    				<span class="icon"><i class="ion-md-list"></i></span>
-    			</a>
-    			<a href="index.php" title="... back to home" class="button">
-    				<span class="icon"><i class="ion-md-home"></i></span>
-    			</a>
-    		</p>
-    	</div>
+			<p class="has-text-right">
+				<a href="index.php?p=overview&m=tag" title="all tags" class="button">
+					<span class="icon"><i class="ion-md-pricetag"></i></span>
+				</a>
+				<a href="index.php?p=overview&m=category" title="all categories" class="button">
+					<span class="icon"><i class="ion-md-list"></i></span>
+				</a>
+				<a href="index.php" title="... back to home" class="button">
+					<span class="icon"><i class="ion-md-home"></i></span>
+				</a>
+			</p>
+		</div>
 	</div>
 
 	<div class="columns">
 		<div class="column">
-    		<?php if(!empty($subHeadline)) { ?>
-    		<h2 class="is-size-2"><?php echo $subHeadline; ?></h2>
-    		<?php } ?>
+			<?php if(!empty($subHeadline)) { ?>
+			<h2 class="is-size-2"><?php echo $subHeadline; ?></h2>
+			<?php } ?>
 		</div>
 	</div>
 </section>
@@ -60,27 +60,27 @@
 	<div class="column is-one-quarter">
 		<div class="card">
 			<div class="card-image">
-    			<figure class="image is-4by3">
-          		<a href="<?php echo $link['link']; ?>" target="_blank">
-            <?php if(!empty($link['image'])) { ?>
-            	<img class="linkthumbnail" src= "<?php echo $link['image']; ?>">
+				<figure class="image is-4by3">
+				<a href="<?php echo $link['link']; ?>" target="_blank">
+			<?php if(!empty($link['image'])) { ?>
+				<img class="linkthumbnail" src= "<?php echo $link['image']; ?>">
 			<?php } else { ?>
-                <img class="" src= "asset/img/no-link-picture.png">
-            <?php } ?>
-            	</a>
-            	</figure>
+				<img class="" src= "asset/img/no-link-picture.png">
+			<?php } ?>
+				</a>
+				</figure>
 			</div>
 			<div class="card-content">
 				<div class="content">
-    	            <h4><a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a></h4>
-        	        <p><?php echo $link['description']; ?></p>
+					<h4><a href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a></h4>
+					<p><?php echo $link['description']; ?></p>
 				</div>
-  			</div>
-  			<footer class="card-footer">
+			</div>
+			<footer class="card-footer">
 				<a href="<?php echo $link['link']; ?>" target="_blank" class="card-footer-item">Visit link</a>
 				<a href="index.php?p=linkinfo&id=<?php echo $link['hash']; ?>" class="card-footer-item">More details</a>
 			</footer>
-        </div>
+		</div>
 	</div>
 <?php } ?>
 </div>
@@ -104,18 +104,18 @@
 <?php } if(!empty($categoryCollection)) { ?>
 <div class="columns">
 	<div class="column">
-        <table class="table">
-            <tr>
-                <th>Name</th>
-                <th># of links</th>
-            </tr>
+		<table class="table">
+			<tr>
+				<th>Name</th>
+				<th># of links</th>
+			</tr>
 		<?php foreach ($categoryCollection as $k=>$v) { ?>
 			<tr>
-                <td><a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
-                <td><?php echo $v['amount']; ?></td>
-            </tr>
+				<td><a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
+				<td><?php echo $v['amount']; ?></td>
+			</tr>
 		<?php } ?>
-        </table>
+		</table>
 	</div>
 </div>
 <?php } ?>
