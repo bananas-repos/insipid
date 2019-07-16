@@ -38,7 +38,7 @@ define('FRONTEND_USERNAME','luke');
 define('FRONTEND_PASSWORD','father');
 
 # absolute path of webroot
-define('ABSOLUTE_PATH', '/home/banana/code/insipid/webroot');
+define('ABSOLUTE_PATH', '/path/to/insipid/webroot');
 # relative to absolute path the name of the storage folder
 define('LOCAL_STORAGE', 'localdata');
 
