@@ -14,7 +14,7 @@ Modify webroot/config.default.php and rename it to webroot/config.php
 Copy and modify documentation/insipid-edit-me.sql and replace the placeholder.
 Open the file and make a search and replace:
 
-search for: `#REPLACEME#
+search for: `#REPLACE_ME#
 replace with: `tableprefix
 
 The value tableprefix has to match with the value for DB_PREFIX in config.php

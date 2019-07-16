@@ -1,5 +1,6 @@
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -8,136 +9,133 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Database: `#REPLACE_ME#`
+--
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `#REPLACEME#_category`
+-- Table structure for table `#REPLACE_ME#_category`
 --
 
-DROP TABLE IF EXISTS `#REPLACEME#_category`;
-CREATE TABLE `#REPLACEME#_category` (
+DROP TABLE IF EXISTS `#REPLACE_ME#_category`;
+CREATE TABLE `#REPLACE_ME#_category` (
   `id` int(10) NOT NULL,
   `name` varchar(128) COLLATE utf8mb4_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `#REPLACEME#_categoryrelation`
+-- Table structure for table `#REPLACE_ME#_categoryrelation`
 --
 
-DROP TABLE IF EXISTS `#REPLACEME#_categoryrelation`;
-CREATE TABLE `#REPLACEME#_categoryrelation` (
+DROP TABLE IF EXISTS `#REPLACE_ME#_categoryrelation`;
+CREATE TABLE `#REPLACE_ME#_categoryrelation` (
   `linkid` int(10) NOT NULL,
   `categoryid` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
 
--- --------------------------------------------------------
-
 --
--- Stand-in structure for view `#REPLACEME#_combined`
+-- Stand-in structure for view `#REPLACE_ME#_combined`
 -- (See below for the actual view)
 --
-DROP VIEW IF EXISTS `#REPLACEME#_combined`;
-CREATE TABLE `#REPLACEME#_combined` (
-`id` int(10)
-,`link` mediumtext
-,`created` datetime
-,`status` int(2)
-,`description` varchar(255)
-,`title` varchar(255)
-,`image` varchar(255)
-,`hash` char(32)
-,`tag` varchar(64)
-,`category` varchar(128)
+DROP VIEW IF EXISTS `#REPLACE_ME#_combined`;
+CREATE TABLE `#REPLACE_ME#_combined` (
+   `id` int(10)
+  ,`link` mediumtext
+  ,`created` datetime
+  ,`status` int(2)
+  ,`description` varchar(255)
+  ,`title` varchar(255)
+  ,`image` varchar(255)
+  ,`hash` char(32)
+  ,`tag` varchar(64)
+  ,`tagId` int(10)
+  ,`category` varchar(128)
+  ,`categoryId` int(10)
 );
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `#REPLACEME#_link`
+-- Table structure for table `#REPLACE_ME#_link`
 --
 
-DROP TABLE IF EXISTS `#REPLACEME#_link`;
-CREATE TABLE `#REPLACEME#_link` (
+DROP TABLE IF EXISTS `#REPLACE_ME#_link`;
+CREATE TABLE `#REPLACE_ME#_link` (
   `id` int(10) NOT NULL,
   `link` mediumtext COLLATE utf8mb4_bin NOT NULL,
   `created` datetime NOT NULL,
+  `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` int(2) NOT NULL,
   `description` varchar(255) COLLATE utf8mb4_bin NOT NULL,
   `title` varchar(255) COLLATE utf8mb4_bin NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_bin NOT NULL,
   `hash` char(32) COLLATE utf8mb4_bin NOT NULL,
-  `search` text COLLATE utf8mb4_bin NOT NULL,
+  `search` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `#REPLACEME#_tag`
+-- Table structure for table `#REPLACE_ME#_tag`
 --
 
-DROP TABLE IF EXISTS `#REPLACEME#_tag`;
-CREATE TABLE `#REPLACEME#_tag` (
+DROP TABLE IF EXISTS `#REPLACE_ME#_tag`;
+CREATE TABLE `#REPLACE_ME#_tag` (
   `id` int(10) NOT NULL,
   `name` varchar(64) COLLATE utf8mb4_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `#REPLACEME#_tagrelation`
+-- Table structure for table `#REPLACE_ME#_tagrelation`
 --
 
-DROP TABLE IF EXISTS `#REPLACEME#_tagrelation`;
-CREATE TABLE `#REPLACEME#_tagrelation` (
+DROP TABLE IF EXISTS `#REPLACE_ME#_tagrelation`;
+CREATE TABLE `#REPLACE_ME#_tagrelation` (
   `linkid` int(10) NOT NULL,
   `tagid` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
 
--- --------------------------------------------------------
-
 --
--- Structure for view `#REPLACEME#_combined`
+-- Structure for view `#REPLACE_ME#_combined`
 --
-DROP TABLE IF EXISTS `#REPLACEME#_combined`;
+DROP TABLE IF EXISTS `#REPLACE_ME#_combined`;
 
-CREATE VIEW `#REPLACEME#_combined`  AS  select `#REPLACEME#_link`.`id` AS `id`,`#REPLACEME#_link`.`link` AS `link`,`#REPLACEME#_link`.`created` AS `created`,`#REPLACEME#_link`.`status` AS `status`,`#REPLACEME#_link`.`description` AS `description`,`#REPLACEME#_link`.`title` AS `title`,`#REPLACEME#_link`.`image` AS `image`,`#REPLACEME#_link`.`hash` AS `hash`,`#REPLACEME#_tag`.`name` AS `tag`,`#REPLACEME#_category`.`name` AS `category` from ((((`#REPLACEME#_link` left join `#REPLACEME#_tagrelation` on((`#REPLACEME#_tagrelation`.`linkid` = `#REPLACEME#_link`.`id`))) left join `#REPLACEME#_tag` on((`#REPLACEME#_tag`.`id` = `#REPLACEME#_tagrelation`.`tagid`))) left join `#REPLACEME#_categoryrelation` on((`#REPLACEME#_categoryrelation`.`linkid` = `#REPLACEME#_link`.`id`))) left join `#REPLACEME#_category` on((`#REPLACEME#_category`.`id` = `#REPLACEME#_categoryrelation`.`categoryid`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `#REPLACE_ME#_combined`  AS  select `#REPLACE_ME#_link`.`id` AS `id`,`#REPLACE_ME#_link`.`link` AS `link`,`#REPLACE_ME#_link`.`created` AS `created`,`#REPLACE_ME#_link`.`status` AS `status`,`#REPLACE_ME#_link`.`description` AS `description`,`#REPLACE_ME#_link`.`title` AS `title`,`#REPLACE_ME#_link`.`image` AS `image`,`#REPLACE_ME#_link`.`hash` AS `hash`,`#REPLACE_ME#_tag`.`name` AS `tag`,`#REPLACE_ME#_tag`.`id` AS `tagId`,`#REPLACE_ME#_category`.`name` AS `category`,`#REPLACE_ME#_category`.`id` AS `categoryId` from ((((`#REPLACE_ME#_link` left join `#REPLACE_ME#_tagrelation` on((`#REPLACE_ME#_tagrelation`.`linkid` = `#REPLACE_ME#_link`.`id`))) left join `#REPLACE_ME#_tag` on((`#REPLACE_ME#_tag`.`id` = `#REPLACE_ME#_tagrelation`.`tagid`))) left join `#REPLACE_ME#_categoryrelation` on((`#REPLACE_ME#_categoryrelation`.`linkid` = `#REPLACE_ME#_link`.`id`))) left join `#REPLACE_ME#_category` on((`#REPLACE_ME#_category`.`id` = `#REPLACE_ME#_categoryrelation`.`categoryid`))) ;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `#REPLACEME#_category`
+-- Indexes for table `#REPLACE_ME#_category`
 --
-ALTER TABLE `#REPLACEME#_category`
+ALTER TABLE `#REPLACE_ME#_category`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `#REPLACEME#_categoryrelation`
+-- Indexes for table `#REPLACE_ME#_categoryrelation`
 --
-ALTER TABLE `#REPLACEME#_categoryrelation`
+ALTER TABLE `#REPLACE_ME#_categoryrelation`
   ADD UNIQUE KEY `linkid` (`linkid`,`categoryid`);
 
 --
--- Indexes for table `#REPLACEME#_link`
+-- Indexes for table `#REPLACE_ME#_link`
 --
-ALTER TABLE `#REPLACEME#_link`
+ALTER TABLE `#REPLACE_ME#_link`
   ADD PRIMARY KEY (`id`),
-  FULLTEXT KEY `search` (`search`),
   ADD UNIQUE KEY `hash` (`hash`);
+ALTER TABLE `#REPLACE_ME#_link` ADD FULLTEXT KEY `search` (`search`);
 
 --
--- Indexes for table `#REPLACEME#_tag`
+-- Indexes for table `#REPLACE_ME#_tag`
 --
-ALTER TABLE `#REPLACEME#_tag`
+ALTER TABLE `#REPLACE_ME#_tag`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `#REPLACEME#_tagrelation`
+-- Indexes for table `#REPLACE_ME#_tagrelation`
 --
-ALTER TABLE `#REPLACEME#_tagrelation`
+ALTER TABLE `#REPLACE_ME#_tagrelation`
   ADD UNIQUE KEY `linkid` (`linkid`,`tagid`);
 
 --
@@ -145,20 +143,24 @@ ALTER TABLE `#REPLACEME#_tagrelation`
 --
 
 --
--- AUTO_INCREMENT for table `#REPLACEME#_category`
+-- AUTO_INCREMENT for table `#REPLACE_ME#_category`
 --
-ALTER TABLE `#REPLACEME#_category`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+ALTER TABLE `#REPLACE_ME#_category`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT for table `#REPLACEME#_link`
+-- AUTO_INCREMENT for table `#REPLACE_ME#_link`
 --
-ALTER TABLE `#REPLACEME#_link`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+ALTER TABLE `#REPLACE_ME#_link`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT for table `#REPLACEME#_tag`
+-- AUTO_INCREMENT for table `#REPLACE_ME#_tag`
 --
-ALTER TABLE `#REPLACEME#_tag`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+ALTER TABLE `#REPLACE_ME#_tag`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

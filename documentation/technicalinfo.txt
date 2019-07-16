@@ -1,4 +1,4 @@
-table link
+# table link
 status = 1|2|3
 1 = private
 2 = visible to everyone -> sql queries use this as default
