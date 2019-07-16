@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2018 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -29,7 +29,6 @@
 /**
  * a static helper class
  */
-
 class Summoner {
 
 	/**
@@ -47,6 +46,7 @@ class Summoner {
 	 * the replace should be empty, otherwise are there chars which are not
 	 * allowed
 	 *
+	 * @return bool
 	 */
 	static function validate($input,$mode='text',$limit=false) {
 		// check if we have input
@@ -64,10 +64,6 @@ class Summoner {
                 else {
                     return false;
 			    }
-			break;
-
-			case 'rights':
-				return self::isRightsString($input);
 			break;
 
 			case 'url':
@@ -138,7 +134,7 @@ class Summoner {
 	 * @param string $string
 	 * @return number
 	 */
-	static function is_utf8 ( $string ) {
+	static function is_utf8($string) {
 	   // From http://w3.org/International/questions/qa-forms-utf-8.html
 	   return preg_match('%^(?:
 	         [\x09\x0A\x0D\x20-\x7E]            # ASCII
@@ -153,8 +149,10 @@ class Summoner {
 	}
 
 	/**
-	 * execute a curl call to the fiven $url
-	 * @param string $curl The request url
+	 * execute a curl call to the given $url
+	 * @param string $url The request url
+	 * @param bool $port
+	 * @return bool|mixed
 	 */
 	static function curlCall($url,$port=false) {
 		$ret = false;
@@ -165,6 +163,11 @@ class Summoner {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+
+		//curl_setopt($ch, CURLOPT_HEADER, true);
+
 		if(!empty($port)) {
 		  curl_setopt($ch, CURLOPT_PORT, $port);
 		}
@@ -175,7 +178,6 @@ class Summoner {
 			$ret = $do;
 		}
 		else {
-			$ret = false;
 			error_log(var_export(curl_error($ch),true));
 		}
 
@@ -185,7 +187,7 @@ class Summoner {
 	}
 
 	/**
-	 * check if a string strts with a given string
+	 * check if a string starts with a given string
 	 *
 	 * @param string $haystack
 	 * @param string $needle
@@ -208,19 +210,19 @@ class Summoner {
 		if ($length == 0) {
 			return true;
 		}
-
 		return (substr($haystack, -$length) === $needle);
 	}
 
 
 	/**
 	 * simulate the Null coalescing operator in php5
-	 *
 	 * this only works with arrays and checking if the key is there and echo/return it.
-	 *
 	 * http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
+	 *
+	 * @param $array
+	 * @param $key
+	 * @return bool
 	 */
-
 	static function ifset($array,$key) {
 	    return isset($array[$key]) ? $array[$key] : false;
 	}
@@ -228,6 +230,7 @@ class Summoner {
 	/**
 	 * try to gather meta information from given URL
 	 * @param string $url
+	 * @return array|bool
 	 */
 	static function gatherInfoFromURL($url) {
 	    $ret = false;
@@ -246,6 +249,7 @@ class Summoner {
 	 * get as much as possible solcial meta infos from given string
 	 * the string is usually a HTML source
 	 * @param string $string
+	 * @return array
 	 */
 	static function socialMetaInfos($string) {
 	    #http://www.w3bees.com/2013/11/fetch-facebook-og-meta-tags-with-php.html
@@ -334,10 +338,11 @@ class Summoner {
 
 	/**
 	 * at creation a category or tag can be a string with multiple values.
-	 * seperated with space or ,
-	 * category and tag is a single string without any seperators
+	 * separated with space or ,
+	 * category and tag is a single string without any separators
 	 *
 	 * @param string $string
+	 * @return array
 	 */
 	static function prepareTagOrCategoryStr($string) {
 	    $ret = array();
@@ -396,8 +401,6 @@ class Summoner {
 	 * extract from given string (was email body) any links we want to add
 	 * should be in the right format
 	 * return an array with links and the infos about them
-	 *
-	 * new-absolute-link|multiple,category,strings|multiple,tag,strings\n
 	 *
 	 * @param string $string
 	 * @return array $ret

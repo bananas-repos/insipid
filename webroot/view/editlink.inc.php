@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2018 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -80,9 +80,23 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink']))
         $submitFeedback['status'] = 'error';
     }
 }
+elseif(isset($_POST['refreshlink'])) {
+	$linkInfo = Summoner::gatherInfoFromURL($linkData['link']);
+	if(!empty($linkInfo)) {
+		if(isset($linkInfo['description'])) {
+			$linkData['description'] = $linkInfo['description'];
+		}
+		if(isset($linkInfo['title'])) {
+			$linkData['title'] = $linkInfo['title'];
+		}
+		if(isset($linkInfo['image'])) {
+			$linkData['image'] = $linkInfo['image'];
+		}
+	}
+}
 
 $formData = $linkData;
-# prepate the tag string
+# prepare the tag string
 $formData['tag'] = '';
 if(!empty($linkData['tags'])) {
     foreach($linkData['tags'] as $k=>$v) {
@@ -91,7 +105,7 @@ if(!empty($linkData['tags'])) {
     $formData['tag'] = trim($formData['tag']," ,");
 }
 
-# prepate the category string
+# prepare the category string
 $formData['category'] = '';
 if(!empty($linkData['categories'])) {
     foreach($linkData['categories'] as $k=>$v) {

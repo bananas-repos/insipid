@@ -129,7 +129,7 @@
         	<div class="column">
         	    <input type="text" name="data[tag]" list="taglist"
     				class="flexdatalist input" multiple='multiple'
-    				data-min-length="0" data-cache="0" data-selection-required='true'
+    				data-min-length="0" data-cache="0"
     				data-toggle-selected="true"
     				value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
     			<datalist id="taglist">
@@ -146,7 +146,7 @@
         	<div class="column">
         	    <input type="text" name="data[category]" list="categorylist"
     				class="flexdatalist input" multiple='multiple'
-    				data-min-length="0" data-cache="0" data-selection-required='true'
+    				data-min-length="0" data-cache="0"
     				data-toggle-selected="true"
     				value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
     			<datalist id="categorylist">
@@ -162,7 +162,8 @@
         		<input class="checkbox" type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
         	</div>
         	<div class="column is-half">
-        		<input type="submit" class="button is-primary" name="editlink" value="Update">
+				<input type="submit" class="button is-info" name="refreshlink" value="Refresh from source">
+				<input type="submit" class="button is-primary" name="editlink" value="Save">
         	</div>
         </div>
     </form>
