@@ -135,7 +135,7 @@
 
         <div class="columns">
         	<div class="column is-half">
-        		<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'image'); ?>" alt="Image from provided link" />
+        		<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'imageToShow'); ?>" alt="Image from provided link" />
         	</div>
     		<div class="column is-half">
     			<div class="field">

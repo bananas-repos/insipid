@@ -4,7 +4,9 @@
 }
 
 .linkthumbnail {
-	max-height: 200px;
+	height: 230px;
+	object-fit: cover;
+	width: 306px;
 }
 
 h4 a {

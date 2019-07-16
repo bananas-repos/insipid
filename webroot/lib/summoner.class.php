@@ -165,7 +165,9 @@ class Summoner {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+		curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0');
 
+		// curl_setopt($ch, CURLOPT_VERBOSE, true);
 		//curl_setopt($ch, CURLOPT_HEADER, true);
 
 		if(!empty($port)) {
@@ -182,6 +184,42 @@ class Summoner {
 		}
 
 		curl_close($ch);
+
+		return $ret;
+	}
+
+	/**
+	 * Download given url to given file
+	 * @param $url
+	 * @param $whereToStore
+	 * @param bool $port
+	 * @return bool
+	 */
+	static function downloadFile($url, $whereToStore, $port=false) {
+		$fh = fopen($whereToStore, 'w+');
+
+		$ret = false;
+
+		if($fh !== false) {
+			$ch = curl_init($url);
+			curl_setopt($ch, CURLOPT_FILE, $fh);
+
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
+			curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0');
+
+			if(!empty($port)) {
+				curl_setopt($ch, CURLOPT_PORT, $port);
+			}
+			curl_exec($ch);
+			curl_close($ch);
+
+			$ret = true;
+		}
+
+		fclose($fh);
 
 		return $ret;
 	}

@@ -63,7 +63,7 @@
     			<figure class="image is-4by3">
           		<a href="<?php echo $link['link']; ?>" target="_blank">
             <?php if(!empty($link['image'])) { ?>
-            	<img class="" src= "<?php echo $link['image']; ?>">
+            	<img class="linkthumbnail" src= "<?php echo $link['image']; ?>">
 			<?php } else { ?>
                 <img class="" src= "asset/img/no-link-picture.png">
             <?php } ?>

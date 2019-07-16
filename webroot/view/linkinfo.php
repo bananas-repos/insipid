@@ -91,7 +91,7 @@
     	</div>
     	<div class="column is-two-third">
     		<p>
-    			<img class="linkthumbnail" src="<?php echo $linkData['image']; ?>" alt="Image if provided...">
+    			<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="Image if provided...">
     		</p>
     	</div>
     </div>

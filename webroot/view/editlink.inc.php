@@ -54,6 +54,12 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink']))
         $formData['private'] = 1;
     }
 
+	$formData['localImage'] = false;
+	if(isset($fData['localImage'])) {
+		$formData['localImage'] = true;
+	}
+
+
     $formData['description'] = trim($fData['description']);
     $formData['title'] = trim($fData['title']);
     $formData['image'] = trim($fData['image']);

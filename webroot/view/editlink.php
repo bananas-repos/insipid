@@ -119,9 +119,12 @@
         	</div>
         	<div class="column">
         		<p>
-        			<img class="linkthumbnail" src="<?php echo $linkData['image']; ?>" alt="Image if provided...">
+        			<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="Image if provided...">
         		</p>
-        		<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
+        		<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" /><br />
+				<br />
+				<input class="checkbox" type="checkbox" name="data[localImage]" value="1" <?php if(Summoner::ifset($formData, 'localImage')) echo "checked"; ?> />
+				Store image locally
         	</div>
         </div>
 

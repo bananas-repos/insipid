@@ -31,11 +31,16 @@ define('DB_HOST','127.0.0.1');
 define('DB_USERNAME','user');
 define('DB_PASSWORD','test');
 define('DB_NAME','insipid');
-define('DB_PREFIX','insipid'); # a _ is added automatically as seperation
+define('DB_PREFIX','insipid'); # a _ is added automatically as separation
 
 # user config
 define('FRONTEND_USERNAME','luke');
 define('FRONTEND_PASSWORD','father');
+
+# absolute path of webroot
+define('ABSOLUTE_PATH', '/home/banana/code/insipid/webroot');
+# relative to absolute path the name of the storage folder
+define('LOCAL_STORAGE', 'localdata');
 
 # complete restricted access not only the private links or the edit functions
 # username and password see above

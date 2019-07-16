@@ -49,7 +49,6 @@ class Link {
      * @return mixed
      */
     public function load($hash) {
-        $ret = false;
 
         $this->_data = array();
 
@@ -68,13 +67,12 @@ class Link {
                 WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows == 1) {
-                $ret = $query->fetch_assoc();
-
-                $this->_data = $ret;
+				$this->_data = $query->fetch_assoc();
 
                 # add stuff
                 $this->_tags();
                 $this->_categories();
+                $this->_image();
             }
         }
 
@@ -125,6 +123,12 @@ class Link {
             $search .= ' '.implode(" ",$tagArr);
             $search .= ' '.implode(" ",$catArr);
 
+            # did the image url change?
+			$_imageUrlChanged = false;
+			if($this->_data['image'] != $data['image']) {
+				$_imageUrlChanged = true;
+			}
+
             $queryStr = "UPDATE `".DB_PREFIX."_link` SET
                             `status` = '".$this->DB->real_escape_string($data['private'])."',
                             `description` = '".$this->DB->real_escape_string($data['description'])."',
@@ -153,6 +157,21 @@ class Link {
                     $tagObj->setRelation($this->_data['id']);
                 }
             }
+
+            # decide to store or remove the image
+			if(isset($data['localImage'])) {
+            	$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
+            	if($data['localImage'] === true) {
+					if(!file_exists($image) || $_imageUrlChanged === true) {
+						Summoner::downloadFile($data['image'],$image);
+					}
+				}
+				elseif($data['localImage'] === false) {
+            		if(file_exists($image)) {
+            			unlink($image);
+					}
+				}
+			}
 
             $ret = true;
         }
@@ -281,5 +300,20 @@ class Link {
             }
         }
     }
+
+	/**
+	 * determine of we have a local stored image
+	 * if so populate the localImage attribute
+	 */
+    private function _image() {
+		if(!empty($this->_data['hash'])) {
+			$this->_data['imageToShow'] = $this->_data['image'];
+			$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
+			if(file_exists($image)) {
+				$this->_data['imageToShow'] = LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
+				$this->_data['localImage'] = true;
+			}
+		}
+	}
 }
- ?>
+
