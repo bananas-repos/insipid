@@ -20,6 +20,7 @@ replace with: `tableprefix
 The value tableprefix has to match with the value for DB_PREFIX in config.php
 
 6.
+Create a table if needed.
 Import the sql file into your MySQL database
 
 7.
