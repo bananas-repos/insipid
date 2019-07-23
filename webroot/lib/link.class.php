@@ -99,8 +99,31 @@ class Link {
 	/**
 	 * create a new link with the given data
 	 * @param array $data
+	 * @return boolean|int
 	 */
-	public function create($data) {
+	public function create($data,$returnId=false) {
+		$ret = false;
+
+		if(!isset($data['link']) || empty($data['link'])) return false;
+		if(!isset($data['hash']) || empty($data['hash'])) return false;
+		if(!isset($data['title']) || empty($data['title'])) return false;
+
+		$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
+                        `link` = '".$this->DB->real_escape_string($data['link'])."',
+                        `created` = NOW(),
+                        `status` = '".$this->DB->real_escape_string($data['status'])."',
+                        `description` = '".$this->DB->real_escape_string($data['description'])."',
+                        `title` = '".$this->DB->real_escape_string($data['title'])."',
+                        `image` = '".$this->DB->real_escape_string($data['image'])."',
+                        `hash` = '".$this->DB->real_escape_string($data['hash'])."',
+                        `search` = '".$this->DB->real_escape_string($data['search'])."'";
+
+        $this->DB->query($queryStr);
+        if($returnId === true) {
+        	$ret = $this->DB->insert_id;
+        }                
+
+		return $ret;
 	}
 
 	/**

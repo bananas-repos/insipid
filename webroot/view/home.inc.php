@@ -36,7 +36,7 @@ $formData = false;
 $honeypotCheck = false;
 
 if((isset($_POST['password']) && !empty($_POST['password'])) || (isset($_POST['username']) && !empty($_POST['username']))) {
-    # those are hidden fields. A robot my input these. A valid user does not.
+    # those are hidden fields. A robot may input these. A valid user does not.
     $honeypotCheck = true;
 }
 
@@ -131,25 +131,18 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
         $search .= ' '.implode(" ",$tagArr);
         $search .= ' '.implode(" ",$catArr);
 
-        $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
-                        `link` = '".$DB->real_escape_string($formData['url'])."',
-                        `created` = NOW(),
-                        `status` = '".$DB->real_escape_string($formData['private'])."',
-                        `description` = '".$DB->real_escape_string($formData['description'])."',
-                        `title` = '".$DB->real_escape_string($formData['title'])."',
-                        `image` = '".$DB->real_escape_string($formData['image'])."',
-                        `hash` = '".$DB->real_escape_string($hash)."',
-                        `search` = '".$DB->real_escape_string($search)."'";
+        $DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
-        /*
-        var_dump($catArr);
-        var_dump($tagArr);
-        var_dump($queryStr);
-        exit();
-        */
-
-        $DB->query($queryStr);
-        $linkID = $DB->insert_id;
+        $linkObj = new Link($DB);
+        $linkID = $linkObj->create(array(
+            'hash' => $hash,
+            'search' => $search,
+            'link' => $formData['url'],
+            'status' => $formData['private'],
+            'description' => $formData['description'],
+            'title' => $formData['title'],
+            'image' => $formData['image']
+        ),true);
 
         if(!empty($linkID)) {
 
@@ -172,11 +165,14 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
                 }
             }
 
+            $DB->commit();
+
             $submitFeedback['message'] = 'Link added successfully.';
             $submitFeedback['status'] = 'success';
             $TemplateData['refresh'] = 'index.php?p=linkinfo&id='.$hash;
         }
         else {
+            $DB->rollback();
             $submitFeedback['message'] = 'Something went wrong...';
             $submitFeedback['status'] = 'error';
             $showAddForm = true;
