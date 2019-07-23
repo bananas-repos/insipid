@@ -132,7 +132,7 @@
 				  foreach($linkData['categories'] as $k=>$v) {
 			?>
 				<a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>" class="button is-small">
-					<span class="icon"><i class="ion-md-list"></i></span>
+					<span class="icon"><i class="ion-md-filing"></i></span>
 					<span><?php echo $v; ?></span>
 				</a>
 			<?php
@@ -152,11 +152,3 @@
 		</div>
 	</div>
 </section>
-
-
-
-
-
-
-
-

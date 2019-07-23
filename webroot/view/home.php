@@ -94,7 +94,7 @@
 					<div class="control">
 						<div class="tags has-addons">
 							<a class="tag is-dark" href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
-							<a class="tag is-info" title="more details..." href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-gear-a"></i></a>
+							<a class="tag is-info" title="more details..." href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-md-information-circle-outline"></i></a>
 						</div>
 					</div>
 <?php } ?>
@@ -224,7 +224,7 @@
 <?php if(!empty($latestLinks)) { ?>
 				<div class="tags">
 <?php foreach ($latestLinks as $ll) { ?>
-					<a class="tag is-medium" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
+					<a class="" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
 <?php } ?>
 				</div>
 <?php } ?>
@@ -246,7 +246,7 @@
 				<h4><a href="?p=overview&m=category&id=<?php echo urlencode($v['id']); ?>"><?php echo $v['name']; ?></a></h4>
 				<div class="tags">
 <?php foreach ($links as $link) { ?>
-					<a class="tag" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a>
+					<a class="" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a>
 <?php } ?>
 				</div>
 			</div>
