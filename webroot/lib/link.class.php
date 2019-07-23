@@ -121,7 +121,7 @@ class Link {
         $this->DB->query($queryStr);
         if($returnId === true) {
         	$ret = $this->DB->insert_id;
-        }                
+        }
 
 		return $ret;
 	}
@@ -146,6 +146,8 @@ class Link {
 			$search .= ' '.implode(" ",$tagArr);
 			$search .= ' '.implode(" ",$catArr);
 
+			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
 			# did the image url change?
 			$_imageUrlChanged = false;
 			if($this->_data['image'] != $data['image']) {
@@ -162,41 +164,48 @@ class Link {
 
 			$query = $this->DB->query($queryStr);
 
-			$catObj = new Category($this->DB);
-			$tagObj = new Tag($this->DB);
-			// clean the relations first
-			$this->_removeTagRelation(false);
-			$this->_removeCategoryRelation(false);
+			if($query !== false) {
+				$catObj = new Category($this->DB);
+				$tagObj = new Tag($this->DB);
+				// clean the relations first
+				$this->_removeTagRelation(false);
+				$this->_removeCategoryRelation(false);
 
-			if(!empty($catArr)) {
-				foreach($catArr as $c) {
-					$catObj->initbystring($c);
-					$catObj->setRelation($this->_data['id']);
-				}
-			}
-			if(!empty($tagArr)) {
-				foreach($tagArr as $t) {
-					$tagObj->initbystring($t);
-					$tagObj->setRelation($this->_data['id']);
-				}
-			}
-
-			# decide to store or remove the image
-			if(isset($data['localImage'])) {
-				$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
-				if($data['localImage'] === true) {
-					if(!file_exists($image) || $_imageUrlChanged === true) {
-						Summoner::downloadFile($data['image'],$image);
+				if(!empty($catArr)) {
+					foreach($catArr as $c) {
+						$catObj->initbystring($c);
+						$catObj->setRelation($this->_data['id']);
 					}
 				}
-				elseif($data['localImage'] === false) {
-					if(file_exists($image)) {
-						unlink($image);
+				if(!empty($tagArr)) {
+					foreach($tagArr as $t) {
+						$tagObj->initbystring($t);
+						$tagObj->setRelation($this->_data['id']);
 					}
 				}
+
+				# decide to store or remove the image
+				if(isset($data['localImage'])) {
+					$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
+					if($data['localImage'] === true) {
+						if(!file_exists($image) || $_imageUrlChanged === true) {
+							Summoner::downloadFile($data['image'],$image);
+						}
+					}
+					elseif($data['localImage'] === false) {
+						if(file_exists($image)) {
+							unlink($image);
+						}
+					}
+				}
+
+				$this->DB->commit();
+				$ret = true;
+			}
+			else {
+				$this->DB->rollback();
 			}
 
-			$ret = true;
 		}
 
 		return $ret;
@@ -212,7 +221,7 @@ class Link {
 		$ret = false;
 
 		if(!empty($link)) {
-			$queryStr = "SELECT 
+			$queryStr = "SELECT
 				any_value(`hash`) as hash
 				FROM `".DB_PREFIX."_link`
 				WHERE `link` = '".$this->DB->real_escape_string($link)."'";
@@ -234,7 +243,7 @@ class Link {
 		$ret = array();
 
 		if(!empty($this->_data['hash'])) {
-			$queryStr = "SELECT 
+			$queryStr = "SELECT
 				DISTINCT(tag) as tag
 				FROM `".DB_PREFIX."_combined`
 				WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
@@ -260,7 +269,7 @@ class Link {
 		$ret = array();
 
 		if(!empty($this->_data['hash'])) {
-			$queryStr = "SELECT 
+			$queryStr = "SELECT
 				DISTINCT(category) FROM `".DB_PREFIX."_combined`
 				WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
 			$query = $this->DB->query($queryStr);
@@ -284,12 +293,12 @@ class Link {
 		if(!empty($this->_data['id'])) {
 			$queryStr = false;
 			if($tagid === false) {
-				$queryStr = "DELETE 
+				$queryStr = "DELETE
 					FROM `".DB_PREFIX."_tagrelation`
 					WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
 			}
 			elseif(is_numeric($tagid)) {
-				$queryStr = "DELETE 
+				$queryStr = "DELETE
 					FROM `".DB_PREFIX."_tagrelation`
 					WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'
 					AND `tagid` = '".$this->DB->real_escape_string($tagid)."'";
@@ -308,7 +317,7 @@ class Link {
 		if(!empty($this->_data['id'])) {
 			$queryStr = false;
 			if($categoryid === false) {
-				$queryStr = "DELETE 
+				$queryStr = "DELETE
 					FROM `".DB_PREFIX."_categoryrelation`
 					WHERE `linkid` = '".$this->DB->real_escape_string($this->_data['id'])."'";
 			}

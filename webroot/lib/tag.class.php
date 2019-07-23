@@ -27,69 +27,68 @@
  */
 
 class Tag {
-    /**
-     * the database object
-     * @var object
-     */
-    private $DB;
+	/**
+	 * the database object
+	 * @var object
+	 */
+	private $DB;
 
-    /**
-     * the current loaded tag by DB id
-     * @var int
-     */
-    private $id;
+	/**
+	 * the current loaded tag by DB id
+	 * @var int
+	 */
+	private $id;
 
-    public function __construct($databaseConnectionObject) {
-        $this->DB = $databaseConnectionObject;
-    }
+	public function __construct($databaseConnectionObject) {
+		$this->DB = $databaseConnectionObject;
+	}
 
-    /**
-     * by given string load the info from the DB and even create if not existing
-     * @param string $string
-     */
-    public function initbystring($string) {
-        $this->id = false;
-        if(!empty($string)) {
-            $queryStr = "SELECT id FROM `".DB_PREFIX."_tag`
-                            WHERE `name` = '".$this->DB->real_escape_string($string)."'";
-            $query = $this->DB->query($queryStr);
-            if(!empty($query) && $query->num_rows > 0) {
-                $result = $query->fetch_assoc();
-                $this->id = $result['id'];
-            }
-            else {
-                $queryStr = "INSERT INTO `".DB_PREFIX."_tag`
-                                SET `name` = '".$this->DB->real_escape_string($string)."'";
-                $this->DB->query($queryStr);
-                if(!empty($this->DB->insert_id)) {
-                    $this->id = $this->DB->insert_id;
-                }
-            }
-        }
-    }
+	/**
+	 * by given string load the info from the DB and even create if not existing
+	 * @param string $string
+	 */
+	public function initbystring($string) {
+		$this->id = false;
+		if(!empty($string)) {
+			$queryStr = "SELECT id FROM `".DB_PREFIX."_tag`
+							WHERE `name` = '".$this->DB->real_escape_string($string)."'";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$result = $query->fetch_assoc();
+				$this->id = $result['id'];
+			}
+			else {
+				$queryStr = "INSERT INTO `".DB_PREFIX."_tag`
+								SET `name` = '".$this->DB->real_escape_string($string)."'";
+				$this->DB->query($queryStr);
+				if(!empty($this->DB->insert_id)) {
+					$this->id = $this->DB->insert_id;
+				}
+			}
+		}
+	}
 
-    /**
-     * by given DB table id load all the info we need
-     * @param int $id
-     */
-    public function initbyid($id) {
-        if(!empty($id)) {
-            $this->id = $id;
-        }
-    }
+	/**
+	 * by given DB table id load all the info we need
+	 * @param int $id
+	 */
+	public function initbyid($id) {
+		if(!empty($id)) {
+			$this->id = $id;
+		}
+	}
 
-    /**
-     * set the relation to the given link to the loaded tag
-     * @param int $linkid
-     * @return boolean
-     */
-    public function setRelation($linkid) {
-        if(!empty($linkid) && !empty($this->id)) {
-            $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
-                            SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
-                                `tagid` = '".$this->DB->real_escape_string($this->id)."'";
-            $this->DB->query($queryStr);
-        }
-    }
+	/**
+	 * set the relation to the given link to the loaded tag
+	 * @param int $linkid
+	 * @return boolean
+	 */
+	public function setRelation($linkid) {
+		if(!empty($linkid) && !empty($this->id)) {
+			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
+							SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
+								`tagid` = '".$this->DB->real_escape_string($this->id)."'";
+			$this->DB->query($queryStr);
+		}
+	}
 }
- ?>

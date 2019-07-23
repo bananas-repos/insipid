@@ -228,5 +228,3 @@ class SimpleImap {
 	    imap_close($this->_connection);
 	}
 }
-
-?>

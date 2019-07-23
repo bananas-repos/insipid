@@ -26,7 +26,6 @@
  *
  */
 ?>
-
 <section class="section">
 <?php if(empty($linkData)) { ?>
 	<div class="columns">

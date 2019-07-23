@@ -460,5 +460,3 @@ class Summoner {
 		return $ret;
 	}
 }
-
-?>
