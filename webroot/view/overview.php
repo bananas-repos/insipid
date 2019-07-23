@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2018 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -25,8 +25,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
- ?>
-
+?>
 <section class="section">
 	<div class="columns">
 		<div class="column">
@@ -100,6 +99,14 @@
 		<?php } ?>
 		</table>
 	</div>
+	<div class="column">
+		<div class="content">
+			<a href="index.php?p=edittags" class="button is-small is-danger">
+				<span class="icon"><i class="ion-md-create"></i></span>
+				<span>Edit tags</span>
+			</a>
+		</div>
+	</div>
 </div>
 <?php } if(!empty($categoryCollection)) { ?>
 <div class="columns">
@@ -116,6 +123,14 @@
 			</tr>
 		<?php } ?>
 		</table>
+	</div>
+	<div class="column">
+		<div class="content">
+			<a href="index.php?p=editcategories" class="button is-small is-danger">
+				<span class="icon"><i class="ion-md-create"></i></span>
+				<span>Edit categories</span>
+			</a>
+		</div>
 	</div>
 </div>
 <?php } ?>

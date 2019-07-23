@@ -71,11 +71,24 @@ class Category {
 	/**
 	 * by given DB table id load all the info we need
 	 * @param int $id
+	 * @return boolean
 	 */
 	public function initbyid($id) {
+		$ret = false;
+
 		if(!empty($id)) {
-			$this->id = $id;
+			$queryStr = "SELECT id,name
+				FROM `".DB_PREFIX."_category`
+				WHERE `id` = '".$this->DB->real_escape_string($id)."'";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$result = $query->fetch_assoc();
+				$this->id = $id;
+				$ret = true;
+			}
 		}
+
+		return $ret;
 	}
 
 	/**
@@ -90,5 +103,40 @@ class Category {
 								`categoryid` = '".$this->DB->real_escape_string($this->id)."'";
 			$this->DB->query($queryStr);
 		}
+	}
+
+	/**
+	 * deletes the current loaded category from db
+	 * @return boolean
+	 */
+	public function delete() {
+		$ret = false;
+
+		if(!empty($this->id)) {
+			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+			try {
+				$queryStr = "DELETE
+					FROM `".DB_PREFIX."_categoryrelation`
+					WHERE `categoryid` = '".$this->DB->real_escape_string($this->id)."'";
+				$this->DB->query($queryStr);
+
+				$queryStr = "DELETE
+					FROM `".DB_PREFIX."_category`
+					WHERE `id` = '".$this->DB->real_escape_string($this->id)."'";
+				$this->DB->query($queryStr);
+
+				$this->DB->commit();
+			} catch (Exception $e) {
+				if(DEBUG) {
+					var_dump($e->getMessage());
+				}
+				error_log('Failed to remove category: '.var_export($e->getMessage(),true));
+
+				$this->DB->rollback();
+			}
+		}
+
+		return $ret;
 	}
 }
