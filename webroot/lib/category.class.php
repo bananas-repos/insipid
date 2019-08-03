@@ -66,15 +66,16 @@ class Category {
 				}
 			}
 		}
+		return $this->id;
 	}
 
 	/**
 	 * by given DB table id load all the info we need
 	 * @param int $id
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function initbyid($id) {
-		$ret = false;
+		$this->id = false;
 
 		if(!empty($id)) {
 			$queryStr = "SELECT id,name
@@ -84,11 +85,10 @@ class Category {
 			if(!empty($query) && $query->num_rows > 0) {
 				$result = $query->fetch_assoc();
 				$this->id = $id;
-				$ret = true;
 			}
 		}
 
-		return $ret;
+		return $this->id;
 	}
 
 	/**

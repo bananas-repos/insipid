@@ -62,26 +62,10 @@
 			</p>
 		</div>
 
-	</div>
-</section>
+<?php require('_displaySubmitStatus.inc.php'); ?>
 
-<?php if(!empty($submitFeedback)) { ?>
-<section class="section">
-<div class="columns">
-	<div class="column">
-<?php if($submitFeedback['status'] == "error") { ?>
-		<div class="notification is-danger">
-			<?php echo $submitFeedback['message']; ?>
-		</div>
-<?php } else { ?>
-		<div class="notification is-success">
-			<p><?php echo $submitFeedback['message']; ?></p>
-		</div>
-<?php } ?>
 	</div>
-</div>
 </section>
-<?php } ?>
 
 <?php if(!empty($searchResult)) { ?>
 <section class="section">

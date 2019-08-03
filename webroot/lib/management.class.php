@@ -87,7 +87,7 @@ class Management {
 		$query = $this->DB->query($queryStr);
 		if(!empty($query)) {
 			while($result = $query->fetch_assoc()) {
-				if($stats === true) {
+				if($stats === true && isset($statsInfo[$result['id']])) {
 					$ret[$result['id']] = array('name' => $result['name'], 'amount' => $statsInfo[$result['id']]);
 				}
 				else {

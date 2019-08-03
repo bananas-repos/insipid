@@ -37,23 +37,8 @@
 		</div>
 	</div>
 <?php } ?>
-<?php if(!empty($submitFeedback)) { ?>
-	<div class="columns">
-		<div class="column">
-<?php if($submitFeedback['status'] == "error") { ?>
-			<div class="notification is-danger">
-				<h5>Error</h5>
-				<p><?php echo $submitFeedback['message']; ?></p>
-			</div>
-<?php } else { ?>
-			<div class="notification is-success">
-				<h5>Success</h5>
-				<p><?php echo $submitFeedback['message']; ?></p>
-			</div>
-<?php } ?>
-		</div>
-	</div>
-<?php } ?>
+
+<?php require('_displaySubmitStatus.inc.php'); ?>
 
 	<div class="columns">
 		<div class="column">

@@ -50,6 +50,9 @@
 			<?php } ?>
 		</div>
 	</div>
+
+<?php require('_displaySubmitStatus.inc.php'); ?>
+
 </section>
 
 <section>

@@ -46,23 +46,40 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
 	# first deletion, then update and then add
 	# adding a new one which matches an existing one will update it.
 
+	$submitFeedback['message'] = array();
+	$submitFeedback['status'] = 'success';
+
 	if(!empty($deleteCategoryData)) {
+		$submitFeedback['message'][] = 'Categories deleted successfully.';
+
 		foreach($deleteCategoryData as $k=>$v) {
 			if($v == "delete") {
 				$catObj = new Category($DB);
 				$load = $catObj->initbyid($k);
-				if($load === true) {
+				if($load !== false) {
 					$catObj->delete();
+				}
+				else {
+					$submitFeedback['message'][] = 'Categories could not be deleted.';
+					$submitFeedback['status'] = 'error';
 				}
 			}
 		}
-
-		$submitFeedback['message'] = 'Link updated successfully.';
-		$submitFeedback['status'] = 'success';
 	}
 
-	$submitFeedback['message'] = 'Something went wrong...';
-			$submitFeedback['status'] = 'error';
+	if(!empty($newCategory)) {
+		$submitFeedback['message'][] = 'Categories added successfully.';
+		$catArr = Summoner::prepareTagOrCategoryStr($newCategory);
+
+		foreach($catArr as $c) {
+			$catObj = new Category($DB);
+			$do = $catObj->initbystring($c);
+			if($do === false) {
+				$submitFeedback['message'][] = 'Category could not be added.';
+				$submitFeedback['status'] = 'error';
+			}
+		}
+	}
 }
 
 # show all the categories we have
