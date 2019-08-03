@@ -8,6 +8,8 @@ if(!empty($submitFeedback)) {
 	if(is_array($message)) {
 		$message = implode("<br />", $message);
 	}
+
+	if(!empty($message)) {
 ?>
 	<div class="columns">
 		<div class="column">
@@ -16,4 +18,7 @@ if(!empty($submitFeedback)) {
 			</div>
 		</div>
 	</div>
-<?php } ?>
+<?php
+	}
+}
+?>
