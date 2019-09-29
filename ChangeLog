@@ -1,13 +1,16 @@
-version 2.1 alpha - Guardian of Fire - (tba)
+version 2.1 alpha - Guardian of Fire - (2019-09-29)
 
 	* cleanups
-	* edit area for a bookmark 
+	* edit area for a bookmark
 	* documentation and sql setup cleanup
 	* new design with bulma.css (https://bulma.io/)
 	* added SEO information to "prevent" crawling and a robots.txt file
 	* new option to restrict access via http basic auth.
 	* very simple user authentication based on http basic auth.
 		Needs improvement in further releases
+	* using mysql transactions
+	* working with new MySQL (5.7) version
+	* Image from parsed link info can now be stored
 
 version 2.0alpha - Bright Crucible - (2017-01-05)
 

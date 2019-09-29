@@ -8,7 +8,7 @@ Read this first!!
 Unpack the archive
 
 4.
-Modify webroot/config.default.php and rename it to webroot/config.php
+Modify webroot/config.default.php and copy it to webroot/config.php
 
 5.
 Copy and modify documentation/insipid-edit-me.sql and replace the placeholder.
@@ -28,6 +28,8 @@ Edit the robots.txt file to your needs.
 
 8.
 Copy the content of the webroot folder into your webserver folder.
+Make the localdata folder writable to the web process to store images from link parsing.
+LOCAL_STORAGE is the option in the config file.
 
 9.
 If you want to fully restrict your contents activate the user/password restriction in the config.
