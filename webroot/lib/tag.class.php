@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -90,5 +90,40 @@ class Tag {
 								`tagid` = '".$this->DB->real_escape_string($this->id)."'";
 			$this->DB->query($queryStr);
 		}
+	}
+
+	/**
+	 * deletes the current loaded tag from db
+	 * @return boolean
+	 */
+	public function delete() {
+		$ret = false;
+
+		if(!empty($this->id)) {
+			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+			try {
+				$queryStr = "DELETE
+					FROM `".DB_PREFIX."_tagrelation`
+					WHERE `tagid` = '".$this->DB->real_escape_string($this->id)."'";
+				$this->DB->query($queryStr);
+
+				$queryStr = "DELETE
+					FROM `".DB_PREFIX."_tag`
+					WHERE `id` = '".$this->DB->real_escape_string($this->id)."'";
+				$this->DB->query($queryStr);
+
+				$this->DB->commit();
+			} catch (Exception $e) {
+				if(DEBUG) {
+					var_dump($e->getMessage());
+				}
+				error_log('Failed to remove tag: '.var_export($e->getMessage(),true));
+
+				$this->DB->rollback();
+			}
+		}
+
+		return $ret;
 	}
 }

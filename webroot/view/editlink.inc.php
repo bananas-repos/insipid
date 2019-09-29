@@ -122,4 +122,3 @@ if(!empty($linkData['categories'])) {
 
 $existingCategories = $Management->categories();
 $existingTags = $Management->tags();
-

@@ -53,6 +53,8 @@
 	<div class="columns">
 		<div class="column">
 			<h1 class="is-size-2"><?php echo $linkData['title']; ?></h1>
+			<h3><a href="index.php?p=linkinfo&id=<?php echo Summoner::ifset($formData, 'hash'); ?>">
+				<i class="icon ion-md-return-left"></i></a></h3>
 		</div>
 	</div>
 </section>

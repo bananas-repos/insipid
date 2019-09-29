@@ -1,0 +1,87 @@
+<?php
+/**
+ * Insipid
+ * Personal web-bookmark-system
+ *
+ * Copyright 2016-2019 Johannes Keßler
+ *
+ * Development starting from 2011: Johannes Keßler
+ * https://www.bananas-playground.net/projekt/insipid/
+ *
+ * creator:
+ * Luke Reeves <luke@neuro-tech.net>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
+ *
+ */
+$submitFeedback = false;
+$formData = false;
+
+# very simple security check.
+# can/should be extended in the future.
+Summoner::simpleAuth();
+
+
+if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags'])) {
+	$tagData = $_POST['tag'];
+
+	$deleteTagData = array();
+	if(isset($_POST['deleteTag'])) {
+		$deleteTagData = $_POST['deleteTag'];
+	}
+
+	$newTag = $_POST['newTag'];
+
+	# first deletion, then update and then add
+	# adding a new one which matches an existing one will update it.
+
+	$submitFeedback['message'] = array();
+	$submitFeedback['status'] = 'success';
+
+	if(!empty($deleteTagData)) {
+		$submitFeedback['message'][] = 'Tags deleted successfully.';
+
+		foreach($deleteTagData as $k=>$v) {
+			if($v == "delete") {
+				$tagObj = new Tag($DB);
+				$load = $tagObj->initbyid($k);
+				if($load !== false) {
+					$tagObj->delete();
+				}
+				else {
+					$submitFeedback['message'][] = 'Tags could not be deleted.';
+					$submitFeedback['status'] = 'error';
+				}
+			}
+		}
+	}
+
+	if(!empty($newTag)) {
+		$submitFeedback['message'][] = 'Tags added successfully.';
+		$tagArr = Summoner::prepareTagOrCategoryStr($newTag);
+
+		foreach($tagArr as $c) {
+			$tagObj = new Tag($DB);
+			$do = $tagObj->initbystring($c);
+			if($do === false) {
+				$submitFeedback['message'][] = 'Tag could not be added.';
+				$submitFeedback['status'] = 'error';
+			}
+		}
+	}
+}
+
+# show all the tags we have
+$tagCollection = $Management->tags(false, true);
+$subHeadline = 'All the tags <i class="ion-md-filing"></i>';
