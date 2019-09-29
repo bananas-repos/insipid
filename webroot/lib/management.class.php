@@ -91,7 +91,7 @@ class Management {
 					$ret[$result['id']] = array('name' => $result['name'], 'amount' => $statsInfo[$result['id']]);
 				}
 				else {
-					$ret[$result['id']] = array('name' => $result['name']);
+					$ret[$result['id']] = array('name' => $result['name'], 'amount' => 0);
 				}
 			}
 		}
