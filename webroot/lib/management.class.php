@@ -156,7 +156,7 @@ class Management {
 	public function latestLinks($limit=5) {
 		$ret = array();
 
-		$queryStr = "SELECT * FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
+		$queryStr = "SELECT `title`	 FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
 		if(!empty($limit)) {
 			$queryStr .= " LIMIT $limit";
 		}
@@ -194,32 +194,46 @@ class Management {
 	 * @param int $id
 	 * @param string $string
 	 * @param int $limit
+	 * @param bool $offset
 	 * @return array
 	 */
-	public function linksByCategory($id,$string,$limit=5) {
+	public function linksByCategory($id, $string, $limit=5, $offset=false) {
 		$ret = array();
 
-		$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
-			FROM `".DB_PREFIX."_combined`
-			WHERE `status` = 2";
+		$querySelect = "SELECT ".$this->COMBINED_SELECT_VALUES;
+		$queryFrom = " FROM `".DB_PREFIX."_combined`";
+		$queryWhere = "	WHERE `status` = 2";
+
 		if(!empty($id) && is_numeric($id)) {
-			$queryStr .= " AND `categoryId` = '" . $this->DB->real_escape_string($id) . "'";
+			$queryWhere .= " AND `categoryId` = '" . $this->DB->real_escape_string($id) . "'";
 		}
 		elseif(!empty($string) && is_string($string)) {
-			$queryStr .= " AND `category` = '" . $this->DB->real_escape_string($string) . "'";
+			$queryWhere .= " AND `category` = '" . $this->DB->real_escape_string($string) . "'";
 		}
 		else {
 			return $ret;
 		}
 
-		$queryStr .= "GROUP BY `hash`
+		$queryOrder = "GROUP BY `hash`
 			ORDER BY `created` DESC";
+		$queryLimit = '';
 		if(!empty($limit)) {
-			$queryStr .= " LIMIT $limit";
+			$queryLimit .= " LIMIT $limit";
+			if($offset !== false) {
+				$queryLimit .= " OFFSET $offset";
+			}
 		}
-		$query = $this->DB->query($queryStr);
+		$query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
 		if(!empty($query) && $query->num_rows > 0) {
-			$ret = $query->fetch_all(MYSQLI_ASSOC);
+			while($result = $query->fetch_assoc()) {
+				$linkObj = new Link($this->DB);
+				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
+				unset($linkObj);
+			}
+
+			$query = $this->DB->query("SELECT COUNT(DISTINCT(hash)) AS amount ".$queryFrom.$queryWhere);
+			$result = $query->fetch_assoc();
+			$ret['amount'] = $result['amount'];
 		}
 
 		return $ret;
@@ -231,32 +245,46 @@ class Management {
 	 * @param int $id
 	 * @param string $string
 	 * @param int $limit
+	 * @param bool $offset
 	 * @return array
 	 */
-	public function linksByTag($id,$string,$limit=5) {
+	public function linksByTag($id, $string, $limit=5, $offset=false) {
 		$ret = array();
 
-		$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
-			FROM `".DB_PREFIX."_combined`
-			WHERE `status` = 2";
+		$querySelect = "SELECT ".$this->COMBINED_SELECT_VALUES;
+		$queryFrom = " FROM `".DB_PREFIX."_combined`";
+		$queryWhere = " WHERE `status` = 2";
+
 		if(!empty($id) && is_numeric($id)) {
-			$queryStr .= " AND `tagId` = '" . $this->DB->real_escape_string($id) . "'";
+			$queryWhere .= " AND `tagId` = '" . $this->DB->real_escape_string($id) . "'";
 		}
 		elseif(!empty($string) && is_string($string)) {
-			$queryStr .= " AND `tag` = '" . $this->DB->real_escape_string($string) . "'";
+			$queryWhere .= " AND `tag` = '" . $this->DB->real_escape_string($string) . "'";
 		}
 		else {
 			return $ret;
 		}
 
-		$queryStr .= "GROUP BY `hash`
+		$queryOrder = "GROUP BY `hash`
 			ORDER BY `created` DESC";
+		$queryLimit = '';
 		if(!empty($limit)) {
-			$queryStr .= " LIMIT $limit";
+			$queryLimit .= " LIMIT $limit";
+			if($offset !== false) {
+				$queryLimit .= " OFFSET $offset";
+			}
 		}
-		$query = $this->DB->query($queryStr);
+		$query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
 		if(!empty($query) && $query->num_rows > 0) {
-			$ret = $query->fetch_all(MYSQLI_ASSOC);
+			while($result = $query->fetch_assoc()) {
+				$linkObj = new Link($this->DB);
+				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
+				unset($linkObj);
+			}
+
+			$query = $this->DB->query("SELECT COUNT(DISTINCT(hash)) AS amount ".$queryFrom.$queryWhere);
+			$result = $query->fetch_assoc();
+			$ret['amount'] = $result['amount'];
 		}
 
 		return $ret;
@@ -268,20 +296,21 @@ class Management {
 	 * @param bool $offset
 	 * @return array
 	 */
-	public function links($limit=false,$offset=false) {
+	public function links($limit=10,$offset=false) {
 		$ret = array();
 
-		$queryStr = "SELECT `hash`
-			FROM `".DB_PREFIX."_link`
-			WHERE `status` = 2
-			ORDER BY `created` DESC";
+		$querySelect = "SELECT `hash`";
+		$queryFrom = " FROM `".DB_PREFIX."_link`";
+		$queryWhere = " WHERE `status` = 2";
+		$queryOrder = " ORDER BY `created` DESC";
+		$queryLimit = "";
 		if(!empty($limit)) {
-			$queryStr .= " LIMIT $limit";
+			$queryLimit = " LIMIT $limit";
 			if($offset !== false) {
-				$queryStr .= " OFFSET $offset";
+				$queryLimit .= " OFFSET $offset";
 			}
 		}
-		$query = $this->DB->query($queryStr);
+		$query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
@@ -289,9 +318,7 @@ class Management {
 				unset($linkObj);
 			}
 
-			$query = $this->DB->query("SELECT COUNT(DISTINCT(hash)) AS `amount` 
-				FROM `".DB_PREFIX."_combined`
-				WHERE `status` = 2");
+			$query = $this->DB->query("SELECT COUNT(hash) AS amount ".$queryFrom.$queryWhere);
 			$result = $query->fetch_assoc();
 			$ret['amount'] = $result['amount'];
 		}

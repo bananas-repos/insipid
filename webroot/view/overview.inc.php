@@ -51,9 +51,12 @@ $pagination = array('pages' => 0);
 switch($_requestMode) {
 	case 'tag':
 		if(!empty($_id)) {
-			$linkCollection = $Management->linksByTag($_id,false,false);
-			if(!empty($linkCollection)) {
-				$subHeadline = $linkCollection[0]['tag'].' <i class="ion-md-pricetag"></i>';
+			$linkCollection = $Management->linksByTag($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+			if(!empty($linkCollection['results'])) {
+				$tagObj = new Tag($DB);
+				$tagObj->initbyid($_id);
+				$tagname = $tagObj->getData('name');
+				$subHeadline = $tagname.' <i class="ion-md-pricetag"></i>';
 			}
 		}
 		else {
@@ -64,9 +67,12 @@ switch($_requestMode) {
 	break;
 	case 'category':
 		if(!empty($_id)) {
-			$linkCollection = $Management->linksByCategory($_id,false,false);
-			if(!empty($linkCollection)) {
-				$subHeadline = $linkCollection[0]['category'].' <i class="ion-md-filing"></i>';
+			$linkCollection = $Management->linksByCategory($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+			if(!empty($linkCollection['results'])) {
+				$catObj = new Category($DB);
+				$catObj->initbyid($_id);
+				$catname = $catObj->getData('name');
+				$subHeadline = $catname.' <i class="ion-md-filing"></i>';
 			}
 		}
 		else {
@@ -79,11 +85,14 @@ switch($_requestMode) {
 	default:
 		# show all
 		$linkCollection = $Management->links(RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
-		if(!empty($linkCollection['amount'])) {
-			$pagination['pages'] = ceil($linkCollection['amount'] / RESULTS_PER_PAGE);
-			$pagination['curPage'] = $_curPage;
-			$pagination['m'] = $_requestMode;
-		}
+}
+if(!empty($linkCollection['amount'])) {
+	$pagination['pages'] = ceil($linkCollection['amount'] / RESULTS_PER_PAGE);
+	$pagination['curPage'] = $_curPage;
+	$pagination['linkadd'] = '&m='.$_requestMode;
+	if(!empty($_id)) {
+		$pagination['linkadd'] .= '&id='.$_id;
+	}
 }
 
 if($pagination['pages'] > 11) {

@@ -37,7 +37,13 @@ class Category {
 	 * the current loaded category by DB id
 	 * @var int
 	 */
-	private $id;
+	private $_id;
+
+	/**
+	 * current loaded tag data
+	 * @var array
+	 */
+	private $_data;
 
 	public function __construct($databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
@@ -46,27 +52,31 @@ class Category {
 	/**
 	 * by given string load the info from the DB and even create if not existing
 	 * @param string $string
+	 * @return bool|int
 	 */
 	public function initbystring($string) {
-		$this->id = false;
+		$this->_id = false;
 		if(!empty($string)) {
-			$queryStr = "SELECT id FROM `".DB_PREFIX."_category`
+			$queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_category`
 							WHERE `name` = '".$this->DB->real_escape_string($string)."'";
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {
 				$result = $query->fetch_assoc();
-				$this->id = $result['id'];
+				$this->_id = $result['id'];
+				$this->_data = $result;
 			}
 			else {
 				$queryStr = "INSERT INTO `".DB_PREFIX."_category`
 								SET `name` = '".$this->DB->real_escape_string($string)."'";
 				$this->DB->query($queryStr);
 				if(!empty($this->DB->insert_id)) {
-					$this->id = $this->DB->insert_id;
+					$this->_id = $this->DB->insert_id;
+					$this->_data['id'] = $this->_id;
+					$this->_data['name'] = $string;
 				}
 			}
 		}
-		return $this->id;
+		return $this->_id;
 	}
 
 	/**
@@ -75,7 +85,7 @@ class Category {
 	 * @return mixed
 	 */
 	public function initbyid($id) {
-		$this->id = false;
+		$this->_id = false;
 
 		if(!empty($id)) {
 			$queryStr = "SELECT id,name
@@ -84,11 +94,27 @@ class Category {
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {
 				$result = $query->fetch_assoc();
-				$this->id = $id;
+				$this->_id = $id;
+				$this->_data = $result;
 			}
 		}
 
-		return $this->id;
+		return $this->_id;
+	}
+
+	/**
+	 * return all or data fpr given key on the current loaded tag
+	 * @param bool $key
+	 * @return array|mixed
+	 */
+	public function getData($key=false) {
+		$ret = $this->_data;
+
+		if(!empty($key) && isset($this->_data[$key])) {
+			$ret = $this->_data[$key];
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -97,10 +123,10 @@ class Category {
 	 * @return void
 	 */
 	public function setRelation($linkid) {
-		if(!empty($linkid) && !empty($this->id)) {
+		if(!empty($linkid) && !empty($this->_id)) {
 			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_categoryrelation`
 							SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
-								`categoryid` = '".$this->DB->real_escape_string($this->id)."'";
+								`categoryid` = '".$this->DB->real_escape_string($this->_id)."'";
 			$this->DB->query($queryStr);
 		}
 	}
@@ -112,18 +138,18 @@ class Category {
 	public function delete() {
 		$ret = false;
 
-		if(!empty($this->id)) {
+		if(!empty($this->_id)) {
 			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
 			try {
 				$queryStr = "DELETE
 					FROM `".DB_PREFIX."_categoryrelation`
-					WHERE `categoryid` = '".$this->DB->real_escape_string($this->id)."'";
+					WHERE `categoryid` = '".$this->DB->real_escape_string($this->_id)."'";
 				$this->DB->query($queryStr);
 
 				$queryStr = "DELETE
 					FROM `".DB_PREFIX."_category`
-					WHERE `id` = '".$this->DB->real_escape_string($this->id)."'";
+					WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
 				$this->DB->query($queryStr);
 
 				$this->DB->commit();

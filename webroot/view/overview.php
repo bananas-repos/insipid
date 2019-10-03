@@ -51,14 +51,14 @@
 		</div>
 	</div>
 
-	<?php if($pagination['pages'] > 0) { ?>
+	<?php if($pagination['pages'] > 1) { ?>
 		<nav class="pagination is-centered" role="navigation" aria-label="pagination">
 			<?php if($pagination['curPage'] > 1) {
-				echo '<a href="index.php?p=overview&m='.$pagination['m'].'&page='.($pagination['curPage']-1).'" 
+				echo '<a href="index.php?p=overview'.$pagination['linkadd'].'&page='.($pagination['curPage']-1).'" 
 					class="pagination-previous">Previous</a>';
 			}
 			if($pagination['curPage'] < $pagination['pages']) {
-				echo '<a href="index.php?p=overview&m='.$pagination['m'].'&page='.($pagination['curPage']+1).'" 
+				echo '<a href="index.php?p=overview'.$pagination['linkadd'].'&page='.($pagination['curPage']+1).'" 
 					class="pagination-next">Next</a>';
 			}
 			?>
@@ -70,7 +70,7 @@
 					if($i == $pagination['curPage']) $active = 'is-current';
 
 					if(in_array($i,$pagination['visibleRange'])) {
-						echo '<li><a href="index.php?p=overview&m=' . $pagination['m'] . '&page=' . $i . '"
+						echo '<li><a href="index.php?p=overview' . $pagination['linkadd'] . '&page=' . $i . '"
 						class="pagination-link ' . $active . '"
 						aria-label="Goto page ' . $i . '">' . $i . '</a></li>';
 					}

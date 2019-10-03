@@ -37,7 +37,13 @@ class Tag {
 	 * the current loaded tag by DB id
 	 * @var int
 	 */
-	private $id;
+	private $_id;
+
+	/**
+	 * current loaded tag data
+	 * @var array
+	 */
+	private $_data;
 
 	public function __construct($databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
@@ -48,21 +54,24 @@ class Tag {
 	 * @param string $string
 	 */
 	public function initbystring($string) {
-		$this->id = false;
+		$this->_id = false;
 		if(!empty($string)) {
-			$queryStr = "SELECT id FROM `".DB_PREFIX."_tag`
+			$queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
 							WHERE `name` = '".$this->DB->real_escape_string($string)."'";
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {
 				$result = $query->fetch_assoc();
-				$this->id = $result['id'];
+				$this->_id = $result['id'];
+				$this->_data = $result;
 			}
 			else {
 				$queryStr = "INSERT INTO `".DB_PREFIX."_tag`
 								SET `name` = '".$this->DB->real_escape_string($string)."'";
 				$this->DB->query($queryStr);
 				if(!empty($this->DB->insert_id)) {
-					$this->id = $this->DB->insert_id;
+					$this->_id = $this->DB->insert_id;
+					$this->_data['id'] = $this->_id;
+					$this->_data['name'] = $string;
 				}
 			}
 		}
@@ -71,11 +80,38 @@ class Tag {
 	/**
 	 * by given DB table id load all the info we need
 	 * @param int $id
+	 * @return bool|int
 	 */
 	public function initbyid($id) {
+		$this->_id = false;
+
 		if(!empty($id)) {
-			$this->id = $id;
+			$queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
+							WHERE `id` = '".$this->DB->real_escape_string($id)."'";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$result = $query->fetch_assoc();
+				$this->_id = $result['id'];
+				$this->_data = $result;
+			}
 		}
+
+		return $this->_id;
+	}
+
+	/**
+	 * return all or data fpr given key on the current loaded tag
+	 * @param bool $key
+	 * @return array|mixed
+	 */
+	public function getData($key=false) {
+		$ret = $this->_data;
+
+		if(!empty($key) && isset($this->_data[$key])) {
+			$ret = $this->_data[$key];
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -84,10 +120,10 @@ class Tag {
 	 * @return boolean
 	 */
 	public function setRelation($linkid) {
-		if(!empty($linkid) && !empty($this->id)) {
+		if(!empty($linkid) && !empty($this->_id)) {
 			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
 							SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
-								`tagid` = '".$this->DB->real_escape_string($this->id)."'";
+								`tagid` = '".$this->DB->real_escape_string($this->_id)."'";
 			$this->DB->query($queryStr);
 		}
 	}
@@ -99,18 +135,18 @@ class Tag {
 	public function delete() {
 		$ret = false;
 
-		if(!empty($this->id)) {
+		if(!empty($this->_id)) {
 			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
 			try {
 				$queryStr = "DELETE
 					FROM `".DB_PREFIX."_tagrelation`
-					WHERE `tagid` = '".$this->DB->real_escape_string($this->id)."'";
+					WHERE `tagid` = '".$this->DB->real_escape_string($this->_id)."'";
 				$this->DB->query($queryStr);
 
 				$queryStr = "DELETE
 					FROM `".DB_PREFIX."_tag`
-					WHERE `id` = '".$this->DB->real_escape_string($this->id)."'";
+					WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
 				$this->DB->query($queryStr);
 
 				$this->DB->commit();

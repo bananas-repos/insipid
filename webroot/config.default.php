@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2018 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -47,7 +47,7 @@ define('LOCAL_STORAGE', 'localdata');
 define("USE_PAGE_AUTH",false);
 
 # results per page
-define("RESULTS_PER_PAGE",10);
+define("RESULTS_PER_PAGE",12);
 
 # settings for importing from e-mail
 # SSL/TLS only

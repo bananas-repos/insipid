@@ -229,7 +229,7 @@
 			<div class="content">
 				<h4><a href="?p=overview&m=category&id=<?php echo urlencode($v['id']); ?>"><?php echo $v['name']; ?></a></h4>
 				<ul>
-<?php foreach ($links as $link) { ?>
+<?php foreach ($links['results'] as $link) { ?>
 					<li><a class="" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a></li>
 <?php } ?>
 				</ul>
