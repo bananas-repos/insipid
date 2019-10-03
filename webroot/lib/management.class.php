@@ -156,7 +156,7 @@ class Management {
 	public function latestLinks($limit=5) {
 		$ret = array();
 
-		$queryStr = "SELECT `title`	 FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
+		$queryStr = "SELECT `title` FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
 		if(!empty($limit)) {
 			$queryStr .= " LIMIT $limit";
 		}
