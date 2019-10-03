@@ -244,14 +244,14 @@ class Link {
 
 		if(!empty($this->_data['hash'])) {
 			$queryStr = "SELECT
-				DISTINCT(tag) as tag
+				DISTINCT tag, tagId
 				FROM `".DB_PREFIX."_combined`
 				WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {
 				while($result = $query->fetch_assoc()) {
 					if($result['tag'] !== NULL) {
-						$ret[$result['tag']] = $result['tag'];
+						$ret[$result['tagId']] = $result['tag'];
 					}
 				}
 
@@ -270,13 +270,14 @@ class Link {
 
 		if(!empty($this->_data['hash'])) {
 			$queryStr = "SELECT
-				DISTINCT(category) FROM `".DB_PREFIX."_combined`
+				DISTINCT category, categoryId
+				FROM `".DB_PREFIX."_combined`
 				WHERE `hash` = '".$this->DB->real_escape_string($this->_data['hash'])."'";
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 					if($result['category'] !== NULL) {
-						$ret[$result['category']] = $result['category'];
+						$ret[$result['categoryId']] = $result['category'];
 					}
 				}
 			}

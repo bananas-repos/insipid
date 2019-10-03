@@ -206,14 +206,9 @@
 			<div class="content">
 				<h4><a href="index.php?p=overview&m=all">Last added</a></h4>
 <?php if(!empty($latestLinks)) { ?>
-				<div class="field is-grouped is-grouped-multiline">
+				<div class="tags">
 <?php foreach ($latestLinks as $ll) { ?>
-				  	<div class="control">
-				  		<div class="tags has-addons">
-						<a class="tag is-link" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
-						<a class="tag is-info">x</a>
-						</div>
-					</div>
+					<a class="tag is-link" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
 <?php } ?>
 				</div>
 <?php } ?>

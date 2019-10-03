@@ -147,7 +147,7 @@
 				<span class="icon">
 					<i class="ion-md-create"></i>
 				</span>
-				<span>edit</span>
+				<span>Edit</span>
 			</a>
 		</div>
 	</div>

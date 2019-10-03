@@ -48,6 +48,8 @@
 			<?php if(!empty($subHeadline)) { ?>
 			<h2 class="is-size-2"><?php echo $subHeadline; ?></h2>
 			<?php } ?>
+			<h3><a href="index.php?p=overview&m=tag">
+					<i class="icon ion-md-return-left"></i></a></h3>
 		</div>
 	</div>
 
