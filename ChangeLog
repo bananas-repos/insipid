@@ -3,6 +3,7 @@ version 2.2alpha - Guardian of Ice - (tba)
 	* email import
 	* code cleanups
 	* using mysql transactions if needed
+	* pagination
 
 
 version 2.1alpha - Guardian of Fire - (2019-09-29)

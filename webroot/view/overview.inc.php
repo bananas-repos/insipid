@@ -36,11 +36,17 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 	$_id = trim($_GET['id']);
 	$_id = Summoner::validate($_id,'digit') ? $_id : false;
 }
+$_curPage = 1;
+if(isset($_GET['page']) && !empty($_GET['page'])) {
+	$_curPage = trim($_GET['page']);
+	$_curPage = Summoner::validate($_curPage,'digit') ? $_curPage : 1;
+}
 
 $linkCollection = array();
 $subHeadline = false;
 $tagCollection = array();
 $categoryCollection = array();
+$pagination = array('pages' => 0);
 
 switch($_requestMode) {
 	case 'tag':
@@ -72,5 +78,29 @@ switch($_requestMode) {
 	case 'all':
 	default:
 		# show all
-		$linkCollection = $Management->links();
+		$linkCollection = $Management->links(RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+		if(!empty($linkCollection['amount'])) {
+			$pagination['pages'] = ceil($linkCollection['amount'] / RESULTS_PER_PAGE);
+			$pagination['curPage'] = $_curPage;
+			$pagination['m'] = $_requestMode;
+		}
+}
+
+if($pagination['pages'] > 11) {
+	# first pages
+	$pagination['visibleRange'] = range(1,3);
+	# last pages
+	foreach(range($pagination['pages']-2, $pagination['pages']) as $e) {
+		array_push($pagination['visibleRange'], $e);
+	}
+	# pages before and after current page
+	$cRange = range($pagination['curPage']-1, $pagination['curPage']+1);
+	foreach($cRange as $e) {
+		array_push($pagination['visibleRange'], $e);
+	}
+	$pagination['currentRangeStart'] = array_shift($cRange);
+	$pagination['currentRangeEnd'] = array_pop($cRange);
+}
+else {
+	$pagination['visibleRange'] = range(1,$pagination['pages']);
 }

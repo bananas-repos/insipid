@@ -267,7 +267,7 @@ class Management {
 	 * @param bool | int $limit
 	 * @return array
 	 */
-	public function links($limit=false) {
+	public function links($limit=false,$offset=false) {
 		$ret = array();
 
 		$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
@@ -275,9 +275,21 @@ class Management {
 			WHERE `status` = 2
 			GROUP BY `hash`
 			ORDER BY `created` DESC";
+		if(!empty($limit)) {
+			$queryStr .= " LIMIT $limit";
+			if($offset !== false) {
+				$queryStr .= " OFFSET $offset";
+			}
+		}
 		$query = $this->DB->query($queryStr);
 		if(!empty($query) && $query->num_rows > 0) {
-			$ret = $query->fetch_all(MYSQLI_ASSOC);
+			$ret['results'] = $query->fetch_all(MYSQLI_ASSOC);
+
+			$query = $this->DB->query("SELECT COUNT(DISTINCT(hash)) AS `amount` 
+				FROM `".DB_PREFIX."_combined`
+				WHERE `status` = 2");
+			$result = $query->fetch_assoc();
+			$ret['amount'] = $result['amount'];
 		}
 
 		return $ret;

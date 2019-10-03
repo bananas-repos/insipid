@@ -50,12 +50,51 @@
 			<?php } ?>
 		</div>
 	</div>
+
+	<?php if($pagination['pages'] > 0) { ?>
+		<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+			<?php if($pagination['curPage'] > 1) {
+				echo '<a href="index.php?p=overview&m='.$pagination['m'].'&page='.($pagination['curPage']-1).'" 
+					class="pagination-previous">Previous</a>';
+			}
+			if($pagination['curPage'] < $pagination['pages']) {
+				echo '<a href="index.php?p=overview&m='.$pagination['m'].'&page='.($pagination['curPage']+1).'" 
+					class="pagination-next">Next</a>';
+			}
+			?>
+			<ul class="pagination-list">
+				<?php
+				$ellipsisShown = 0;
+				for($i=1;$i<=$pagination['pages'];$i++) {
+					$active = '';
+					if($i == $pagination['curPage']) $active = 'is-current';
+
+					if(in_array($i,$pagination['visibleRange'])) {
+						echo '<li><a href="index.php?p=overview&m=' . $pagination['m'] . '&page=' . $i . '"
+						class="pagination-link ' . $active . '"
+						aria-label="Goto page ' . $i . '">' . $i . '</a></li>';
+					}
+					else {
+						if($i < $pagination['currentRangeStart'] && $ellipsisShown == 0) {
+							echo '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+							$ellipsisShown = 1;
+						}
+						if($i > $pagination['currentRangeEnd'] && ($ellipsisShown == 0 || $ellipsisShown == 1)) {
+							echo '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+							$ellipsisShown = 2;
+						}
+					}
+				}
+				?>
+			</ul>
+		</nav>
+	<?php } ?>
 </section>
 
 <section class="section">
-<?php if(!empty($linkCollection)) { ?>
+<?php if(!empty($linkCollection['results'])) { ?>
 <div class="columns is-multiline">
-<?php foreach ($linkCollection as $link) { ?>
+<?php foreach ($linkCollection['results'] as $link) { ?>
 	<div class="column is-one-quarter">
 		<div class="card">
 			<div class="card-image">

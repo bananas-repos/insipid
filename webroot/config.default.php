@@ -46,6 +46,9 @@ define('LOCAL_STORAGE', 'localdata');
 # username and password see above
 define("USE_PAGE_AUTH",false);
 
+# results per page
+define("RESULTS_PER_PAGE",10);
+
 # settings for importing from e-mail
 # SSL/TLS only
 # imap
