@@ -1,11 +1,11 @@
 TODO / Feature list
 ==========================================================================
-+ theme support
-+ bookmark js snippet
++ sorting
 + snapshots
 + stats, storage usage
-+ private links
++ show private links if authenticated
++ bookmark js snippet
++ theme support
 + more "secure" user authentication
 ++ multiple user accounts and stuff
-+ sorting
-+ paging
+
