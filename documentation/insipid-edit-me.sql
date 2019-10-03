@@ -100,7 +100,24 @@ CREATE TABLE `#REPLACE_ME#_tagrelation` (
 --
 DROP TABLE IF EXISTS `#REPLACE_ME#_combined`;
 
-CREATE VIEW `#REPLACE_ME#_combined`  AS  select `#REPLACE_ME#_link`.`id` AS `id`,`#REPLACE_ME#_link`.`link` AS `link`,`#REPLACE_ME#_link`.`created` AS `created`,`#REPLACE_ME#_link`.`status` AS `status`,`#REPLACE_ME#_link`.`description` AS `description`,`#REPLACE_ME#_link`.`title` AS `title`,`#REPLACE_ME#_link`.`image` AS `image`,`#REPLACE_ME#_link`.`hash` AS `hash`,`#REPLACE_ME#_tag`.`name` AS `tag`,`#REPLACE_ME#_tag`.`id` AS `tagId`,`#REPLACE_ME#_category`.`name` AS `category`,`#REPLACE_ME#_category`.`id` AS `categoryId` from ((((`#REPLACE_ME#_link` left join `#REPLACE_ME#_tagrelation` on((`#REPLACE_ME#_tagrelation`.`linkid` = `#REPLACE_ME#_link`.`id`))) left join `#REPLACE_ME#_tag` on((`#REPLACE_ME#_tag`.`id` = `#REPLACE_ME#_tagrelation`.`tagid`))) left join `#REPLACE_ME#_categoryrelation` on((`#REPLACE_ME#_categoryrelation`.`linkid` = `#REPLACE_ME#_link`.`id`))) left join `#REPLACE_ME#_category` on((`#REPLACE_ME#_category`.`id` = `#REPLACE_ME#_categoryrelation`.`categoryid`))) ;
+CREATE VIEW `#REPLACE_ME#_combined` AS
+select `#REPLACE_ME#_link`.`id` AS `id`,
+`#REPLACE_ME#_link`.`link` AS `link`,
+`#REPLACE_ME#_link`.`created` AS `created`,
+`#REPLACE_ME#_link`.`status` AS `status`,
+`#REPLACE_ME#_link`.`description` AS `description`,
+`#REPLACE_ME#_link`.`title` AS `title`,
+`#REPLACE_ME#_link`.`image` AS `image`,
+`#REPLACE_ME#_link`.`hash` AS `hash`,
+`#REPLACE_ME#_tag`.`name` AS `tag`,
+`#REPLACE_ME#_tag`.`id` AS `tagId`,
+`#REPLACE_ME#_category`.`name` AS `category`,
+`#REPLACE_ME#_category`.`id` AS `categoryId`
+from ((((`#REPLACE_ME#_link`
+left join `#REPLACE_ME#_tagrelation` on((`#REPLACE_ME#_tagrelation`.`linkid` = `#REPLACE_ME#_link`.`id`)))
+left join `#REPLACE_ME#_tag` on((`#REPLACE_ME#_tag`.`id` = `#REPLACE_ME#_tagrelation`.`tagid`)))
+left join `#REPLACE_ME#_categoryrelation` on((`#REPLACE_ME#_categoryrelation`.`linkid` = `#REPLACE_ME#_link`.`id`)))
+left join `#REPLACE_ME#_category` on((`#REPLACE_ME#_category`.`id` = `#REPLACE_ME#_categoryrelation`.`categoryid`))) ;
 
 --
 -- Indexes for dumped tables

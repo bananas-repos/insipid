@@ -1,7 +1,5 @@
 TODO / Feature list
 ==========================================================================
-+ SQL transactions.
-+ edit area
 + theme support
 + bookmark js snippet
 + snapshots
@@ -10,3 +8,4 @@ TODO / Feature list
 + more "secure" user authentication
 ++ multiple user accounts and stuff
 + sorting
++ paging

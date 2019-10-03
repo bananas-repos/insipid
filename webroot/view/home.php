@@ -35,7 +35,7 @@
 				<div class="field has-addons">
 					<div class="control is-expanded">
 						<div class="control has-icons-left">
-							<input class="input" type="text" name="data[searchfield]" placeholder="Search your bookmarks">
+							<input class="input" type="text" name="data[searchfield]" placeholder="Search your bookmarks or add a new one">
 							<span class="icon is-small is-left">
 								<i class="ion-link"></i>
 							</span>
@@ -206,9 +206,14 @@
 			<div class="content">
 				<h4><a href="index.php?p=overview&m=all">Last added</a></h4>
 <?php if(!empty($latestLinks)) { ?>
-				<div class="tags">
+				<div class="field is-grouped is-grouped-multiline">
 <?php foreach ($latestLinks as $ll) { ?>
-					<a class="" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
+				  	<div class="control">
+				  		<div class="tags has-addons">
+						<a class="tag is-link" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
+						<a class="tag is-info">x</a>
+						</div>
+					</div>
 <?php } ?>
 				</div>
 <?php } ?>
@@ -228,11 +233,11 @@
 		<div class="column is-one-quarter">
 			<div class="content">
 				<h4><a href="?p=overview&m=category&id=<?php echo urlencode($v['id']); ?>"><?php echo $v['name']; ?></a></h4>
-				<div class="tags">
+				<ul>
 <?php foreach ($links as $link) { ?>
-					<a class="" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a>
+					<li><a class="" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a></li>
 <?php } ?>
-				</div>
+				</ul>
 			</div>
 		</div>
 <?php
