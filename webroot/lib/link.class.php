@@ -79,6 +79,42 @@ class Link {
 		return $this->_data;
 	}
 
+	/**
+	 * loads only the info needed to display the link
+	 * for edit use $this->load
+	 * @param $hash
+	 * @return array
+	 */
+	public function loadShortInfo($hash) {
+		$this->_data = array();
+
+		if(!empty($hash)) {
+			$queryStr = "SELECT
+				any_value(`id`) as id,
+				any_value(`link`) as link,
+				any_value(`description`) as description,
+				any_value(`title`) as title,
+				any_value(`image`) as image,
+				any_value(`hash`) as hash
+				FROM `".DB_PREFIX."_link`
+				WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows == 1) {
+				$this->_data = $query->fetch_assoc();
+
+				# add stuff
+				$this->_image();
+			}
+		}
+
+		return $this->_data;
+	}
+
+	/**
+	 * return all or data fpr given key on the current loaded link
+	 * @param bool $key
+	 * @return array|mixed
+	 */
 	public function getData($key=false) {
 		$ret = $this->_data;
 

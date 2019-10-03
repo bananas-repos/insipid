@@ -265,15 +265,15 @@ class Management {
 	/**
 	 * return all links and Info we have from the combined view
 	 * @param bool | int $limit
+	 * @param bool $offset
 	 * @return array
 	 */
 	public function links($limit=false,$offset=false) {
 		$ret = array();
 
-		$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
-			FROM `".DB_PREFIX."_combined`
+		$queryStr = "SELECT `hash`
+			FROM `".DB_PREFIX."_link`
 			WHERE `status` = 2
-			GROUP BY `hash`
 			ORDER BY `created` DESC";
 		if(!empty($limit)) {
 			$queryStr .= " LIMIT $limit";
@@ -283,7 +283,11 @@ class Management {
 		}
 		$query = $this->DB->query($queryStr);
 		if(!empty($query) && $query->num_rows > 0) {
-			$ret['results'] = $query->fetch_all(MYSQLI_ASSOC);
+			while($result = $query->fetch_assoc()) {
+				$linkObj = new Link($this->DB);
+				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
+				unset($linkObj);
+			}
 
 			$query = $this->DB->query("SELECT COUNT(DISTINCT(hash)) AS `amount` 
 				FROM `".DB_PREFIX."_combined`
