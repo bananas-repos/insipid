@@ -73,6 +73,7 @@ class Link {
 				$this->_tags();
 				$this->_categories();
 				$this->_image();
+				$this->_private();
 			}
 		}
 
@@ -382,6 +383,15 @@ class Link {
 				$this->_data['imageToShow'] = LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
 				$this->_data['localImage'] = true;
 			}
+		}
+	}
+
+	/**
+	 * check if the status is private and set the info
+	 */
+	private function _private() {
+		if(!empty($this->_data['status']) && $this->_data['status'] == "1") {
+			$this->_data['private'] = "1";
 		}
 	}
 }

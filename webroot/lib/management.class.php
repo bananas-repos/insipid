@@ -33,6 +33,8 @@ class Management {
 	 */
 	private $DB;
 
+	private $_showPrivate = false;
+
 	protected $COMBINED_SELECT_VALUES = "any_value(`id`) as id,
 				any_value(`link`) as link,
 				any_value(`created`) as created,
@@ -51,6 +53,16 @@ class Management {
 	}
 
 	/**
+	 * Show private links or not
+	 * @param $bool
+	 */
+	public function setShowPrivate($bool) {
+		if(is_bool($bool)) {
+			$this->_showPrivate = $bool;
+		}
+	}
+
+	/**
 	 * get all the available categories from the DB.
 	 * optional limit
 	 * optional stats
@@ -65,9 +77,17 @@ class Management {
 		if($stats === true) {
 			$queryStr = "SELECT
 				COUNT(*) as amount,
-				any_value(categoryid) as categoryId
-				FROM `".DB_PREFIX."_categoryrelation`
-				GROUP BY categoryid";
+				any_value(cr.categoryid) as categoryId
+				FROM `".DB_PREFIX."_categoryrelation` AS cr, `".DB_PREFIX."_link` AS l
+				WHERE cr.linkid = l.id";
+			if($this->_showPrivate === true) {
+				$queryStr .= " AND l.status IN (2,1)";
+			}
+			else {
+				$queryStr .= " AND l.status = 2";
+			}
+			$queryStr .= " GROUP BY categoryid";
+
 			$query = $this->DB->query($queryStr);
 			if(!empty($query)) {
 				while($result = $query->fetch_assoc()) {
@@ -114,9 +134,17 @@ class Management {
 		if($stats === true) {
 			$queryStr = "SELECT
 				COUNT(*) as amount,
-				any_value(`tagid`) as tagId
-				FROM `".DB_PREFIX."_tagrelation`
-				GROUP BY tagId";
+				any_value(tr.tagid) as tagId
+				FROM `".DB_PREFIX."_tagrelation` AS tr,  `".DB_PREFIX."_link` AS l
+				WHERE tr.linkid = l.id";
+			if($this->_showPrivate === true) {
+				$queryStr .= " AND l.status IN (2,1)";
+			}
+			else {
+				$queryStr .= " AND l.status = 2";
+			}
+			$queryStr .= "GROUP BY tagId";
+
 			$query = $this->DB->query($queryStr);
 			if(!empty($query)) {
 				while($result = $query->fetch_assoc()) {
@@ -156,7 +184,14 @@ class Management {
 	public function latestLinks($limit=5) {
 		$ret = array();
 
-		$queryStr = "SELECT `title` FROM `".DB_PREFIX."_link` WHERE `status` = 2 ORDER BY `created` DESC";
+		$queryStr = "SELECT `title` FROM `".DB_PREFIX."_link`";
+		if($this->_showPrivate === true) {
+			$queryStr .= " WHERE `status` IN (2,1)";
+		}
+		else {
+			$queryStr .= " WHERE `status` = 2";
+		}
+		$queryStr .= " ORDER BY `created` DESC";
 		if(!empty($limit)) {
 			$queryStr .= " LIMIT $limit";
 		}
@@ -203,7 +238,9 @@ class Management {
 		$querySelect = "SELECT ".$this->COMBINED_SELECT_VALUES;
 		$queryFrom = " FROM `".DB_PREFIX."_combined`";
 		$queryWhere = "	WHERE `status` = 2";
-
+		if($this->_showPrivate === true) {
+			$queryWhere = "	WHERE `status` IN (2,1)";
+		}
 		if(!empty($id) && is_numeric($id)) {
 			$queryWhere .= " AND `categoryId` = '" . $this->DB->real_escape_string($id) . "'";
 		}
@@ -254,7 +291,9 @@ class Management {
 		$querySelect = "SELECT ".$this->COMBINED_SELECT_VALUES;
 		$queryFrom = " FROM `".DB_PREFIX."_combined`";
 		$queryWhere = " WHERE `status` = 2";
-
+		if($this->_showPrivate === true) {
+			$queryWhere = " WHERE `status` IN (2,1)";
+		}
 		if(!empty($id) && is_numeric($id)) {
 			$queryWhere .= " AND `tagId` = '" . $this->DB->real_escape_string($id) . "'";
 		}
@@ -302,6 +341,9 @@ class Management {
 		$querySelect = "SELECT `hash`";
 		$queryFrom = " FROM `".DB_PREFIX."_link`";
 		$queryWhere = " WHERE `status` = 2";
+		if($this->_showPrivate === true) {
+			$queryWhere = " WHERE `status` IN (2,1)";
+		}
 		$queryOrder = " ORDER BY `created` DESC";
 		$queryLimit = "";
 		if(!empty($limit)) {
@@ -335,10 +377,15 @@ class Management {
 		$ret = array();
 
 		if(!empty($categoryid) && is_numeric($categoryid)) {
-			$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES."
-			FROM `".DB_PREFIX."_combined`
-			WHERE `status` = 2
-			AND `categoryId` = '" . $this->DB->real_escape_string($categoryid) . "'
+			$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES." 
+			FROM `".DB_PREFIX."_combined`";
+			if($this->_showPrivate === true) {
+				$queryStr .= " WHERE `status` IN (2,1)";
+			}
+			else {
+				$queryStr .= " WHERE `status` = 2";
+			}
+			$queryStr .= " AND `categoryId` = '" . $this->DB->real_escape_string($categoryid) . "'
 			ORDER BY `created` DESC
 			LIMIT 1";
 			$query = $this->DB->query($queryStr);
@@ -346,6 +393,63 @@ class Management {
 				$ret = $query->fetch_all(MYSQLI_ASSOC);
 			}
 		}
+		return $ret;
+	}
+
+	/**
+	 * Search for the given url in the links table
+	 * @param $url
+	 * @return mixed
+	 */
+	public function searchForLinkByURL($url) {
+		$ret = false;
+
+		if(!empty($url)) {
+			$queryStr = "SELECT * FROM `".DB_PREFIX."_link`";
+			if($this->_showPrivate === true) {
+				$queryStr .= " WHERE `status` IN (2,1)";
+			}
+			else {
+				$queryStr .= " WHERE `status` = 2";
+			}
+			$queryStr .= " AND `link` = '".$this->DB->real_escape_string($url)."'";
+
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$ret = $query->fetch_all(MYSQLI_ASSOC);
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * search for given searchstring in the search data of the links
+	 * @param $searchStr
+	 * @return mixed
+	 */
+	public function searchForLinkBySearchData($searchStr) {
+		$ret = false;
+
+		if(!empty($searchStr)) {
+			$queryStr = "SELECT *,
+				MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE) AS score
+				FROM `".DB_PREFIX."_link`
+				WHERE MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE)";
+			if($this->_showPrivate === true) {
+				$queryStr .= " WHERE `status` IN (2,1)";
+			}
+			else {
+				$queryStr .= " WHERE `status` = 2";
+			}
+			$queryStr .= " ORDER BY score DESC";
+
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$ret = $query->fetch_all(MYSQLI_ASSOC);
+			}
+		}
+
 		return $ret;
 	}
 
@@ -388,4 +492,3 @@ class Management {
 	}
 }
 
-?>

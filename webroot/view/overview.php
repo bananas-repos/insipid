@@ -138,6 +138,7 @@
 		<?php } ?>
 		</table>
 	</div>
+	<?php if($_displayEditButton === true) { ?>
 	<div class="column">
 		<div class="content">
 			<a href="index.php?p=edittags" class="button is-small is-danger">
@@ -146,6 +147,7 @@
 			</a>
 		</div>
 	</div>
+	<?php } ?>
 </div>
 <?php } if(!empty($categoryCollection)) { ?>
 <div class="columns">
@@ -163,6 +165,7 @@
 		<?php } ?>
 		</table>
 	</div>
+	<?php if($_displayEditButton === true) { ?>
 	<div class="column">
 		<div class="content">
 			<a href="index.php?p=editcategories" class="button is-small is-danger">
@@ -171,6 +174,7 @@
 			</a>
 		</div>
 	</div>
+	<?php } ?>
 </div>
 <?php } ?>
 </section>

@@ -29,7 +29,7 @@
 <section class="section">
 	<div class="columns">
 		<div class="column">
-			<form method="post">
+			<form method="post" action="index.php">
 				<input type="hidden" name="password" />
 				<input type="hidden" name="username" />
 				<div class="field has-addons">
@@ -61,10 +61,8 @@
 				</a>
 			</p>
 		</div>
-
-<?php require('_displaySubmitStatus.inc.php'); ?>
-
 	</div>
+	<?php require('_displaySubmitStatus.inc.php'); ?>
 </section>
 
 <?php if(!empty($searchResult)) { ?>

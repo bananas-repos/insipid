@@ -1,11 +1,12 @@
 TODO / Feature list
 ==========================================================================
 + auth and de-auth call over url only. Then display edit buttons
++ show private links if authenticated
 + stats, storage usage. With stats and valid auth display moderation
 + email import auto reply check
++ better url compare. eg. urls with / or without / at the end
 + sorting
 + snapshots
-+ show private links if authenticated
 + bookmark js snippet
 + theme support
 + more "secure" user authentication

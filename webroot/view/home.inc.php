@@ -35,6 +35,17 @@ $showAddForm = false;
 $formData = false;
 $honeypotCheck = false;
 
+$_requestMode = false;
+if(isset($_GET['m']) && !empty($_GET['m'])) {
+	$_requestMode = trim($_GET['m']);
+	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : "all";
+}
+if($_requestMode === "auth") {
+	# very simple security check.
+	# can/should be extended in the future.
+	Summoner::simpleAuth();
+}
+
 if((isset($_POST['password']) && !empty($_POST['password'])) || (isset($_POST['username']) && !empty($_POST['username']))) {
 	# those are hidden fields. A robot may input these. A valid user does not.
 	$honeypotCheck = true;
@@ -48,6 +59,8 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 		# search for URL
 		$queryStr = "SELECT * FROM `".DB_PREFIX."_link`
 						WHERE `link` = '".$DB->real_escape_string($searchValue)."'";
+
+		$searchResult = $Management->searchForLinkByURL($searchValue);
 	}
 	elseif(Summoner::validate($searchValue,'text')) {
 		$queryStr = "SELECT *,
@@ -55,21 +68,24 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 			FROM `".DB_PREFIX."_link`
 			WHERE MATCH (`search`) AGAINST ('".$DB->real_escape_string($searchValue)."' IN BOOLEAN MODE)
 			ORDER BY score DESC";
+
+		$searchResult = $Management->searchForLinkBySearchData($searchValue);
 	}
 	else {
 		$submitFeedback['message'] = 'Invalid input';
 		$submitFeedback['status'] = 'error';
 	}
-
+/*
 	if(!empty($queryStr)) {
 		$query = $DB->query($queryStr);
 		if(!empty($query) && $query->num_rows > 0) {
 			$searchResult = $query->fetch_all(MYSQLI_ASSOC);
 		}
 	}
+*/
 
 	# new one?
-	if(empty($searchResult) && $isUrl === true) {
+	if(empty($searchResult) && $isUrl === true && Summoner::simpleAuthCheck() === true) {
 		# try to gather some information automatically
 		$linkInfo = Summoner::gatherInfoFromURL($searchValue);
 		if(!empty($linkInfo)) {
@@ -98,12 +114,10 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 }
 
 # add a new one
-if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone']) && $honeypotCheck === false) {
+if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone']) && $honeypotCheck === false
+	&& Summoner::simpleAuthCheck() === true
+) {
 	$fData = $_POST['data'];
-
-	# very simple security check.
-	# can/should be extended in the future.
-	Summoner::simpleAuth();
 
 	$formData['private'] = 2;
 	if(isset($fData['private'])) {

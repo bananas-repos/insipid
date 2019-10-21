@@ -88,6 +88,9 @@ $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;;
 
 # management needs the DB object
 $Management = new Management($DB);
+if($Summoner::simpleAuthCheck() === true) {
+	$Management->setShowPrivate(true);
+}
 
 if(isset($_GET['p']) && !empty($_GET['p'])) {
     $_requestPage = trim($_GET['p']);

@@ -141,6 +141,7 @@
 			?>
 		</div>
 	</div>
+	<?php if($_displayEditButton === true) { ?>
 	<div class="columns">
 		<div class="column">
 			<a href="index.php?p=editlink&id=<?php echo $linkData['hash']; ?>" class="button is-small is-danger">
@@ -151,4 +152,5 @@
 			</a>
 		</div>
 	</div>
+	<?php } ?>
 </section>

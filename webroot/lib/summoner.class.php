@@ -436,6 +436,21 @@ class Summoner {
 	}
 
 	/**
+	 * check if we have a valid auth. Nothing more.
+	 * @see Summoner::simpleAuth to trigger the auth
+	 * @return bool
+	 */
+	static function simpleAuthCheck() {
+		if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])
+			&& $_SERVER['PHP_AUTH_USER'] === FRONTEND_USERNAME && $_SERVER['PHP_AUTH_PW'] === FRONTEND_PASSWORD
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Checks if in the given urlstring a scheme is existent. If not add http:// to it
 	 * @param $urlString
 	 * @return string

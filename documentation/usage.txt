@@ -1,0 +1,11 @@
+Use Insipid as a self hosted service for your own bookmarks. Share and collect.
+
+Management needs authentication which is configured with the following options in the options file:
+
+FRONTEND_USERNAME  => This is the username
+FRONTEND_PASSWORD => This is the password for the username
+
+Call the following URL to trigger the authentication:
+http(s)://your.domain.tld/path/to/insipid/index.php?m=auth
+
+If successful you can now manage your items. Edit buttons are visible now.

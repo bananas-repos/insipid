@@ -48,6 +48,11 @@ $tagCollection = array();
 $categoryCollection = array();
 $pagination = array('pages' => 0);
 
+$_displayEditButton = false;
+if(Summoner::simpleAuthCheck() === true) {
+	$_displayEditButton = true;
+}
+
 switch($_requestMode) {
 	case 'tag':
 		if(!empty($_id)) {

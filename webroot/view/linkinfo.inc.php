@@ -25,11 +25,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
-$_requestMode = false;
-if(isset($_GET['m']) && !empty($_GET['m'])) {
-    $_requestMode = trim($_GET['m']);
-    $_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : "all";
-}
 
 $_id = false;
 if(isset($_GET['id']) && !empty($_GET['id'])) {
@@ -41,4 +36,9 @@ $linkObj = new Link($DB);
 $linkData = $linkObj->load($_id);
 if(empty($linkData)) {
     header("HTTP/1.0 404 Not Found");
+}
+
+$_displayEditButton = false;
+if(Summoner::simpleAuthCheck() === true) {
+	$_displayEditButton = true;
 }
