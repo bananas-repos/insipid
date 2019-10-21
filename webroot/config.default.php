@@ -51,10 +51,15 @@ define("RESULTS_PER_PAGE",12);
 
 # settings for importing from e-mail
 # SSL/TLS only
-# imap
+# IMAP (reading), SMTP (sending)
 define('EMAIL_SERVER','');
 define('EMAIL_SERVER_USER','');
 define('EMAIL_SERVER_PASS','');
-define('EMAIL_SERVER_PORT',993);
+define('EMAIL_SERVER_PORT_IMAP',993);
+define('EMAIL_SERVER_PORT_SMTP',465);
 define('EMAIL_SERVER_MAILBOX','INBOX'); # default INBOX
 define('EMAIL_MARKER','to-insipid- ');
+define('EMAIL_REPORT_BACK',false);
+define('EMAIL_REPLY_BACK_VALID','');
+define('EMAIL_REPLY_BACK_ADDRESS','');
+define('EMAIL_REPLY_BACK_SUBJECT','Insipid email import response');

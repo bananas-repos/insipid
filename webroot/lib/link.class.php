@@ -144,7 +144,7 @@ class Link {
 		if(!isset($data['hash']) || empty($data['hash'])) return false;
 		if(!isset($data['title']) || empty($data['title'])) return false;
 
-		$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
+		$queryStr = "INSERT INTO `".DB_PREFIX."_link` SET
                         `link` = '".$this->DB->real_escape_string($data['link'])."',
                         `created` = NOW(),
                         `status` = '".$this->DB->real_escape_string($data['status'])."',

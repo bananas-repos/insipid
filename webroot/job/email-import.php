@@ -34,15 +34,6 @@ date_default_timezone_set('Europe/Berlin');
 
 define('DEBUG',true);
 
-## check request
-$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
-if(!empty($_urlToParse)) {
-    # see http://de2.php.net/manual/en/regexp.reference.unicode.php
-    if(preg_match('/[\p{C}\p{M}\p{Sc}\p{Sk}\p{So}\p{Zl}\p{Zp}]/u',$_urlToParse) === 1) {
-        die('Malformed request. Make sure you know what you are doing.');
-    }
-}
-
 ## set the error reporting
 ini_set('log_errors',true);
 ini_set('error_log','error.log');
@@ -54,28 +45,51 @@ else {
 }
 
 require('../config.php');
-require('../lib/simple-imap.class.php');
 require('../lib/summoner.class.php');
 require('../lib/tag.class.php');
 require('../lib/category.class.php');
 require('../lib/link.class.php');
 
+require('../lib/simple-imap.class.php');
+require('../lib/email-import-helper.class.php');
+
+# load only if needed
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+if(EMAIL_REPORT_BACK === true) {
+	require('../lib/phpmailer/PHPMailer.php');
+	require('../lib/phpmailer/SMTP.php');
+
+	$phpmailer = new PHPMailer();
+	if(DEBUG === true) $phpmailer->SMTPDebug = SMTP::DEBUG_SERVER;
+	$phpmailer->isSMTP();
+	$phpmailer->Host = EMAIL_SERVER;
+	$phpmailer->SMTPAuth = true;
+	$phpmailer->SMTPSecure = $phpmailer::ENCRYPTION_SMTPS;
+	$phpmailer->Username = EMAIL_SERVER_USER;
+	$phpmailer->Password = EMAIL_SERVER_PASS;
+	$phpmailer->Port = EMAIL_SERVER_PORT_SMTP;
+	$phpmailer->setFrom(EMAIL_REPLY_BACK_ADDRESS);
+	$phpmailer->Subject = EMAIL_REPLY_BACK_SUBJECT;
+	$phpmailer->Timeout = 3;
+}
+
 $DB = false;
-$Summoner = new Summoner();
 
 ## DB connection
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); # throw exeptions
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
 $DB->set_charset("utf8mb4");
 $DB->query("SET collation_connection = 'utf8mb4_bin'");
+$driver = new mysqli_driver();
+$driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;;
 
 # the email reader
 $EmailReader = new SimpleImap();
-$emaildata = array();
+$emails = array();
 try {
     $EmailReader->connect();
-    #if(DEBUG === true) {$EmailReader->mailboxStatus();}
+    if(DEBUG === true) $EmailReader->mailboxStatus();
 }
 catch (Exception $e) {
     error_log('Email server connection failed: '.var_export($e->getMessage(),true));
@@ -83,118 +97,174 @@ catch (Exception $e) {
 }
 
 try {
-    $emaildata = $EmailReader->bodyFromMessagesWithSubject(EMAIL_MARKER);
+	// emailid => info of the mail as an array
+	// this is not the message-id
+    $emails = $EmailReader->messageWithValidSubject(EMAIL_MARKER);
 }
 catch (Exception $e) {
     error_log('Can not process email messages: '.var_export($e->getMessage(),true));
     exit();
 }
 
-# process the emaildata and then move the emails
-var_dump($emaildata);
+# process the emails and then move the emails
+$invalidProcessedEmails = array();
+$validProcessedEmails = array();
+if(!empty($emails)) {
+    foreach($emails as $emailId=>$emailData) {
+        $links = EmailImportHelper::extractEmailLinks($emailData['body']);
+		if(!empty($links)) {
+			if(DEBUG === true) var_dump($links);
 
-if(!empty($emaildata)) {
+			foreach($links as $linkstring) {
+				# defaults
+				$newdata['link'] = $linkstring;
+				$newdata['description'] = '';
+				$newdata['title'] = '';
+				$newdata['image'] = '';
+				$newdata['status'] = '3'; # moderation required
+				$newdata['search'] = '';
+				$newdata['tagArr'] = array();
+				$newdata['catArr'] = array();
+				$newdata['hash'] = '';
 
-    $links = array();
-    foreach($emaildata as $ed) {
-        $links = array_replace($links,$Summoner::extractEmailLinks($ed));
+				if(strstr($linkstring, "|")) {
+					$_t = explode("|", $linkstring);
+					$newdata['link'] = $_t[0];
+
+					$newdata['catArr'] = Summoner::prepareTagOrCategoryStr($_t[1]);
+					if(isset($_t[2])) {
+						$newdata['tagArr'] = Summoner::prepareTagOrCategoryStr($_t[2]);
+					}
+				}
+
+				$newdata['link'] = filter_var($newdata['link'], FILTER_SANITIZE_URL);
+				$newdata['link'] = Summoner::addSchemeToURL($newdata['link']);
+
+				if (!filter_var($newdata['link'], FILTER_VALIDATE_URL)) {
+					error_log("Invalid URL: ".var_export($newdata['link'],true));
+					if(DEBUG === true) var_dump($newdata['link']);
+					continue;
+				}
+
+				$newdata['hash'] = md5($newdata['link']);
+
+				$linkInfo = Summoner::gatherInfoFromURL($newdata['link']);
+				if(!empty($linkInfo) && !empty($linkInfo['title'])) {
+					$newdata['title'] = $linkInfo['title'];
+
+					if(isset($linkInfo['description'])) {
+						$newdata['description'] = $linkInfo['description'];
+					}
+					if(isset($linkInfo['image'])) {
+						$newdata['image'] = $linkInfo['image'];
+					}
+				}
+				else {
+					error_log("No valid title for link found: ".var_export($newdata,true));
+					if(DEBUG === true) var_dump("No valid title for link found: ".var_export($newdata,true));
+					array_push($invalidProcessedEmails, $emailData);
+					continue;
+				}
+
+				$newdata['search'] = $newdata['title'];
+				$newdata['search'] .= ' '.$newdata['description'];
+				$newdata['search'] .= ' '.implode(" ",$newdata['tagArr']);
+				$newdata['search'] .= ' '.implode(" ",$newdata['catArr']);
+				$newdata['search'] = trim($newdata['search']);
+
+				if(DEBUG === true) var_dump($newdata);
+
+				$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+				$linkObj = new Link($DB);
+				try {
+					$linkID = $linkObj->create(array(
+						'hash' => $newdata['hash'],
+						'search' => $newdata['search'],
+						'link' => $newdata['link'],
+						'status' => $newdata['status'],
+						'description' => $newdata['description'],
+						'title' => $newdata['title'],
+						'image' => $newdata['image']
+					), true);
+				}
+				catch (Exception $e) {
+					$_m = "Can not create new link into DB. Duplicate? ".$e->getMessage();
+					error_log($_m);
+					$emailData['importmessage'] = $_m;
+					array_push($invalidProcessedEmails,$emailData);
+					if(DEBUG === true) var_dump($_m);
+					if(DEBUG === true) var_dump($newdata);
+					continue;
+				}
+
+				if(!empty($linkID)) {
+
+					if(!empty($newdata['catArr'])) {
+						foreach($newdata['catArr'] as $c) {
+							$catObj = new Category($DB);
+							$catObj->initbystring($c);
+							$catObj->setRelation($linkID);
+
+							unset($catObj);
+						}
+					}
+					if(!empty($newdata['tagArr'])) {
+						foreach($newdata['tagArr'] as $t) {
+							$tagObj = new Tag($DB);
+							$tagObj->initbystring($t);
+							$tagObj->setRelation($linkID);
+
+							unset($tagObj);
+						}
+					}
+
+					$DB->commit();
+
+					error_log("Link successfully added: ".$newdata['link']);
+					array_push($validProcessedEmails,$emailData);
+				}
+				else {
+					$DB->rollback();
+					error_log("Link could not be added. SQL problem: ".$newdata['link']);
+					$emailData['importmessage'] = "Link could not be added";
+					array_push($invalidProcessedEmails,$emailData);
+				}
+			}
+		}
+
     }
+}
 
-    $newdata = array();
-    if(!empty($links)) {
-        var_dump($links);
-
-
-        foreach($links as $linkstring) {
-
-            # defaults
-            $newdata['link'] = $linkstring;
-            $newdata['description'] = '';
-            $newdata['title'] = '';
-            $newdata['image'] = '';
-            $newdata['status'] = '3'; # moderation required
-            $search = '';
-            $tagArr = array();
-            $catArr = array();
-            $hash = '';
-
-            if(strstr($linkstring, "|")) {
-                $_t = explode("|", $linkstring);
-                $newdata['link'] = $_t[0];
-
-                $catArr = Summoner::prepareTagOrCategoryStr($_t[1]);
-                if(isset($_t[2])) {
-                    $tagArr = Summoner::prepareTagOrCategoryStr($_t[2]);
-                }
-            }
-
-            $hash = md5($newdata['link']);
-
-            $linkInfo = Summoner::gatherInfoFromURL($newdata['link']);
-            if(!empty($linkInfo)) {
-                if(isset($linkInfo['description'])) {
-                    $newdata['description'] = $linkInfo['description'];
-                }
-                if(isset($linkInfo['title'])) {
-                    $newdata['title'] = $linkInfo['title'];
-                }
-                if(isset($linkInfo['image'])) {
-                    $newdata['image'] = $linkInfo['image'];
-                }
-            }
-
-            $search = $newdata['title'];
-            $search .= ' '.$newdata['description'];
-            $search .= ' '.implode(" ",$tagArr);
-            $search .= ' '.implode(" ",$catArr);
-
-            $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_link` SET
-                    `link` = '".$DB->real_escape_string($newdata['link'])."',
-                    `created` = NOW(),
-                    `status` = '".$DB->real_escape_string($newdata['status'])."',
-                    `description` = '".$DB->real_escape_string($newdata['description'])."',
-                    `title` = '".$DB->real_escape_string($newdata['title'])."',
-                    `image` = '".$DB->real_escape_string($newdata['image'])."',
-                    `hash` = '".$DB->real_escape_string($hash)."',
-                    `search` = '".$DB->real_escape_string($search)."'";
-            var_dump($newdata);
-            var_dump($queryStr);
-
-            /*
-            $DB->query($queryStr);
-            $linkID = $DB->insert_id;
-
-            if(!empty($linkID)) {
-
-                if(!empty($catArr)) {
-                    foreach($catArr as $c) {
-                        $catObj = new Category($DB);
-                        $catObj->initbystring($c);
-                        $catObj->setRelation($linkID);
-
-                        unset($catObj);
-                    }
-                }
-                if(!empty($tagArr)) {
-                    foreach($tagArr as $t) {
-                        $tagObj = new Tag($DB);
-                        $tagObj->initbystring($t);
-                        $tagObj->setRelation($linkID);
-
-                        unset($tagObj);
-                    }
-                }
-            }
-            */
-
-
-        }
-    }
-
+# if we have invalid import mails, ignore them, just log em
+# if EMAIL_REPORT_BACK is true then report back with errors if EMAIL_REPLY_BACK_VALID
+if(!empty($invalidProcessedEmails)) {
+	error_log("We have invalid import messages.");
+	foreach ($invalidProcessedEmails as $invalidMail) {
+		if(EmailImportHelper::canSendReplyTo($invalidMail['header_rfc822']->reply_toaddress)
+			&& !EmailImportHelper::isAutoReplyMessage($invalidMail['header_array'])) {
+			$_address = PHPMailer::parseAddresses($invalidMail['header_rfc822']->reply_toaddress);
+			$phpmailer->Body = $invalidMail['importmessage']."\n\n";
+			$phpmailer->Body .= $invalidMail['body'];
+			$phpmailer->addAddress($_address[0]['address']);
+			$phpmailer->send();
+			error_log("Report back email to: ".$_address[0]['address']);
+		}
+		else {
+			error_log("Invalid message: ".$invalidMail['header_rfc822']->subject);
+		}
+	}
 }
 
 # move them to the processed / archive folder
 #$EmailReader->move()
+if(!empty($validProcessedEmails)) {
+	error_log("We have valid import messages.");
+	foreach ($validProcessedEmails as $validMail) {
+	}
+}
+
+
 
 $DB->close();
 # END

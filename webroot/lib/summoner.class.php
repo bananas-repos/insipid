@@ -367,7 +367,7 @@ class Summoner {
 
 
 		if(!isset($mediaInfos['title'])) {
-			$titleDom = $xpath->query('//html/head/title');
+			$titleDom = $xpath->query('//title');
 			$mediaInfos['title'] = $titleDom->item(0)->nodeValue;
 		}
 
@@ -436,26 +436,16 @@ class Summoner {
 	}
 
 	/**
-	 * extract from given string (was email body) any links we want to add
-	 * should be in the right format
-	 * return an array with links and the infos about them
-	 *
-	 * @param string $string
-	 * @return array $ret
+	 * Checks if in the given urlstring a scheme is existent. If not add http:// to it
+	 * @param $urlString
+	 * @return string
 	 */
-	static function extractEmailLinks($string) {
-		$ret = array();
+	static function addSchemeToURL($urlString) {
+		$ret = $urlString;
 
-		#this matches a valid URL. An URL with | is still valid...
-		$urlpattern  = '#(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))#';
-
-		preg_match_all($urlpattern, $string, $matches);
-		if(isset($matches[0]) && !empty($matches[0])) {
-			foreach($matches[0] as $match) {
-				$ret[md5($match)] = $match;
-			}
+		if(empty(parse_url($ret, PHP_URL_SCHEME))) {
+			$ret = "http://".$ret;
 		}
-
 
 		return $ret;
 	}

@@ -130,6 +130,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 		$search .= ' '.$formData['description'];
 		$search .= ' '.implode(" ",$tagArr);
 		$search .= ' '.implode(" ",$catArr);
+		$search .= trim($search);
 
 		$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 

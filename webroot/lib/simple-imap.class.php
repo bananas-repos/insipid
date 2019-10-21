@@ -1,22 +1,37 @@
 <?php
-
 /**
+ * Copyright 2016-2019 Johannes Keßler
+ *
  * simple IMAP SSL/TLS email connection based on the imap PHP functions
  * the code supports SSL/TLS and IMAP only
  *
- * @author banana
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
+ *
+ */
+
+/**
+ * Class SimpleImap
+ * read and manage email messages over imap. Sending not included. Use PHPMailer instead.
  */
 class SimpleImap {
 
 	private $_connection;
 
-	private $_inbox;
-
 	private $_server = EMAIL_SERVER;
 	private $_user = EMAIL_SERVER_USER;
 	private $_pass = EMAIL_SERVER_PASS;
-	private $_port = EMAIL_SERVER_PORT;
+	private $_port = EMAIL_SERVER_PORT_IMAP;
 	private $_mailbox = EMAIL_SERVER_MAILBOX;
 
 	private $_connectionstring = '';
@@ -35,6 +50,7 @@ class SimpleImap {
 	 * with this code SSL/TLS only
 	 *
 	 * @see http://ca.php.net/manual/en/function.imap-open.php
+	 * @throws Exception
 	 */
 	public function connect() {
 
@@ -58,10 +74,12 @@ class SimpleImap {
 
 	/**
 	 * process the given mailbox and check for the special messages
-	 * return the bodies from the found messages as an array
+	 * return the body and headers from the found message
 	 * @param string $subjectmarker
+	 * @return array emailId => array(body, header);
+	 * @throws Exception
 	 */
-	function bodyFromMessagesWithSubject($subjectmarker) {
+	function messageWithValidSubject($subjectmarker) {
 	    $ret = array();
 
 	    $messagecount = imap_num_msg($this->_connection);
@@ -81,7 +99,11 @@ class SimpleImap {
 	                $processedmessagescount++;
 	                # valid message
 	                # get the body
-	                $ret[$i] = $this->_extractBody($i);
+	                $ret[$i]['body'] = $this->_extractBody($i);
+					$ret[$i]['header'] = $this->emailHeaders($i);
+					$ret[$i]['header_rfc822'] = $this->emailHeaders_rfc822($i);
+					$ret[$i]['header_array'] = $this->emailHeadersAsArray($i);
+					$ret[$i]['emailid'] = $i;
 	            }
 	        }
 	    }
@@ -124,6 +146,34 @@ class SimpleImap {
 	    }
 	}
 
+	/**
+	 * This function causes a fetch of the complete, unfiltered RFC2822 format header of the specified message.
+	 * @param $messagenum Int
+	 * @return string
+	 */
+	public function emailHeaders($messagenum) {
+		return imap_fetchheader($this->_connection, $messagenum);
+	}
+
+	/**
+	 * return the email headers by given emailid
+	 * @param $messagenum
+	 * @return object
+	 */
+	public function emailHeaders_rfc822($messagenum) {
+		return imap_rfc822_parse_headers($this->emailHeaders($messagenum));
+	}
+
+	/**
+	 * Email headers parsed as an array
+	 * @param $messagenum
+	 * @return array
+	 */
+	public function emailHeadersAsArray($messagenum) {
+		preg_match_all('/([^: ]+): (.+?(?:\r\n\s(?:.+?))*)\r\n/m', $this->emailHeaders($messagenum), $matches );
+		return array_combine( $matches[1], $matches[2]);
+	}
+
 
 	/**
 	 * extract the subject from the email headers and decode
@@ -135,7 +185,7 @@ class SimpleImap {
 	private function _extractSubject($messagenum) {
 	    $ret = '';
 
-	    $headerinfo = imap_rfc822_parse_headers(imap_fetchheader($this->_connection, $messagenum));
+	    $headerinfo = $this->emailHeaders_rfc822($messagenum);
 	    $subjectArr = imap_mime_header_decode($headerinfo->subject);
 	    foreach ($subjectArr as $el) {
 	        $ret .= $el->text;

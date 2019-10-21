@@ -79,11 +79,12 @@ if(defined("USE_PAGE_AUTH") && USE_PAGE_AUTH === true) {
 }
 
 ## DB connection
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); # throw exeptions
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
 $DB->set_charset("utf8mb4");
 $DB->query("SET collation_connection = 'utf8mb4_bin'");
+$driver = new mysqli_driver();
+$driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;;
 
 # management needs the DB object
 $Management = new Management($DB);
