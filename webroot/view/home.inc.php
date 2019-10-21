@@ -57,32 +57,15 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 	$isUrl = Summoner::validate($searchValue,'url');
 	if($isUrl === true) {
 		# search for URL
-		$queryStr = "SELECT * FROM `".DB_PREFIX."_link`
-						WHERE `link` = '".$DB->real_escape_string($searchValue)."'";
-
 		$searchResult = $Management->searchForLinkByURL($searchValue);
 	}
 	elseif(Summoner::validate($searchValue,'text')) {
-		$queryStr = "SELECT *,
-			MATCH (`search`) AGAINST ('".$DB->real_escape_string($searchValue)."' IN BOOLEAN MODE) AS score
-			FROM `".DB_PREFIX."_link`
-			WHERE MATCH (`search`) AGAINST ('".$DB->real_escape_string($searchValue)."' IN BOOLEAN MODE)
-			ORDER BY score DESC";
-
 		$searchResult = $Management->searchForLinkBySearchData($searchValue);
 	}
 	else {
 		$submitFeedback['message'] = 'Invalid input';
 		$submitFeedback['status'] = 'error';
 	}
-/*
-	if(!empty($queryStr)) {
-		$query = $DB->query($queryStr);
-		if(!empty($query) && $query->num_rows > 0) {
-			$searchResult = $query->fetch_all(MYSQLI_ASSOC);
-		}
-	}
-*/
 
 	# new one?
 	if(empty($searchResult) && $isUrl === true && Summoner::simpleAuthCheck() === true) {
