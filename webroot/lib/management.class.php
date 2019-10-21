@@ -184,7 +184,7 @@ class Management {
 	public function latestLinks($limit=5) {
 		$ret = array();
 
-		$queryStr = "SELECT `title` FROM `".DB_PREFIX."_link`";
+		$queryStr = "SELECT `title`, `link` FROM `".DB_PREFIX."_link`";
 		if($this->_showPrivate === true) {
 			$queryStr .= " WHERE `status` IN (2,1)";
 		}
