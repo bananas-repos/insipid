@@ -57,6 +57,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 	$isUrl = Summoner::validate($searchValue,'url');
 	if($isUrl === true) {
 		# search for URL
+		$searchValue = trim($searchValue, "/");
 		$searchResult = $Management->searchForLinkByURL($searchValue);
 	}
 	elseif(Summoner::validate($searchValue,'text')) {
