@@ -1,5 +1,5 @@
-Insipid has a feature to fetch new links from e-mails.
-Those e-mails are read from a configured IMAP mailbox.
+Insipid has a feature to fetch new links from E-Mails.
+Those E-Mails are read from a configured IMAP mailbox.
 
 You need to enable the imap functions within PHP and
 have a IMAP mailbox on a SSL/TLS email server.
@@ -22,7 +22,7 @@ EMAIL_REPLY_BACK_VALID => Multiple E-Mails addresses which can be reported back 
 EMAIL_REPLY_BACK_ADDRESS => The E-Mail address which sends the report mail. Usually the address from which your read the mails
 
 
-Syntax of the email body:
+Syntax of the E-Mail body:
 
 absolute-link|multiple,category,strings|multiple,tag,strings\n
 new-absolute-link|multiple,category,strings|multiple,tag,strings\n
