@@ -461,6 +461,86 @@ class Management {
 	}
 
 	/**
+	 * amount of links in the DB. Status 1 and 2 only
+	 * @return int
+	 */
+	public function linkAmount() {
+		$ret = 0;
+
+		$queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_link`";
+		if($this->_showPrivate === true) {
+			$queryStr .= " WHERE `status` IN (2,1)";
+		}
+		else {
+			$queryStr .= " WHERE `status` = 2";
+		}
+
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			$result = $query->fetch_assoc();
+			$ret = $result['amount'];
+		}
+
+		return $ret;
+	}
+
+
+	/**
+	 * amount of tags
+	 * @return int
+	 */
+	public function tagAmount() {
+		$ret = 0;
+
+		$queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_tag`";
+
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			$result = $query->fetch_assoc();
+			$ret = $result['amount'];
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * amount of categories
+	 * @return int
+	 */
+	public function categoryAmount() {
+		$ret = 0;
+
+		$queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_category`";
+
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			$result = $query->fetch_assoc();
+			$ret = $result['amount'];
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Amount of links need moderation
+	 * @return int
+	 */
+	public function moderationAmount() {
+		$ret = 0;
+
+		$queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_link`";
+		$queryStr .= " WHERE `status` = 3";
+
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			$result = $query->fetch_assoc();
+			$ret = $result['amount'];
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * for simpler management we have the search data in a separate column
 	 * it is not fancy or even technical nice but it damn works
 	 */
