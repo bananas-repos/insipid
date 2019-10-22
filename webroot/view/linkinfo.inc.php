@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -33,6 +33,7 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 }
 
 $linkObj = new Link($DB);
+$linkObj->setShowPrivate(Summoner::simpleAuthCheck());
 $linkData = $linkObj->load($_id);
 if(empty($linkData)) {
     header("HTTP/1.0 404 Not Found");

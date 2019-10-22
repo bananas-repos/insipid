@@ -33,6 +33,10 @@ class Management {
 	 */
 	private $DB;
 
+	/**
+	 * Show private links too
+	 * @var bool
+	 */
 	private $_showPrivate = false;
 
 	protected $COMBINED_SELECT_VALUES = "any_value(`id`) as id,
@@ -264,6 +268,7 @@ class Management {
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
+				$linkObj->setShowPrivate($this->_showPrivate);
 				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
 				unset($linkObj);
 			}
@@ -317,6 +322,7 @@ class Management {
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
+				$linkObj->setShowPrivate($this->_showPrivate);
 				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
 				unset($linkObj);
 			}
@@ -356,6 +362,7 @@ class Management {
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
+				$linkObj->setShowPrivate($this->_showPrivate);
 				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
 				unset($linkObj);
 			}
@@ -468,6 +475,7 @@ class Management {
 		if(!empty($allLinks)) {
 			foreach($allLinks as $link) {
 				$LinkObj = new Link($this->DB);
+				$LinkObj->setShowPrivate($this->_showPrivate);
 				$l = $LinkObj->load($link['hash']);
 
 				$searchStr = $l['title'];

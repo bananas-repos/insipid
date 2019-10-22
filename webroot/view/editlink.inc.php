@@ -25,13 +25,13 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
+
 $submitFeedback = false;
 $formData = false;
 
 # very simple security check.
 # can/should be extended in the future.
 Summoner::simpleAuth();
-
 
 $_id = false;
 if(isset($_GET['id']) && !empty($_GET['id'])) {
@@ -40,6 +40,7 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 }
 
 $linkObj = new Link($DB);
+$linkObj->setShowPrivate(Summoner::simpleAuthCheck());
 $linkObj->load($_id);
 $linkData = $linkObj->getData();
 if(empty($linkData)) {

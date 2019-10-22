@@ -39,8 +39,24 @@ class Link {
 	 */
 	private $_data;
 
+	/**
+	 * Show private links too
+	 * @var bool
+	 */
+	private $_showPrivate = false;
+
 	public function __construct($databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
+	}
+
+	/**
+	 * Show private links or not
+	 * @param $bool
+	 */
+	public function setShowPrivate($bool) {
+		if(is_bool($bool)) {
+			$this->_showPrivate = $bool;
+		}
 	}
 
 	/**
@@ -65,6 +81,12 @@ class Link {
 				any_value(`hash`) as hash
 				FROM `".DB_PREFIX."_link`
 				WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
+			if($this->_showPrivate === true) {
+				$queryStr .= " AND `status` IN (2,1)";
+			}
+			else {
+				$queryStr .= " AND `status` = 2";
+			}
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows == 1) {
 				$this->_data = $query->fetch_assoc();
@@ -99,6 +121,12 @@ class Link {
 				any_value(`hash`) as hash
 				FROM `".DB_PREFIX."_link`
 				WHERE `hash` = '".$this->DB->real_escape_string($hash)."'";
+			if($this->_showPrivate === true) {
+				$queryStr .= " AND `status` IN (2,1)";
+			}
+			else {
+				$queryStr .= " AND `status` = 2";
+			}
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows == 1) {
 				$this->_data = $query->fetch_assoc();
@@ -243,30 +271,6 @@ class Link {
 				$this->DB->rollback();
 			}
 
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * check if the given URL exists in the DB
-	 * if so return the hash. If not, return false
-	 * @param string $link
-	 * @return string
-	 */
-	public function exists($link) {
-		$ret = false;
-
-		if(!empty($link)) {
-			$queryStr = "SELECT
-				any_value(`hash`) as hash
-				FROM `".DB_PREFIX."_link`
-				WHERE `link` = '".$this->DB->real_escape_string($link)."'";
-			$query = $this->DB->query($queryStr);
-			if(!empty($query) && $query->num_rows > 0) {
-				$result = $query->fetch_assoc();
-				$ret = $result['hash'];
-			}
 		}
 
 		return $ret;
