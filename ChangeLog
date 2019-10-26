@@ -4,6 +4,11 @@ version 2.2alpha - Guardian of Ice - (tba)
 	* code cleanups
 	* using mysql transactions if needed
 	* pagination
+	* authentication with an extra url now (index.php?m=auth)
+	* management actions shown only if authenticated
+	* small stats overview
+	* links can now be deleted...
+	* awaiting moderation links can new be moderated
 
 version 2.1alpha - Guardian of Fire - (2019-09-29)
 

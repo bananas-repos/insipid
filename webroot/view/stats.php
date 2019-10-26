@@ -51,26 +51,32 @@
 </section>
 
 <section class="section">
-	<div class="columns">
-		<div class="column">
+	<div class="columns is-multiline">
+		<div class="column is-one-quarter">
 			<h3 class="is-size-3">Links</h3>
 			<p># of Links: <?php echo $linkAmount; ?></p>
 			<p><a href="index.php?p=overview&m=all">View all</a></p>
 		</div>
-		<div class="column">
+		<div class="column is-one-quarter">
 			<h3 class="is-size-3">Tags</h3>
 			<p># of Tags: <?php echo $tagAmount; ?></p>
 			<p><a href="index.php?p=overview&m=tag">View all</a></p>
 		</div>
-		<div class="column">
+		<div class="column is-one-quarter">
 			<h3 class="is-size-3">Categories</h3>
 			<p># of Categories: <?php echo $categoryAmount; ?></p>
 			<p><a href="index.php?p=overview&m=category">View all</a></p>
 		</div>
 		<?php if($_displayEditButton === true) { ?>
-		<div class="column">
+		<div class="column is-one-quarter">
 			<h3 class="is-size-3">Moderation</h3>
 			<p># Moderation needed: <?php echo $moderationAmount; ?></p>
+			<p><a href="index.php?p=overview&m=awm">View all</a></p>
+		</div>
+		<div class="column is-one-quarter">
+			<h3 class="is-size-3">Local image storage</h3>
+			<p># Moderation needed: <?php echo $moderationAmount; ?></p>
+			<p><a href="index.php?p=overview&m=category">Delete all</a></p>
 		</div>
 		<?php } ?>
 	</div>

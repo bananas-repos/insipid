@@ -47,10 +47,11 @@ $subHeadline = false;
 $tagCollection = array();
 $categoryCollection = array();
 $pagination = array('pages' => 0);
+$displayEditButton = false;
+$isAwm = false;
 
-$_displayEditButton = false;
 if(Summoner::simpleAuthCheck() === true) {
-	$_displayEditButton = true;
+	$displayEditButton = true;
 }
 
 switch($_requestMode) {
@@ -85,6 +86,13 @@ switch($_requestMode) {
 			$categoryCollection = $Management->categories(false, true);
 			$subHeadline = 'All the categories <i class="ion-md-filing"></i>';
 		}
+	break;
+	case 'awm':
+		Summoner::simpleAuth();
+		$isAwm = true;
+		$subHeadline = 'Awaiting moderation';
+		$Management->setShowAwm(true);
+		$linkCollection = $Management->links(RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
 	break;
 	case 'all':
 	default:

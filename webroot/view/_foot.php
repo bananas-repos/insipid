@@ -31,6 +31,7 @@
     		<div class="column">
 				<div class="content has-text-centered">
 					&copy; 2016 - <?php echo date('Y'); ?> <a href="https://www.bananas-playground.net/projekt/insipid/" target="_blank">Insipid</a>
+					- <a href="index.php?p=stats">Stats</a>
 				</div>
 			</div>
 		</div>

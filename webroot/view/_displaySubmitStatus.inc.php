@@ -1,7 +1,7 @@
 <?php
 if(!empty($submitFeedback)) {
 	$cssClass="is-success";
-	if($submitFeedback['status'] == "error") {
+	if(isset($submitFeedback['status']) && $submitFeedback['status'] == "error") {
 		$cssClass="is-danger";
 	}
 	$message = $submitFeedback['message'];

@@ -94,7 +94,7 @@
 				<p>URL:</p>
 			</div>
 			<div class="column">
-				<p><?php echo $linkData['link']; ?></p>
+				<p><a href="<?php echo $linkData['link']; ?>" target="_blank"><?php echo $linkData['link']; ?></a></p>
 			</div>
 		</div>
 		<div class="columns">

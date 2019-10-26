@@ -116,7 +116,11 @@
 			</div>
 			<footer class="card-footer">
 				<a href="<?php echo $link['link']; ?>" target="_blank" class="card-footer-item">Visit link</a>
+				<?php if($isAwm === true) { ?>
+				<a href="index.php?p=editlink&id=<?php echo $link['hash']; ?>&awm=1" class="card-footer-item">Edit</a>
+				<?php } else { ?>
 				<a href="index.php?p=linkinfo&id=<?php echo $link['hash']; ?>" class="card-footer-item">More details</a>
+				<?php } ?>
 			</footer>
 		</div>
 	</div>
@@ -138,7 +142,7 @@
 		<?php } ?>
 		</table>
 	</div>
-	<?php if($_displayEditButton === true) { ?>
+	<?php if($displayEditButton === true) { ?>
 	<div class="column">
 		<div class="content">
 			<a href="index.php?p=edittags" class="button is-small is-danger">
@@ -165,7 +169,7 @@
 		<?php } ?>
 		</table>
 	</div>
-	<?php if($_displayEditButton === true) { ?>
+	<?php if($displayEditButton === true) { ?>
 	<div class="column">
 		<div class="content">
 			<a href="index.php?p=editcategories" class="button is-small is-danger">

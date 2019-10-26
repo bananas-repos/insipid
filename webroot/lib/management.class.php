@@ -27,19 +27,10 @@
  */
 
 class Management {
-	/**
-	 * the database object
-	 * @var object
-	 */
-	private $DB;
 
-	/**
-	 * Show private links too
-	 * @var bool
-	 */
-	private $_showPrivate = false;
+	const LINK_QUERY_STATUS = 2;
 
-	protected $COMBINED_SELECT_VALUES = "any_value(`id`) as id,
+	const COMBINED_SELECT_VALUES = "any_value(`id`) as id,
 				any_value(`link`) as link,
 				any_value(`created`) as created,
 				any_value(`status`) as `status`,
@@ -52,6 +43,20 @@ class Management {
 				any_value(`categoryId`) as categoryId,
 				any_value(`tagId`) as tagId";
 
+	/**
+	 * the database object
+	 * @var object
+	 */
+	private $DB;
+
+	/**
+	 * Type of links based on status to show
+	 * @var bool
+	 */
+	private $_queryStatus = self::LINK_QUERY_STATUS;
+
+
+
 	public function __construct($databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
 	}
@@ -61,8 +66,20 @@ class Management {
 	 * @param $bool
 	 */
 	public function setShowPrivate($bool) {
-		if(is_bool($bool)) {
-			$this->_showPrivate = $bool;
+		$this->_queryStatus = self::LINK_QUERY_STATUS;
+		if($bool === true) {
+			$this->_queryStatus = 1;
+		}
+	}
+
+	/**
+	 * Show awaiting moderation links or not
+	 * @param $bool
+	 */
+	public function setShowAwm($bool) {
+		$this->_queryStatus = self::LINK_QUERY_STATUS;
+		if($bool === true) {
+			$this->_queryStatus = 3;
 		}
 	}
 
@@ -80,16 +97,11 @@ class Management {
 
 		if($stats === true) {
 			$queryStr = "SELECT
-				COUNT(*) as amount,
-				any_value(cr.categoryid) as categoryId
-				FROM `".DB_PREFIX."_categoryrelation` AS cr, `".DB_PREFIX."_link` AS l
-				WHERE cr.linkid = l.id";
-			if($this->_showPrivate === true) {
-				$queryStr .= " AND l.status IN (2,1)";
-			}
-			else {
-				$queryStr .= " AND l.status = 2";
-			}
+				COUNT(*) AS amount,
+				any_value(cr.categoryid) AS categoryId
+				FROM `".DB_PREFIX."_categoryrelation` AS cr, `".DB_PREFIX."_link` AS t
+				WHERE cr.linkid = t.id";
+			$queryStr .= " AND ".$this->_decideLinkTypeForQuery();
 			$queryStr .= " GROUP BY categoryid";
 
 			$query = $this->DB->query($queryStr);
@@ -137,16 +149,11 @@ class Management {
 
 		if($stats === true) {
 			$queryStr = "SELECT
-				COUNT(*) as amount,
-				any_value(tr.tagid) as tagId
-				FROM `".DB_PREFIX."_tagrelation` AS tr,  `".DB_PREFIX."_link` AS l
-				WHERE tr.linkid = l.id";
-			if($this->_showPrivate === true) {
-				$queryStr .= " AND l.status IN (2,1)";
-			}
-			else {
-				$queryStr .= " AND l.status = 2";
-			}
+				COUNT(*) AS amount,
+				any_value(tr.tagid) AS tagId
+				FROM `".DB_PREFIX."_tagrelation` AS tr,  `".DB_PREFIX."_link` AS t
+				WHERE tr.linkid = t.id";
+			$queryStr .= " AND ".$this->_decideLinkTypeForQuery();
 			$queryStr .= "GROUP BY tagId";
 
 			$query = $this->DB->query($queryStr);
@@ -188,13 +195,8 @@ class Management {
 	public function latestLinks($limit=5) {
 		$ret = array();
 
-		$queryStr = "SELECT `title`, `link` FROM `".DB_PREFIX."_link`";
-		if($this->_showPrivate === true) {
-			$queryStr .= " WHERE `status` IN (2,1)";
-		}
-		else {
-			$queryStr .= " WHERE `status` = 2";
-		}
+		$queryStr = "SELECT `title`, `link` FROM `".DB_PREFIX."_link` AS t";
+		$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
 		$queryStr .= " ORDER BY `created` DESC";
 		if(!empty($limit)) {
 			$queryStr .= " LIMIT $limit";
@@ -239,24 +241,21 @@ class Management {
 	public function linksByCategory($id, $string, $limit=5, $offset=false) {
 		$ret = array();
 
-		$querySelect = "SELECT ".$this->COMBINED_SELECT_VALUES;
-		$queryFrom = " FROM `".DB_PREFIX."_combined`";
-		$queryWhere = "	WHERE `status` = 2";
-		if($this->_showPrivate === true) {
-			$queryWhere = "	WHERE `status` IN (2,1)";
-		}
+		$querySelect = "SELECT ".self::COMBINED_SELECT_VALUES;
+		$queryFrom = " FROM `".DB_PREFIX."_combined` AS t";
+		$queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
 		if(!empty($id) && is_numeric($id)) {
-			$queryWhere .= " AND `categoryId` = '" . $this->DB->real_escape_string($id) . "'";
+			$queryWhere .= " AND t.categoryId = '" . $this->DB->real_escape_string($id) . "'";
 		}
 		elseif(!empty($string) && is_string($string)) {
-			$queryWhere .= " AND `category` = '" . $this->DB->real_escape_string($string) . "'";
+			$queryWhere .= " AND t.category = '" . $this->DB->real_escape_string($string) . "'";
 		}
 		else {
 			return $ret;
 		}
 
-		$queryOrder = "GROUP BY `hash`
-			ORDER BY `created` DESC";
+		$queryOrder = "GROUP BY t.hash
+			ORDER BY t.created DESC";
 		$queryLimit = '';
 		if(!empty($limit)) {
 			$queryLimit .= " LIMIT $limit";
@@ -268,12 +267,11 @@ class Management {
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
-				$linkObj->setShowPrivate($this->_showPrivate);
 				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
 				unset($linkObj);
 			}
 
-			$query = $this->DB->query("SELECT COUNT(DISTINCT(hash)) AS amount ".$queryFrom.$queryWhere);
+			$query = $this->DB->query("SELECT COUNT(DISTINCT(t.hash)) AS amount ".$queryFrom.$queryWhere);
 			$result = $query->fetch_assoc();
 			$ret['amount'] = $result['amount'];
 		}
@@ -293,24 +291,21 @@ class Management {
 	public function linksByTag($id, $string, $limit=5, $offset=false) {
 		$ret = array();
 
-		$querySelect = "SELECT ".$this->COMBINED_SELECT_VALUES;
-		$queryFrom = " FROM `".DB_PREFIX."_combined`";
-		$queryWhere = " WHERE `status` = 2";
-		if($this->_showPrivate === true) {
-			$queryWhere = " WHERE `status` IN (2,1)";
-		}
+		$querySelect = "SELECT ".self::COMBINED_SELECT_VALUES;
+		$queryFrom = " FROM `".DB_PREFIX."_combined` AS t";
+		$queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
 		if(!empty($id) && is_numeric($id)) {
-			$queryWhere .= " AND `tagId` = '" . $this->DB->real_escape_string($id) . "'";
+			$queryWhere .= " AND t.tagId = '" . $this->DB->real_escape_string($id) . "'";
 		}
 		elseif(!empty($string) && is_string($string)) {
-			$queryWhere .= " AND `tag` = '" . $this->DB->real_escape_string($string) . "'";
+			$queryWhere .= " AND t.tag = '" . $this->DB->real_escape_string($string) . "'";
 		}
 		else {
 			return $ret;
 		}
 
-		$queryOrder = "GROUP BY `hash`
-			ORDER BY `created` DESC";
+		$queryOrder = "GROUP BY t.hash
+			ORDER BY t.created DESC";
 		$queryLimit = '';
 		if(!empty($limit)) {
 			$queryLimit .= " LIMIT $limit";
@@ -322,12 +317,11 @@ class Management {
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
-				$linkObj->setShowPrivate($this->_showPrivate);
 				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
 				unset($linkObj);
 			}
 
-			$query = $this->DB->query("SELECT COUNT(DISTINCT(hash)) AS amount ".$queryFrom.$queryWhere);
+			$query = $this->DB->query("SELECT COUNT(DISTINCT(t.hash)) AS amount ".$queryFrom.$queryWhere);
 			$result = $query->fetch_assoc();
 			$ret['amount'] = $result['amount'];
 		}
@@ -345,11 +339,8 @@ class Management {
 		$ret = array();
 
 		$querySelect = "SELECT `hash`";
-		$queryFrom = " FROM `".DB_PREFIX."_link`";
-		$queryWhere = " WHERE `status` = 2";
-		if($this->_showPrivate === true) {
-			$queryWhere = " WHERE `status` IN (2,1)";
-		}
+		$queryFrom = " FROM `".DB_PREFIX."_link` AS t";
+		$queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
 		$queryOrder = " ORDER BY `created` DESC";
 		$queryLimit = "";
 		if(!empty($limit)) {
@@ -362,12 +353,11 @@ class Management {
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
-				$linkObj->setShowPrivate($this->_showPrivate);
 				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
 				unset($linkObj);
 			}
 
-			$query = $this->DB->query("SELECT COUNT(hash) AS amount ".$queryFrom.$queryWhere);
+			$query = $this->DB->query("SELECT COUNT(t.hash) AS amount ".$queryFrom.$queryWhere);
 			$result = $query->fetch_assoc();
 			$ret['amount'] = $result['amount'];
 		}
@@ -384,16 +374,11 @@ class Management {
 		$ret = array();
 
 		if(!empty($categoryid) && is_numeric($categoryid)) {
-			$queryStr = "SELECT ".$this->COMBINED_SELECT_VALUES." 
-			FROM `".DB_PREFIX."_combined`";
-			if($this->_showPrivate === true) {
-				$queryStr .= " WHERE `status` IN (2,1)";
-			}
-			else {
-				$queryStr .= " WHERE `status` = 2";
-			}
-			$queryStr .= " AND `categoryId` = '" . $this->DB->real_escape_string($categoryid) . "'
-			ORDER BY `created` DESC
+			$queryStr = "SELECT ".self::COMBINED_SELECT_VALUES." 
+			FROM `".DB_PREFIX."_combined` AS t";
+			$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
+			$queryStr .= " AND t.categoryId = '" . $this->DB->real_escape_string($categoryid) . "'
+			ORDER BY t.created DESC
 			LIMIT 1";
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {
@@ -412,14 +397,9 @@ class Management {
 		$ret = false;
 
 		if(!empty($url)) {
-			$queryStr = "SELECT * FROM `".DB_PREFIX."_link`";
-			if($this->_showPrivate === true) {
-				$queryStr .= " WHERE `status` IN (2,1)";
-			}
-			else {
-				$queryStr .= " WHERE `status` = 2";
-			}
-			$queryStr .= " AND `link` = '".$this->DB->real_escape_string($url)."'";
+			$queryStr = "SELECT * FROM `".DB_PREFIX."_link` AS t";
+			$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
+			$queryStr .= " AND t.link = '".$this->DB->real_escape_string($url)."'";
 
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {
@@ -441,14 +421,9 @@ class Management {
 		if(!empty($searchStr)) {
 			$queryStr = "SELECT *,
 				MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE) AS score
-				FROM `".DB_PREFIX."_link`
+				FROM `".DB_PREFIX."_link` AS t
 				WHERE MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE)";
-			if($this->_showPrivate === true) {
-				$queryStr .= " WHERE `status` IN (2,1)";
-			}
-			else {
-				$queryStr .= " WHERE `status` = 2";
-			}
+			$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
 			$queryStr .= " ORDER BY score DESC";
 
 			$query = $this->DB->query($queryStr);
@@ -467,13 +442,9 @@ class Management {
 	public function linkAmount() {
 		$ret = 0;
 
-		$queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_link`";
-		if($this->_showPrivate === true) {
-			$queryStr .= " WHERE `status` IN (2,1)";
-		}
-		else {
-			$queryStr .= " WHERE `status` = 2";
-		}
+		$queryStr = "SELECT COUNT(*) AS amount 
+						FROM `".DB_PREFIX."_link` AS t";
+		$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
 
 		$query = $this->DB->query($queryStr);
 		if(!empty($query) && $query->num_rows > 0) {
@@ -540,6 +511,39 @@ class Management {
 		return $ret;
 	}
 
+
+	/**
+	 * Load link by given hash. Do not use Link class directly.
+	 * Otherwise the authentication will be ignored.
+	 * @param $hash
+	 * @param bool $fullInfo
+	 * @return array|mixed
+	 */
+	public function loadLink($hash,$fullInfo=true) {
+		$ret = array();
+
+		if (!empty($hash)) {
+
+			$querySelect = "SELECT `hash`";
+			$queryFrom = " FROM `" . DB_PREFIX . "_link` AS t";
+			$queryWhere = " WHERE " . $this->_decideLinkTypeForQuery();
+			$queryWhere .= " AND t.hash = '" . $this->DB->real_escape_string($hash) . "'";
+
+			$query = $this->DB->query($querySelect.$queryFrom.$queryWhere);
+			if (!empty($query) && $query->num_rows == 1) {
+				$linkObj = new Link($this->DB);
+				if($fullInfo === true) {
+					$ret = $linkObj->load($hash);
+				}
+				else {
+					$ret = $linkObj->loadShortInfo($hash);
+				}
+			}
+		}
+
+		return $ret;
+	}
+
 	/**
 	 * for simpler management we have the search data in a separate column
 	 * it is not fancy or even technical nice but it damn works
@@ -555,7 +559,6 @@ class Management {
 		if(!empty($allLinks)) {
 			foreach($allLinks as $link) {
 				$LinkObj = new Link($this->DB);
-				$LinkObj->setShowPrivate($this->_showPrivate);
 				$l = $LinkObj->load($link['hash']);
 
 				$searchStr = $l['title'];
@@ -577,6 +580,25 @@ class Management {
 				unset($LinkObj,$l,$searchStr,$t,$c,$queryStr);
 			}
 		}
+	}
+
+	/**
+	 * Return the query string for the correct status type
+	 * @return string
+	 */
+	private function _decideLinkTypeForQuery() {
+		switch ($this->_queryStatus) {
+			case 1:
+				$ret = "t.status IN (2,1)";
+				break;
+			case 3:
+				$ret = "t.status = 3";
+				break;
+
+			default:
+				$ret = "t.status = 2";
+		}
+		return $ret;
 	}
 }
 

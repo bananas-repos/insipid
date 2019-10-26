@@ -39,12 +39,25 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 	$_id = Summoner::validate($_id,'nospace') ? $_id : false;
 }
 
-$linkObj = new Link($DB);
-$linkObj->setShowPrivate(Summoner::simpleAuthCheck());
-$linkObj->load($_id);
-$linkData = $linkObj->getData();
+$_isAwm = false;
+if(isset($_GET['awm']) && !empty($_GET['awm'])) {
+	$_isAwm = trim($_GET['awm']);
+	$_isAwm = Summoner::validate($_isAwm,'digit') ? true : false;
+	$Management->setShowAwm($_isAwm);
+}
+
+$linkData = $Management->loadLink($_id);
 if(empty($linkData)) {
 	header("HTTP/1.0 404 Not Found");
+	exit();
+}
+
+$linkObj = new Link($DB);
+$linkObj->load($_id);
+
+if($_isAwm === true) {
+	$submitFeedback['message'] = 'To accept this link (link has moderation status), just save it. Otherwise just delete.';
+	$submitFeedback['status'] = 'success';
 }
 
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink'])) {
@@ -59,7 +72,6 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink']))
 	if(isset($fData['localImage'])) {
 		$formData['localImage'] = true;
 	}
-
 
 	$formData['description'] = trim($fData['description']);
 	$formData['title'] = trim($fData['title']);

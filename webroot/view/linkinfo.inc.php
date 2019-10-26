@@ -32,11 +32,10 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
     $_id = Summoner::validate($_id,'nospace') ? $_id : false;
 }
 
-$linkObj = new Link($DB);
-$linkObj->setShowPrivate(Summoner::simpleAuthCheck());
-$linkData = $linkObj->load($_id);
+$linkData = $Management->loadLink($_id);
 if(empty($linkData)) {
     header("HTTP/1.0 404 Not Found");
+    exit();
 }
 
 $_displayEditButton = false;
