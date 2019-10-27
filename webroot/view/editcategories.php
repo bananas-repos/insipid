@@ -90,7 +90,7 @@
 				</tr>
 				<tr>
 					<td colspan="3">
-						<input type="submit" class="button is-primary" name="updateCategories" value="Update categories">
+						<input type="submit" class="button is-success" name="updateCategories" value="Update categories">
 					</td>
 				</tr>
 			</table>

@@ -149,13 +149,22 @@
 			</div>
 		</div>
 		<div class="columns">
-			<div class="column is-half">
+			<div class="column is-one-quarter">
 				<label>Private</label>
 				<input class="checkbox" type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
 			</div>
-			<div class="column is-half">
+			<div class="column">
 				<input type="submit" class="button is-info" name="refreshlink" value="Refresh from source">
-				<input type="submit" class="button is-primary" name="editlink" value="Save">
+				<input type="submit" class="button is-success" name="editlink" value="Save">
+			</div>
+		</div>
+		<div class="columns">
+			<div class="column is-one-quarter">
+				<label>DELETE</label>
+				<input class="checkbox" type="checkbox" name="data[delete]" value="1" />
+			</div>
+			<div class="column">
+				<input type="submit" class="button is-danger" name="deleteLink" value="DELETE">
 			</div>
 		</div>
 	</form>

@@ -26,8 +26,7 @@
  *
  */
 
-class Link
-{
+class Link {
 
 	/**
 	 * the database object
@@ -41,8 +40,7 @@ class Link
 	 */
 	private $_data;
 
-	public function __construct($databaseConnectionObject)
-	{
+	public function __construct($databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
 	}
 
@@ -51,8 +49,7 @@ class Link
 	 * @param string $hash
 	 * @return mixed
 	 */
-	public function load($hash)
-	{
+	public function load($hash) {
 
 		$this->_data = array();
 
@@ -90,8 +87,7 @@ class Link
 	 * @param $hash
 	 * @return array
 	 */
-	public function loadShortInfo($hash)
-	{
+	public function loadShortInfo($hash) {
 		$this->_data = array();
 
 		if (!empty($hash)) {
@@ -122,8 +118,7 @@ class Link
 	 * @param bool $key
 	 * @return array|mixed
 	 */
-	public function getData($key = false)
-	{
+	public function getData($key = false) {
 		$ret = $this->_data;
 
 		if (!empty($key) && isset($this->_data[$key])) {
@@ -136,8 +131,7 @@ class Link
 	/**
 	 * reload the current id from DB
 	 */
-	public function reload()
-	{
+	public function reload() {
 		$this->load($this->_data['hash']);
 	}
 
@@ -146,8 +140,7 @@ class Link
 	 * @param array $data
 	 * @return boolean|int
 	 */
-	public function create($data, $returnId = false)
-	{
+	public function create($data, $returnId = false) {
 		$ret = false;
 
 		if (!isset($data['link']) || empty($data['link'])) return false;
@@ -177,8 +170,7 @@ class Link
 	 * @param array $data
 	 * @return boolean|int
 	 */
-	public function update($data)
-	{
+	public function update($data) {
 
 		$ret = false;
 
@@ -257,11 +249,20 @@ class Link
 	}
 
 	/**
+	 * call this to delete all the relations to this link.
+	 * To completely remove the link use Management->deleteLink()
+	 */
+	public function deleteRelations() {
+		$this->_removeTagRelation(false);
+		$this->_removeCategoryRelation(false);
+		$this->_deleteImage();
+	}
+
+	/**
 	 * load all the tags we have to the already loaded link
 	 * needs $this->load called first
 	 */
-	private function _tags()
-	{
+	private function _tags() {
 		$ret = array();
 
 		if (!empty($this->_data['hash'])) {
@@ -287,8 +288,7 @@ class Link
 	 * load all the categories we have to the already loaded link
 	 * needs $this->load called first
 	 */
-	private function _categories()
-	{
+	private function _categories() {
 		$ret = array();
 
 		if (!empty($this->_data['hash'])) {
@@ -313,8 +313,7 @@ class Link
 	 * remove all or given tag relation to the current loaded link
 	 * @param mixed $tagid
 	 */
-	private function _removeTagRelation($tagid)
-	{
+	private function _removeTagRelation($tagid) {
 		if (!empty($this->_data['id'])) {
 			$queryStr = false;
 			if ($tagid === false) {
@@ -337,8 +336,7 @@ class Link
 	 * remove all or given category relation to the current loaded link
 	 * @param mixed $categoryid
 	 */
-	private function _removeCategoryRelation($categoryid)
-	{
+	private function _removeCategoryRelation($categoryid) {
 		if (!empty($this->_data['id'])) {
 			$queryStr = false;
 			if ($categoryid === false) {
@@ -361,14 +359,25 @@ class Link
 	 * determine of we have a local stored image
 	 * if so populate the localImage attribute
 	 */
-	private function _image()
-	{
+	private function _image() {
 		if (!empty($this->_data['hash'])) {
 			$this->_data['imageToShow'] = $this->_data['image'];
-			$image = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/thumbnail-' . $this->_data['hash'];
+			$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
 			if (file_exists($image)) {
-				$this->_data['imageToShow'] = LOCAL_STORAGE . '/thumbnail-' . $this->_data['hash'];
+				$this->_data['imageToShow'] = LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
 				$this->_data['localImage'] = true;
+			}
+		}
+	}
+
+	/**
+	 * remove the local stored image
+	 */
+	private function _deleteImage() {
+		if (!empty($this->_data['hash']) && !empty($this->_data['imageToShow'])) {
+			$image = ABSOLUTE_PATH.'/'.$this->_data['imageToShow'];
+			if (file_exists($image)) {
+				unlink($image);
 			}
 		}
 	}
@@ -376,8 +385,7 @@ class Link
 	/**
 	 * check if the status is private and set the info
 	 */
-	private function _private()
-	{
+	private function _private() {
 		if (!empty($this->_data['status']) && $this->_data['status'] == "1") {
 			$this->_data['private'] = "1";
 		}

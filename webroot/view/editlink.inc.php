@@ -113,6 +113,21 @@ elseif(isset($_POST['refreshlink'])) {
 		}
 	}
 }
+elseif(isset($_POST['deleteLink'])) {
+	$fData = $_POST['data'];
+	if(isset($fData['delete'])) {
+		$do = $Management->deleteLink($_id);
+		if($do === true) {
+			if($_isAwm === true) {
+				header('Location: index.php?p=overview&m=awm');
+			}
+			else {
+				header('Location: index.php');
+			}
+			exit();
+		}
+	}
+}
 
 $formData = $linkData;
 # prepare the tag string

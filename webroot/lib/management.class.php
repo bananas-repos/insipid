@@ -517,17 +517,18 @@ class Management {
 	 * Otherwise the authentication will be ignored.
 	 * @param $hash
 	 * @param bool $fullInfo
+	 * @param $withObject
 	 * @return array|mixed
 	 */
-	public function loadLink($hash,$fullInfo=true) {
+	public function loadLink($hash,$fullInfo=true,$withObject=false) {
 		$ret = array();
 
 		if (!empty($hash)) {
 
 			$querySelect = "SELECT `hash`";
-			$queryFrom = " FROM `" . DB_PREFIX . "_link` AS t";
-			$queryWhere = " WHERE " . $this->_decideLinkTypeForQuery();
-			$queryWhere .= " AND t.hash = '" . $this->DB->real_escape_string($hash) . "'";
+			$queryFrom = " FROM `".DB_PREFIX."_link` AS t";
+			$queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
+			$queryWhere .= " AND t.hash = '".$this->DB->real_escape_string($hash)."'";
 
 			$query = $this->DB->query($querySelect.$queryFrom.$queryWhere);
 			if (!empty($query) && $query->num_rows == 1) {
@@ -537,6 +538,38 @@ class Management {
 				}
 				else {
 					$ret = $linkObj->loadShortInfo($hash);
+				}
+
+				if($withObject === true) {
+					$ret = array(
+						'data' => $ret,
+						'obj' => $linkObj
+					);
+				}
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Delete link by given hash
+	 * @param $hash
+	 * @return bool
+	 */
+	public function deleteLink($hash) {
+		$ret = false;
+
+		if (!empty($hash)) {
+			$linkData = $this->loadLink($hash,false,true);
+			if(!empty($linkData)) {
+				$linkData['obj']->deleteRelations();
+
+				$queryStr = "DELETE FROM `" . DB_PREFIX . "_link` 
+						WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
+				$query = $this->DB->query($queryStr);
+				if (!empty($query)) {
+					$ret = true;
 				}
 			}
 		}
