@@ -464,4 +464,26 @@ class Summoner {
 
 		return $ret;
 	}
+
+	static function folderSize($folder) {
+		$ret = 0;
+
+		if(file_exists($folder) && is_readable($folder)) {
+			foreach (glob(rtrim($folder, '/') . '/*', GLOB_NOSORT) as $each) {
+				$ret += is_file($each) ? filesize($each) : self::folderSize($each);
+			}
+		}
+
+		return $ret;
+	}
+
+	static function  humanFileSize($size,$unit="") {
+	  if( (!$unit && $size >= 1<<30) || $unit == "GB")
+		return number_format($size/(1<<30),2)."GB";
+	  if( (!$unit && $size >= 1<<20) || $unit == "MB")
+		return number_format($size/(1<<20),2)."MB";
+	  if( (!$unit && $size >= 1<<10) || $unit == "KB")
+		return number_format($size/(1<<10),2)."KB";
+	  return number_format($size)." bytes";
+	}
 }

@@ -511,6 +511,18 @@ class Management {
 		return $ret;
 	}
 
+	public function storageAmount() {
+		$ret = 0;
+
+		$_storageFolder = ABSOLUTE_PATH.'/'.LOCAL_STORAGE;
+
+		if(file_exists($_storageFolder) && is_readable($_storageFolder)) {
+			$ret = Summoner::folderSize();
+		}
+
+		return $ret;
+	}
+
 
 	/**
 	 * Load link by given hash. Do not use Link class directly.

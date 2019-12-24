@@ -34,4 +34,5 @@ if(Summoner::simpleAuthCheck() === true) {
 $linkAmount = $Management->linkAmount();
 $tagAmount = $Management->tagAmount();
 $categoryAmount = $Management->categoryAmount();
+$localStorageAmount = $Management->storageAmount();
 

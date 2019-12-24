@@ -75,7 +75,7 @@
 		</div>
 		<div class="column is-one-quarter">
 			<h3 class="is-size-3">Local image storage</h3>
-			<p># Moderation needed: <?php echo $moderationAmount; ?></p>
+			<p>Diskspace used: <?php echo $moderationAmount; ?></p>
 			<p><a href="index.php?p=overview&m=category">Delete all</a></p>
 		</div>
 		<?php } ?>
