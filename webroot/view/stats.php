@@ -53,30 +53,32 @@
 <section class="section">
 	<div class="columns is-multiline">
 		<div class="column is-one-quarter">
-			<h3 class="is-size-3">Links</h3>
+			<h4 class="is-size-4">Links</h4>
 			<p># of Links: <?php echo $linkAmount; ?></p>
 			<p><a href="index.php?p=overview&m=all">View all</a></p>
 		</div>
 		<div class="column is-one-quarter">
-			<h3 class="is-size-3">Tags</h3>
+			<h4 class="is-size-4">Tags</h4>
 			<p># of Tags: <?php echo $tagAmount; ?></p>
 			<p><a href="index.php?p=overview&m=tag">View all</a></p>
 		</div>
 		<div class="column is-one-quarter">
-			<h3 class="is-size-3">Categories</h3>
+			<h4 class="is-size-4">Categories</h4>
 			<p># of Categories: <?php echo $categoryAmount; ?></p>
 			<p><a href="index.php?p=overview&m=category">View all</a></p>
 		</div>
 		<?php if($_displayEditButton === true) { ?>
 		<div class="column is-one-quarter">
-			<h3 class="is-size-3">Moderation</h3>
+			<h4 class="is-size-4">Moderation</h4>
 			<p># Moderation needed: <?php echo $moderationAmount; ?></p>
 			<p><a href="index.php?p=overview&m=awm">View all</a></p>
 		</div>
 		<div class="column is-one-quarter">
-			<h3 class="is-size-3">Local image storage</h3>
-			<p>Diskspace used: <?php echo $moderationAmount; ?></p>
-			<p><a href="index.php?p=overview&m=category">Delete all</a></p>
+			<h4 class="is-size-4">Local image storage</h4>
+			<p>Diskspace used: <?php echo $localStorageAmount; ?></p>
+            <form method="post">
+                <input type="submit" class="button is-info is-small" value="Delete all" name="statsDeleteLocalStorage">
+            </form>
 		</div>
 		<?php } ?>
 	</div>

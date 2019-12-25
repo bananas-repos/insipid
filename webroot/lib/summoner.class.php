@@ -284,7 +284,7 @@ class Summoner {
 	}
 
 	/**
-	 * get as much as possible solcial meta infos from given string
+	 * get as much as possible social meta infos from given string
 	 * the string is usually a HTML source
 	 * @param string $string
 	 * @return array
@@ -465,6 +465,11 @@ class Summoner {
 		return $ret;
 	}
 
+    /**
+     * retrieve the folder size with its children of given folder path
+     * @param $folder
+     * @return false|int
+     */
 	static function folderSize($folder) {
 		$ret = 0;
 
@@ -477,13 +482,82 @@ class Summoner {
 		return $ret;
 	}
 
+    /**
+     * Calculate the given byte size in more human readable format.
+     * @param $size
+     * @param string $unit
+     * @return string
+     */
 	static function  humanFileSize($size,$unit="") {
-	  if( (!$unit && $size >= 1<<30) || $unit == "GB")
-		return number_format($size/(1<<30),2)."GB";
-	  if( (!$unit && $size >= 1<<20) || $unit == "MB")
-		return number_format($size/(1<<20),2)."MB";
-	  if( (!$unit && $size >= 1<<10) || $unit == "KB")
-		return number_format($size/(1<<10),2)."KB";
-	  return number_format($size)." bytes";
+        $ret =  number_format($size)." bytes";
+
+        if((!$unit && $size >= 1<<30) || $unit == "GB") {
+            $ret = number_format($size / (1 << 30), 2)."GB";
+        }
+        elseif((!$unit && $size >= 1<<20) || $unit == "MB") {
+            $ret = number_format($size / (1 << 20), 2) . "MB";
+        }
+        elseif( (!$unit && $size >= 1<<10) || $unit == "KB") {
+            $ret = number_format($size / (1 << 10), 2) . "KB";
+        }
+
+        return $ret;
 	}
+
+    /**
+     * delete and/or empty a directory
+     *
+     * $empty = true => empty the directory but do not delete it
+     *
+     * @param string $directory
+     * @param boolean $empty
+     * @param int $fTime If not false remove files older then this value in sec.
+     * @return boolean
+     */
+    static function recursive_remove_directory($directory,$empty=false,$fTime=0) {
+        if(substr($directory,-1) == '/') {
+            $directory = substr($directory,0,-1);
+        }
+
+        if(!file_exists($directory) || !is_dir($directory)) {
+            return false;
+        }
+        elseif(!is_readable($directory)) {
+            return false;
+        }
+        else {
+            $handle = opendir($directory);
+
+            // and scan through the items inside
+            while (false !== ($item = readdir($handle))) {
+                if($item[0] != '.') {
+                    $path = $directory.'/'.$item;
+
+                    if(is_dir($path)) {
+                        recursive_remove_directory($path);
+                    }
+                    else {
+                        if($fTime !== false && is_int($fTime)) {
+                            $ft = filemtime($path);
+                            $offset = time()-$fTime;
+                            if($ft <= $offset) {
+                                unlink($path);
+                            }
+                        }
+                        else {
+                            unlink($path);
+                        }
+                    }
+                }
+            }
+            closedir($handle);
+
+            if($empty === false) {
+                if(!rmdir($directory)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 }

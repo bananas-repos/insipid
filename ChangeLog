@@ -1,4 +1,4 @@
-version 2.2alpha - Guardian of Ice - (tba)
+version 2.2 - Guardian of Ice - (tba)
 
 	* email import
 	* code cleanups
@@ -7,9 +7,10 @@ version 2.2alpha - Guardian of Ice - (tba)
 	* authentication with an extra url now (index.php?m=auth)
 	* management actions shown only if authenticated
 	* small stats overview
-	* links can now be deleted...
+	* links can now be deleted
 	* awaiting moderation links can new be moderated
 	* Fixed an error in create sql file
+	* clean up the local storage via stats page (if authenticated)
 
 version 2.1alpha - Guardian of Fire - (2019-09-29)
 

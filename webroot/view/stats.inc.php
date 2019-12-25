@@ -31,8 +31,21 @@ if(Summoner::simpleAuthCheck() === true) {
 	$moderationAmount = $Management->moderationAmount();
 }
 
+if(isset($_POST['statsDeleteLocalStorage'])) {
+
+    if($Management->clearLocalStorage() === true) {
+        
+        $TemplateData['refresh'] = 'index.php?p=stats';
+    }
+    else {
+        $submitFeedback['message'] = 'Something went wrong while storage cleaning';
+        $submitFeedback['status'] = 'error';
+    }
+}
+
 $linkAmount = $Management->linkAmount();
 $tagAmount = $Management->tagAmount();
 $categoryAmount = $Management->categoryAmount();
 $localStorageAmount = $Management->storageAmount();
+$localStorageAmount = Summoner::humanFileSize($localStorageAmount);
 

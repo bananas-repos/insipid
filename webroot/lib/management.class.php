@@ -511,17 +511,36 @@ class Management {
 		return $ret;
 	}
 
+    /**
+     * get the used disk space for local image storage
+     * @return false|int
+     */
 	public function storageAmount() {
 		$ret = 0;
 
 		$_storageFolder = ABSOLUTE_PATH.'/'.LOCAL_STORAGE;
 
 		if(file_exists($_storageFolder) && is_readable($_storageFolder)) {
-			$ret = Summoner::folderSize();
+			$ret = Summoner::folderSize($_storageFolder);
 		}
 
 		return $ret;
 	}
+
+    /**
+     * empties the local storage directory
+     * @return bool
+     */
+	public function clearLocalStorage() {
+	    $ret = false;
+
+        $_storageFolder = ABSOLUTE_PATH.'/'.LOCAL_STORAGE;
+        if(file_exists($_storageFolder) && is_writable($_storageFolder)) {
+            $ret = Summoner::recursive_remove_directory($_storageFolder,true);
+        }
+
+	    return $ret;
+    }
 
 
 	/**
