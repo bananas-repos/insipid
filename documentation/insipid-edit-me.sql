@@ -98,7 +98,7 @@ CREATE TABLE `#REPLACE_ME#_tagrelation` (
 --
 -- Structure for view `#REPLACE_ME#_combined`
 --
-DROP TABLE IF EXISTS `#REPLACE_ME#_combined`;
+DROP VIEW IF EXISTS `#REPLACE_ME#_combined`;
 
 CREATE VIEW `#REPLACE_ME#_combined` AS
 select `#REPLACE_ME#_link`.`id` AS `id`,
