@@ -57,13 +57,12 @@ if(Summoner::simpleAuthCheck() === true) {
 switch($_requestMode) {
 	case 'tag':
 		if(!empty($_id)) {
+            $tagObj = new Tag($DB);
+            $tagObj->initbyid($_id);
+            $tagname = $tagObj->getData('name');
+            $subHeadline = $tagname.' <i class="ion-md-pricetag"></i>';
+
 			$linkCollection = $Management->linksByTag($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
-			if(!empty($linkCollection['results'])) {
-				$tagObj = new Tag($DB);
-				$tagObj->initbyid($_id);
-				$tagname = $tagObj->getData('name');
-				$subHeadline = $tagname.' <i class="ion-md-pricetag"></i>';
-			}
 		}
 		else {
 			# show all the tags we have
@@ -73,13 +72,11 @@ switch($_requestMode) {
 	break;
 	case 'category':
 		if(!empty($_id)) {
+            $catObj = new Category($DB);
+            $catObj->initbyid($_id);
+            $catname = $catObj->getData('name');
+            $subHeadline = $catname.' <i class="ion-md-filing"></i>';
 			$linkCollection = $Management->linksByCategory($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
-			if(!empty($linkCollection['results'])) {
-				$catObj = new Category($DB);
-				$catObj->initbyid($_id);
-				$catname = $catObj->getData('name');
-				$subHeadline = $catname.' <i class="ion-md-filing"></i>';
-			}
 		}
 		else {
 			# show all the categories we have

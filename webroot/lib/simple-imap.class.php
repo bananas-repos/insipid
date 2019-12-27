@@ -126,11 +126,13 @@ class SimpleImap {
 	    if($this->_connection !== false) {
 	        $status = imap_status($this->_connection, $this->_connectionstring.$this->_mailbox, SA_ALL);
 
-	        var_dump("messages ".$status->messages);
-	        var_dump("recent ".$status->recent);
-	        var_dump("unseen ".$status->unseen);
-	        var_dump("uidnext ".$status->uidnext);
-	        var_dump("uidvalidity ".$status->uidvalidity);
+	        if(DEBUG === true) {
+                var_dump("messages " . $status->messages);
+                var_dump("recent " . $status->recent);
+                var_dump("unseen " . $status->unseen);
+                var_dump("uidnext " . $status->uidnext);
+                var_dump("uidvalidity " . $status->uidvalidity);
+            }
 
 	        $list = imap_getmailboxes($this->_connection, $this->_connectionstring, "*");
 	        if (is_array($list)) {
@@ -141,7 +143,7 @@ class SimpleImap {
 	                echo $val->attributes . "<br />\n";
 	            }
 	        } else {
-	            error_log("imap_getmailboxes failed: ".var_export(imap_last_error()));
+	            error_log("ERROR imap_getmailboxes failed: ".var_export(imap_last_error()));
 	        }
 	    }
 	}

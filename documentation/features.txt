@@ -1,6 +1,6 @@
 Insipid is a web-based bookmark manager similar to the Delicious service.
 
-It lets you manage and host your own bookmarks. No talking to other servervices or agencies.
+It lets you manage and host your own bookmarks. No talking to other services or agencies.
 Your data is your data.
 
 Bookmarks are put into categories and should have tags.

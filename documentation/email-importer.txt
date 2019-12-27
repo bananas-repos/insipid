@@ -26,3 +26,5 @@ Syntax of the E-Mail body:
 
 absolute-link|multiple,category,strings|multiple,tag,strings\n
 new-absolute-link|multiple,category,strings|multiple,tag,strings\n
+
+Create a cronjob to execute the email-import.php file.

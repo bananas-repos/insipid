@@ -72,6 +72,16 @@ if(EMAIL_REPORT_BACK === true) {
 	$phpmailer->setFrom(EMAIL_REPLY_BACK_ADDRESS);
 	$phpmailer->Subject = EMAIL_REPLY_BACK_SUBJECT;
 	$phpmailer->Timeout = 3;
+
+    if(DEBUG === true) $phpmailer->SMTPDebug = SMTP::DEBUG_SERVER;
+
+    $phpmailer->SMTPOptions = array(
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true
+        ],
+    );
 }
 
 $DB = false;
@@ -92,7 +102,7 @@ try {
     if(DEBUG === true) $EmailReader->mailboxStatus();
 }
 catch (Exception $e) {
-    error_log('Email server connection failed: '.var_export($e->getMessage(),true));
+    error_log('ERROR Email server connection failed: '.var_export($e->getMessage(),true));
     exit();
 }
 
@@ -102,7 +112,7 @@ try {
     $emails = $EmailReader->messageWithValidSubject(EMAIL_MARKER);
 }
 catch (Exception $e) {
-    error_log('Can not process email messages: '.var_export($e->getMessage(),true));
+    error_log('ERROR Can not process email messages: '.var_export($e->getMessage(),true));
     exit();
 }
 
@@ -141,7 +151,7 @@ if(!empty($emails)) {
 				$newdata['link'] = Summoner::addSchemeToURL($newdata['link']);
 
 				if (!filter_var($newdata['link'], FILTER_VALIDATE_URL)) {
-					error_log("Invalid URL: ".var_export($newdata['link'],true));
+					error_log("ERROR Invalid URL: ".var_export($newdata['link'],true));
 					if(DEBUG === true) var_dump($newdata['link']);
 					continue;
 				}
@@ -160,8 +170,8 @@ if(!empty($emails)) {
 					}
 				}
 				else {
-					error_log("No valid title for link found: ".var_export($newdata,true));
-					if(DEBUG === true) var_dump("No valid title for link found: ".var_export($newdata,true));
+					error_log("WARN No valid title for link found: ".var_export($newdata,true));
+					if(DEBUG === true) var_dump("WARN No valid title for link found: ".var_export($newdata,true));
 					array_push($invalidProcessedEmails, $emailData);
 					continue;
 				}
@@ -189,7 +199,7 @@ if(!empty($emails)) {
 					), true);
 				}
 				catch (Exception $e) {
-					$_m = "Can not create new link into DB. Duplicate? ".$e->getMessage();
+					$_m = "WARN Can not create new link into DB. Duplicate? ".$e->getMessage();
 					error_log($_m);
 					$emailData['importmessage'] = $_m;
 					array_push($invalidProcessedEmails,$emailData);
@@ -221,12 +231,12 @@ if(!empty($emails)) {
 
 					$DB->commit();
 
-					error_log("Link successfully added: ".$newdata['link']);
+					error_log("INFO Link successfully added: ".$newdata['link']);
 					array_push($validProcessedEmails,$emailData);
 				}
 				else {
 					$DB->rollback();
-					error_log("Link could not be added. SQL problem: ".$newdata['link']);
+					error_log("ERROR Link could not be added. SQL problem: ".$newdata['link']);
 					$emailData['importmessage'] = "Link could not be added";
 					array_push($invalidProcessedEmails,$emailData);
 				}
@@ -239,7 +249,7 @@ if(!empty($emails)) {
 # if we have invalid import mails, ignore them, just log em
 # if EMAIL_REPORT_BACK is true then report back with errors if EMAIL_REPLY_BACK_VALID
 if(!empty($invalidProcessedEmails)) {
-	error_log("We have invalid import messages.");
+	error_log("INFO We have invalid import messages.");
 	foreach ($invalidProcessedEmails as $invalidMail) {
 		if(EmailImportHelper::canSendReplyTo($invalidMail['header_rfc822']->reply_toaddress)
 			&& !EmailImportHelper::isAutoReplyMessage($invalidMail['header_array'])) {
@@ -248,10 +258,10 @@ if(!empty($invalidProcessedEmails)) {
 			$phpmailer->Body .= $invalidMail['body'];
 			$phpmailer->addAddress($_address[0]['address']);
 			$phpmailer->send();
-			error_log("Report back email to: ".$_address[0]['address']);
+			error_log("INFO Report back email to: ".$_address[0]['address']);
 		}
 		else {
-			error_log("Invalid message: ".$invalidMail['header_rfc822']->subject);
+			error_log("WARN Invalid message: ".$invalidMail['header_rfc822']->subject);
 		}
 	}
 }
@@ -259,7 +269,7 @@ if(!empty($invalidProcessedEmails)) {
 # move them to the processed / archive folder
 #$EmailReader->move()
 if(!empty($validProcessedEmails)) {
-	error_log("We have valid import messages.");
+	error_log("INFO We have valid import messages.");
 	foreach ($validProcessedEmails as $validMail) {
 	}
 }

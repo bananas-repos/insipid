@@ -8,7 +8,16 @@ Read this first!!
 Unpack the archive
 
 4.
-Modify webroot/config.default.php and copy it to webroot/config.php
+Create your config file.
+Copy webroot/config.default.php to webroot/config.php
+
+Modify at least the following settings in this file:
+- define('DB_HOST','127.0.0.1');
+- define('DB_USERNAME','user');
+- define('DB_PASSWORD','test');
+- define('FRONTEND_USERNAME','luke');
+- define('FRONTEND_PASSWORD','father');
+- define('ABSOLUTE_PATH', '/path/to/insipid/webroot');
 
 5.
 Copy and modify documentation/insipid-edit-me.sql and replace the placeholder.
@@ -17,11 +26,11 @@ Open the file and make a search and replace:
 search for: `#REPLACE_ME#
 replace with: `tableprefix
 
-The value tableprefix has to match with the value for DB_PREFIX in config.php
+The value tableprefix has to match with the value for DB_PREFIX in your config.php file
 
 6.
 Create a table if needed.
-Import the sql file into your MySQL database
+Import the edited from step 5 sql file into your MySQL database.
 
 7.
 Edit the robots.txt file to your needs.
