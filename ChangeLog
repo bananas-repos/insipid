@@ -15,6 +15,7 @@ version 2.2 - Guardian of Ice - (tba)
 	* Fixed info when a tag or category has no links
 	* Fixed code cleanups
 	* Fixed access to log files directory
+	* Fixed check for duplicates in email importer
 
 version 2.1alpha - Guardian of Fire - (2019-09-29)
 

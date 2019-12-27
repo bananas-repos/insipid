@@ -36,7 +36,7 @@ define('DEBUG',true);
 
 ## set the error reporting
 ini_set('log_errors',true);
-ini_set('error_log','error.log');
+ini_set('error_log','import.log');
 if(DEBUG === true) {
     ini_set('display_errors',true);
 }
@@ -184,29 +184,39 @@ if(!empty($emails)) {
 
 				if(DEBUG === true) var_dump($newdata);
 
-				$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+                $DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
-				$linkObj = new Link($DB);
-				try {
-					$linkID = $linkObj->create(array(
-						'hash' => $newdata['hash'],
-						'search' => $newdata['search'],
-						'link' => $newdata['link'],
-						'status' => $newdata['status'],
-						'description' => $newdata['description'],
-						'title' => $newdata['title'],
-						'image' => $newdata['image']
-					), true);
-				}
-				catch (Exception $e) {
-					$_m = "WARN Can not create new link into DB. Duplicate? ".$e->getMessage();
-					error_log($_m);
-					$emailData['importmessage'] = $_m;
-					array_push($invalidProcessedEmails,$emailData);
-					if(DEBUG === true) var_dump($_m);
-					if(DEBUG === true) var_dump($newdata);
-					continue;
-				}
+                $linkObj = new Link($DB);
+                $linkID = false;
+
+				# check for duplicate
+                $existing = $linkObj->load($newdata['hash']);
+                if(!empty($existing) && isset($existing['id'])) {
+                    $linkID = $existing['id'];
+                    error_log('INFO Updating existing link with tag or category '.$newdata['link']);
+                }
+                else {
+                    $linkObj = new Link($DB);
+                    try {
+                        $linkID = $linkObj->create(array(
+                            'hash' => $newdata['hash'],
+                            'search' => $newdata['search'],
+                            'link' => $newdata['link'],
+                            'status' => $newdata['status'],
+                            'description' => $newdata['description'],
+                            'title' => $newdata['title'],
+                            'image' => $newdata['image']
+                        ), true);
+                    } catch (Exception $e) {
+                        $_m = "WARN Can not create new link into DB. Duplicate? " . $e->getMessage();
+                        error_log($_m);
+                        $emailData['importmessage'] = $_m;
+                        array_push($invalidProcessedEmails, $emailData);
+                        if (DEBUG === true) var_dump($_m);
+                        if (DEBUG === true) var_dump($newdata);
+                        continue;
+                    }
+                }
 
 				if(!empty($linkID)) {
 
@@ -231,7 +241,7 @@ if(!empty($emails)) {
 
 					$DB->commit();
 
-					error_log("INFO Link successfully added: ".$newdata['link']);
+					error_log("INFO Link successfully added/updated: ".$newdata['link']);
 					array_push($validProcessedEmails,$emailData);
 				}
 				else {
