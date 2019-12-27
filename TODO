@@ -1,8 +1,5 @@
 TODO / Feature list
-==========================================================================
-+ stats, storage usage. With stats and valid auth display moderation
-+ email import auto reply check
-+ flush local storage of images
++ improved documentation
 + delete single local storage of a link
 + sorting
 + snapshots

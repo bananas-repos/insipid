@@ -9,6 +9,7 @@ Call the following URL to trigger the authentication:
 http(s)://your.domain.tld/path/to/insipid/index.php?m=auth
 
 If successful you can now manage your items. Edit buttons are visible now.
+Moderation and more overview can be access from the stats overview page.
 
 HowToAdd a new link:
 

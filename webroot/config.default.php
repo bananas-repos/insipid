@@ -59,6 +59,7 @@ define('EMAIL_SERVER_PORT_IMAP',993);
 define('EMAIL_SERVER_PORT_SMTP',465);
 define('EMAIL_SERVER_MAILBOX','INBOX'); # default INBOX
 define('EMAIL_MARKER','to-insipid- ');
+define('EMAIL_ARCHIVE_FOLDER','archive');
 define('EMAIL_REPORT_BACK',false);
 define('EMAIL_REPLY_BACK_VALID','');
 define('EMAIL_REPLY_BACK_ADDRESS','');

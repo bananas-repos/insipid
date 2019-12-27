@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2017 Johannes Keßler
+ * Copyright 2016-2019 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -32,7 +32,7 @@ ini_set('error_reporting',-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
-define('DEBUG',true);
+define('DEBUG',false);
 
 ## set the error reporting
 ini_set('log_errors',true);
@@ -170,7 +170,7 @@ if(!empty($emails)) {
 					}
 				}
 				else {
-					error_log("WARN No valid title for link found: ".var_export($newdata,true));
+					error_log("WARN No valid title for link found: ".$newdata['link']);
 					if(DEBUG === true) var_dump("WARN No valid title for link found: ".var_export($newdata,true));
 					array_push($invalidProcessedEmails, $emailData);
 					continue;
@@ -208,7 +208,7 @@ if(!empty($emails)) {
                             'image' => $newdata['image']
                         ), true);
                     } catch (Exception $e) {
-                        $_m = "WARN Can not create new link into DB. Duplicate? " . $e->getMessage();
+                        $_m = "WARN Can not create new link into DB." . $e->getMessage();
                         error_log($_m);
                         $emailData['importmessage'] = $_m;
                         array_push($invalidProcessedEmails, $emailData);
@@ -246,7 +246,7 @@ if(!empty($emails)) {
 				}
 				else {
 					$DB->rollback();
-					error_log("ERROR Link could not be added. SQL problem: ".$newdata['link']);
+					error_log("ERROR Link could not be added. SQL problem? ".$newdata['link']);
 					$emailData['importmessage'] = "Link could not be added";
 					array_push($invalidProcessedEmails,$emailData);
 				}
@@ -277,14 +277,13 @@ if(!empty($invalidProcessedEmails)) {
 }
 
 # move them to the processed / archive folder
-#$EmailReader->move()
 if(!empty($validProcessedEmails)) {
 	error_log("INFO We have valid import messages.");
 	foreach ($validProcessedEmails as $validMail) {
+	    $EmailReader->moveMessage($validMail['uid']);
+        error_log("INFO Mail moved to archive ".$validMail['header_rfc822']->subject);
 	}
 }
 
-
-
 $DB->close();
-# END
+$EmailReader->close();

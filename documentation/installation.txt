@@ -42,3 +42,6 @@ LOCAL_STORAGE is the option in the config file.
 
 9.
 If you want to fully restrict your contents activate the user/password restriction in the config.
+
+10.
+If you want to use the e-mail importer read the email-importer.txt file.

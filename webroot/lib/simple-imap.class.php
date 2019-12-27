@@ -103,7 +103,8 @@ class SimpleImap {
 					$ret[$i]['header'] = $this->emailHeaders($i);
 					$ret[$i]['header_rfc822'] = $this->emailHeaders_rfc822($i);
 					$ret[$i]['header_array'] = $this->emailHeadersAsArray($i);
-					$ret[$i]['emailid'] = $i;
+					# @see https://www.php.net/manual/en/function.imap-uid.php
+                    $ret[$i]['uid'] = imap_uid($this->_connection,$i);
 	            }
 	        }
 	    }
@@ -176,6 +177,19 @@ class SimpleImap {
 		return array_combine( $matches[1], $matches[2]);
 	}
 
+    /**
+     * Move given message to given folder
+     * @param $messageUid This is the message Uid as an int
+     * @param string $folder This is the target folder. Default is EMAIL_ARCHIVE_FOLDER
+     */
+	public function moveMessage($messageUid,$folder=EMAIL_ARCHIVE_FOLDER) {
+	    if(!empty($messageUid) && !empty($folder)) {
+	        $messageUid = (string)$messageUid;
+	        imap_setflag_full($this->_connection,$messageUid,"\SEEN", ST_UID);
+            imap_mail_move($this->_connection, $messageUid, $folder,CP_UID);
+            imap_expunge($this->_connection);
+        }
+    }
 
 	/**
 	 * extract the subject from the email headers and decode
@@ -246,32 +260,6 @@ class SimpleImap {
 
 	    return $ret;
 	}
-
-	/*
-
-	// move the message to a new folder
-	function move($msg_index, $folder='INBOX.Processed') {
-		// move on server
-		imap_mail_move($this->_connection, $msg_index, $folder);
-		imap_expunge($this->_connection);
-
-		// re-read the inbox
-		$this->inbox();
-	}
-
-	// get a specific message (1 = first email, 2 = second email, etc.)
-	function get($msg_index=NULL) {
-		if (count($this->_inbox) <= 0) {
-			return array();
-		}
-		elseif ( ! is_null($msg_index) && isset($this->_inbox[$msg_index])) {
-			return $this->_inbox[$msg_index];
-		}
-
-		return $this->_inbox[0];
-	}
-*/
-
 
 	/**
 	 * close the imap connection
