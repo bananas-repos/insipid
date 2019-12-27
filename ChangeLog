@@ -14,6 +14,7 @@ version 2.2 - Guardian of Ice - (tba)
 	* Fixed an error in create sql file
 	* Fixed info when a tag or category has no links
 	* Fixed code cleanups
+	* Fixed access to log files directory
 
 version 2.1alpha - Guardian of Fire - (2019-09-29)
 
