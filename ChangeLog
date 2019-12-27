@@ -10,6 +10,7 @@ version 2.2 - Guardian of Ice - (tba)
 	* awaiting moderation links can new be moderated
 	* clean up the local storage via stats page (if authenticated)
 	* Updated documentation
+	* INFO, WARN and ERROR now in the log files used for messages
 	* Fixed an error in create sql file
 	* Fixed info when a tag or category has no links
 	* Fixed code cleanups

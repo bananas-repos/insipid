@@ -157,7 +157,7 @@ class Category {
 				if(DEBUG) {
 					var_dump($e->getMessage());
 				}
-				error_log('Failed to remove category: '.var_export($e->getMessage(),true));
+				error_log('ERROR Failed to remove category: '.var_export($e->getMessage(),true));
 
 				$this->DB->rollback();
 			}

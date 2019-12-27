@@ -180,7 +180,7 @@ class Summoner {
 			$ret = $do;
 		}
 		else {
-			error_log(var_export(curl_error($ch),true));
+			error_log('ERROR '.var_export(curl_error($ch),true));
 		}
 
 		curl_close($ch);

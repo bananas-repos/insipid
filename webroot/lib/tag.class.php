@@ -154,7 +154,7 @@ class Tag {
 				if(DEBUG) {
 					var_dump($e->getMessage());
 				}
-				error_log('Failed to remove tag: '.var_export($e->getMessage(),true));
+				error_log('ERROR Failed to remove tag: '.var_export($e->getMessage(),true));
 
 				$this->DB->rollback();
 			}

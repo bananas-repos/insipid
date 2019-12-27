@@ -109,8 +109,8 @@ class SimpleImap {
 	    }
 
 	    # log messages processed to all messages
-	    error_log("Read ".$messagecount." messages");
-	    error_log("Processed ".$processedmessagescount." messages");
+	    error_log("INFO Read ".$messagecount." messages");
+	    error_log("INFO Processed ".$processedmessagescount." messages");
 
 	    return $ret;
 
