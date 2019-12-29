@@ -1,6 +1,8 @@
 version x.x - Guardian of Steel (tba)
 
     + Improved documentation
+    + Delete single local storage of a link
+    ++ Done by uncheck the store image locally option
     + Fixed a bug in tag selection SQL query
 
 version 2.2 - Guardian of Ice - (2019-02-27)
