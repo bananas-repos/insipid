@@ -16,3 +16,5 @@ HowToAdd a new link:
 There is no special "add a new link" option. Just paste the link into the search bar.
 If the link is already in your database the edit option will be shown.
 If not the add field will be shown and the possibility to safe the new link.
+
+Usage of the email-importer can be found in the email-importer.txt file

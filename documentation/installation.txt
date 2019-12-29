@@ -1,44 +1,54 @@
-1.
-Check the requirements first.
+1. Requirements
+Check the requirements.txt first.
+An access and database on a mysql database server. Write them down.
+If you share a database either use the default table prefix (inisipid) or use your own.
+Absolute path on your webserver web-accessible folder where insipid will be installed to
 
-2.
-Read this first!!
+2. Read
+Read this document before changing anything!
 
-3.
-Unpack the archive
+3. Unpack
+Unpack the archive to a temporary directory of your choice.
+Final files and folder will be moved to the webroot of your
+webserver later on.
+You can also verify the package with the available m5/sha sum information
 
-4.
+4. Config
 Create your config file.
 Copy webroot/config.default.php to webroot/config.php
 
 Modify at least the following settings in this file:
-- define('DB_HOST','127.0.0.1');
-- define('DB_USERNAME','user');
-- define('DB_PASSWORD','test');
-- define('FRONTEND_USERNAME','luke');
-- define('FRONTEND_PASSWORD','father');
-- define('ABSOLUTE_PATH', '/path/to/insipid/webroot');
+- define('DB_HOST','127.0.0.1'); <= The database server hostname you are using
+- define('DB_USERNAME','user'); <= The database username you are using
+- define('DB_PASSWORD','test'); <= The database password you are using
+- define('DB_NAME','insipid'); <= Database name on your database server
+- define('FRONTEND_USERNAME','luke'); <= The frontend username. Please change the default
+- define('FRONTEND_PASSWORD','father'); <= The frontend password. Please change the default
+- define('ABSOLUTE_PATH', '/path/to/insipid/on/your/webserver'); <= Absolute path where insipid is located in your webserver
 
-5.
+5. Prepare SQL file
 Copy and modify documentation/insipid-edit-me.sql and replace the placeholder.
 Open the file and make a search and replace:
 
 search for: `#REPLACE_ME#
-replace with: `tableprefix
+replace with: `YOUR_TABLE_PREFIX
 
-The value tableprefix has to match with the value for DB_PREFIX in your config.php file
+The value YOUR_TABLE_PREFIX has to match with the value for DB_PREFIX in your config.php file.
+Default is insipid. Alter the value here and in the config file if you choose a different one
 
-6.
-Create a table if needed.
+6. Database
+Create a database if needed. Should match DB_NAME in your config. Remember step 1.
 Import the edited from step 5 sql file into your MySQL database.
 
 7.
 Edit the robots.txt file to your needs.
+Usually not needed
 
 8.
-Copy the content of the webroot folder into your webserver folder.
+Copy the content of the unpacked webroot folder onto your webserver folder.
 Make the localdata folder writable to the web process to store images from link parsing.
 LOCAL_STORAGE is the option in the config file.
+Make sure ABSOLUTE_PATH matches the location of insipid in your webserver!
 
 9.
 If you want to fully restrict your contents activate the user/password restriction in the config.

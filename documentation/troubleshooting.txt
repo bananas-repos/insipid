@@ -1,0 +1,9 @@
+To get more information if your are stuck:
+
+Edit index.php (or email-import.php if you have trouble with it) and change the following setting:
+
+FROM: define('DEBUG',false);
+TO: define('DEBUG',true);
+
+Alter it to false after your are done. Do not use this permanently since it displays unwanted and even
+sensitive information to everyone.

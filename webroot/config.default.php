@@ -26,11 +26,12 @@
  *
  */
 
-# database config
-define('DB_HOST','127.0.0.1');
-define('DB_USERNAME','user');
-define('DB_PASSWORD','test');
-define('DB_NAME','insipid');
+#
+## database config
+define('DB_HOST','127.0.0.1'); # Address of the database server
+define('DB_USERNAME','user'); # Username to access the database server and database itself
+define('DB_PASSWORD','test'); # Password for username
+define('DB_NAME','insipid'); # Database name on your database server
 define('DB_PREFIX','insipid'); # a _ is added automatically as separation
 
 # user config
