@@ -1,6 +1,6 @@
 version x.x - Guardian of Steel (tba)
 
-
+    + Fixed a bug in tag selection SQL query
 
 version 2.2 - Guardian of Ice - (2019-02-27)
 

@@ -154,7 +154,7 @@ class Management {
 				FROM `".DB_PREFIX."_tagrelation` AS tr,  `".DB_PREFIX."_link` AS t
 				WHERE tr.linkid = t.id";
 			$queryStr .= " AND ".$this->_decideLinkTypeForQuery();
-			$queryStr .= "GROUP BY tagId";
+			$queryStr .= " GROUP BY tagId";
 
 			$query = $this->DB->query($queryStr);
 			if(!empty($query)) {
