@@ -97,7 +97,7 @@
                 <a href="index.php?<?php echo $sortLink['default']; ?>"
                    class="button is-small <?php if($sortLink['active'] === 'default') { ?>is-link<?php } ?>">default</a>
                 <a href="index.php?<?php echo $sortLink['name']; ?>"
-                   class="button is-small <?php if($sortLink['active'] === 'name') { ?>is-link<?php } ?>">name</a>
+                   class="button is-small <?php if($sortLink['active'] === 'title') { ?>is-link<?php } ?>">title</a>
                 <a href="index.php?<?php echo $sortLink['direction']; ?>"
                    class="button is-small <?php if($sortLink['activeDirection'] === true) { ?>is-link<?php } ?>"><span class="icon"><i class="ion-md-arrow-dropup"></i></span></a>
             </div>

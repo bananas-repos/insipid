@@ -73,13 +73,17 @@ if(Summoner::simpleAuthCheck() === true) {
 $sortLink['active'] = 'default';
 $sortLink['activeDirection'] = false;
 
-if(!empty($_sort) && $_sort === 'name') {
-    $currentGetParameters['s'] = 'name';
-    $sortLink['active'] = 'name';
+$_saveSort = false;
+if(!empty($_sort) && $_sort === 'title') {
+    $currentGetParameters['s'] = 'title';
+    $sortLink['active'] = 'title';
+    $_saveSort = 'title';
 }
+$_saveSortDirection = false;
 if(!empty($_sortDirection) && $_sortDirection === 'asc') {
     $currentGetParameters['sd'] = 'asc';
     $sortLink['activeDirection'] = true;
+    $_saveSortDirection = 'asc';
 }
 
 switch($_requestMode) {
@@ -109,7 +113,14 @@ switch($_requestMode) {
             $catname = $catObj->getData('name');
             $subHeadline = $catname.' <i class="ion-md-filing"></i>';
 
-			$linkCollection = $Management->linksByCategory($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+            $_options = array(
+                'limit' => RESULTS_PER_PAGE,
+                'offset' =>(RESULTS_PER_PAGE * ($_curPage-1))
+            );
+            if(!empty($_saveSort)) $_options['sort'] = $_saveSort;
+            if(!empty($_saveSortDirection)) $_options['sortDirection'] = $_saveSortDirection;
+
+			$linkCollection = $Management->linksByCategory($_id,'',$_options);
 
             $currentGetParameters['id'] = $_id;
 		}
@@ -161,5 +172,5 @@ else {
 }
 
 $sortLink['default'] = Summoner::createFromParameterLinkQuery($currentGetParameters,array('s'=>false,'sd'=>false));
-$sortLink['name'] = Summoner::createFromParameterLinkQuery($currentGetParameters,array('s'=>'name','sd'=>false));
+$sortLink['name'] = Summoner::createFromParameterLinkQuery($currentGetParameters,array('s'=>'title','sd'=>false));
 $sortLink['direction'] = Summoner::createFromParameterLinkQuery($currentGetParameters,array('sd'=>'asc'));
