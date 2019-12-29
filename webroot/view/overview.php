@@ -51,44 +51,58 @@
 		</div>
 	</div>
 
-	<?php if($pagination['pages'] > 1) { ?>
-		<nav class="pagination is-centered" role="navigation" aria-label="pagination">
-			<?php if($pagination['curPage'] > 1) {
-				echo '<a href="index.php?p=overview'.$pagination['linkadd'].'&page='.($pagination['curPage']-1).'" 
-					class="pagination-previous">Previous</a>';
-			}
-			if($pagination['curPage'] < $pagination['pages']) {
-				echo '<a href="index.php?p=overview'.$pagination['linkadd'].'&page='.($pagination['curPage']+1).'" 
-					class="pagination-next">Next</a>';
-			}
-			?>
-			<ul class="pagination-list">
-				<?php
-				$ellipsisShown = 0;
-				for($i=1;$i<=$pagination['pages'];$i++) {
-					$active = '';
-					if($i == $pagination['curPage']) $active = 'is-current';
+    <div class="columns">
+        <div class="column is-half">
+        <?php if($pagination['pages'] > 1) { ?>
+            <nav class="pagination is-small" role="navigation" aria-label="pagination">
+                <?php if($pagination['curPage'] > 1) {
+                    echo '<a href="index.php?'.Summoner::createFromParameterLinkQuery($currentGetParameters,array('page'=>($pagination['curPage']-1))).'" 
+                        class="pagination-previous">Previous</a>';
+                }
+                if($pagination['curPage'] < $pagination['pages']) {
+                    echo '<a href="index.php?'.Summoner::createFromParameterLinkQuery($currentGetParameters,array('page'=>($pagination['curPage']+1))).'" 
+                        class="pagination-next">Next</a>';
+                }
+                ?>
+                <ul class="pagination-list">
+                    <?php
+                    $ellipsisShown = 0;
+                    for($i=1;$i<=$pagination['pages'];$i++) {
+                        $active = '';
+                        if($i == $pagination['curPage']) $active = 'is-current';
 
-					if(in_array($i,$pagination['visibleRange'])) {
-						echo '<li><a href="index.php?p=overview' . $pagination['linkadd'] . '&page=' . $i . '"
-						class="pagination-link ' . $active . '"
-						aria-label="Goto page ' . $i . '">' . $i . '</a></li>';
-					}
-					else {
-						if($i < $pagination['currentRangeStart'] && $ellipsisShown == 0) {
-							echo '<li><span class="pagination-ellipsis">&hellip;</span></li>';
-							$ellipsisShown = 1;
-						}
-						if($i > $pagination['currentRangeEnd'] && ($ellipsisShown == 0 || $ellipsisShown == 1)) {
-							echo '<li><span class="pagination-ellipsis">&hellip;</span></li>';
-							$ellipsisShown = 2;
-						}
-					}
-				}
-				?>
-			</ul>
-		</nav>
-	<?php } ?>
+                        if(in_array($i,$pagination['visibleRange'])) {
+                            echo '<li><a href="index.php?'.Summoner::createFromParameterLinkQuery($currentGetParameters,array('page'=>$i)).'"
+                            class="pagination-link ' . $active . '"
+                            aria-label="Goto page ' . $i . '">' . $i . '</a></li>';
+                        }
+                        else {
+                            if($i < $pagination['currentRangeStart'] && $ellipsisShown == 0) {
+                                echo '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+                                $ellipsisShown = 1;
+                            }
+                            if($i > $pagination['currentRangeEnd'] && ($ellipsisShown == 0 || $ellipsisShown == 1)) {
+                                echo '<li><span class="pagination-ellipsis">&hellip;</span></li>';
+                                $ellipsisShown = 2;
+                            }
+                        }
+                    }
+                    ?>
+                </ul>
+            </nav>
+        <?php } ?>
+        </div>
+        <div class="column is-half">
+            <div class="is-pulled-right">
+                <a href="index.php?<?php echo $sortLink['default']; ?>"
+                   class="button is-small <?php if($sortLink['active'] === 'default') { ?>is-link<?php } ?>">default</a>
+                <a href="index.php?<?php echo $sortLink['name']; ?>"
+                   class="button is-small <?php if($sortLink['active'] === 'name') { ?>is-link<?php } ?>">name</a>
+                <a href="index.php?<?php echo $sortLink['direction']; ?>"
+                   class="button is-small <?php if($sortLink['activeDirection'] === true) { ?>is-link<?php } ?>"><span class="icon"><i class="ion-md-arrow-dropup"></i></span></a>
+            </div>
+        </div>
+    </div>
 </section>
 
 <section class="section">

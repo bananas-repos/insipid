@@ -25,10 +25,12 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
+$currentGetParameters['p'] = 'overview';
+
 $_requestMode = false;
 if(isset($_GET['m']) && !empty($_GET['m'])) {
 	$_requestMode = trim($_GET['m']);
-	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : "all";
+	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : false;
 }
 
 $_id = false;
@@ -36,10 +38,23 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
 	$_id = trim($_GET['id']);
 	$_id = Summoner::validate($_id,'digit') ? $_id : false;
 }
+
 $_curPage = 1;
 if(isset($_GET['page']) && !empty($_GET['page'])) {
 	$_curPage = trim($_GET['page']);
 	$_curPage = Summoner::validate($_curPage,'digit') ? $_curPage : 1;
+}
+
+$_sort = false;
+if(isset($_GET['s']) && !empty($_GET['s'])) {
+    $_sort = trim($_GET['s']);
+    $_sort = Summoner::validate($_sort,'nospace') ? $_sort : false;
+}
+
+$_sortDirection = false;
+if(isset($_GET['sd']) && !empty($_GET['sd'])) {
+    $_sortDirection = trim($_GET['sd']);
+    $_sortDirection = Summoner::validate($_sortDirection,'nospace') ? $_sortDirection : false;
 }
 
 $linkCollection = array();
@@ -49,13 +64,27 @@ $categoryCollection = array();
 $pagination = array('pages' => 0);
 $displayEditButton = false;
 $isAwm = false;
+$sortLink = array();
 
 if(Summoner::simpleAuthCheck() === true) {
 	$displayEditButton = true;
 }
 
+$sortLink['active'] = 'default';
+$sortLink['activeDirection'] = false;
+
+if(!empty($_sort) && $_sort === 'name') {
+    $currentGetParameters['s'] = 'name';
+    $sortLink['active'] = 'name';
+}
+if(!empty($_sortDirection) && $_sortDirection === 'asc') {
+    $currentGetParameters['sd'] = 'asc';
+    $sortLink['activeDirection'] = true;
+}
+
 switch($_requestMode) {
 	case 'tag':
+        $currentGetParameters['m'] = 'tag';
 		if(!empty($_id)) {
             $tagObj = new Tag($DB);
             $tagObj->initbyid($_id);
@@ -63,6 +92,8 @@ switch($_requestMode) {
             $subHeadline = $tagname.' <i class="ion-md-pricetag"></i>';
 
 			$linkCollection = $Management->linksByTag($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+
+            $currentGetParameters['id'] = $_id;
 		}
 		else {
 			# show all the tags we have
@@ -71,12 +102,16 @@ switch($_requestMode) {
 		}
 	break;
 	case 'category':
+        $currentGetParameters['m'] = 'category';
 		if(!empty($_id)) {
             $catObj = new Category($DB);
             $catObj->initbyid($_id);
             $catname = $catObj->getData('name');
             $subHeadline = $catname.' <i class="ion-md-filing"></i>';
+
 			$linkCollection = $Management->linksByCategory($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+
+            $currentGetParameters['id'] = $_id;
 		}
 		else {
 			# show all the categories we have
@@ -85,10 +120,12 @@ switch($_requestMode) {
 		}
 	break;
 	case 'awm':
+        $currentGetParameters['m'] = 'awm';
 		Summoner::simpleAuth();
 		$isAwm = true;
 		$subHeadline = 'Awaiting moderation';
 		$Management->setShowAwm(true);
+
 		$linkCollection = $Management->links(RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
 	break;
 	case 'all':
@@ -96,13 +133,12 @@ switch($_requestMode) {
 		# show all
 		$linkCollection = $Management->links(RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
 }
+
 if(!empty($linkCollection['amount'])) {
 	$pagination['pages'] = ceil($linkCollection['amount'] / RESULTS_PER_PAGE);
 	$pagination['curPage'] = $_curPage;
-	$pagination['linkadd'] = '&m='.$_requestMode;
-	if(!empty($_id)) {
-		$pagination['linkadd'] .= '&id='.$_id;
-	}
+
+    $currentGetParameters['page'] = $_curPage;
 }
 
 if($pagination['pages'] > 11) {
@@ -123,3 +159,7 @@ if($pagination['pages'] > 11) {
 else {
 	$pagination['visibleRange'] = range(1,$pagination['pages']);
 }
+
+$sortLink['default'] = Summoner::createFromParameterLinkQuery($currentGetParameters,array('s'=>false,'sd'=>false));
+$sortLink['name'] = Summoner::createFromParameterLinkQuery($currentGetParameters,array('s'=>'name','sd'=>false));
+$sortLink['direction'] = Summoner::createFromParameterLinkQuery($currentGetParameters,array('sd'=>'asc'));
