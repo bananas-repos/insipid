@@ -299,17 +299,21 @@ class Management {
 		return $ret;
 	}
 
-	/**
-	 * find all links by given tag string or id.
-	 * Return array sorted by creation date DESC
-	 * @param int $id
-	 * @param string $string
-	 * @param int $limit
-	 * @param bool $offset
-	 * @return array
-	 */
-	public function linksByTag($id, $string, $limit=5, $offset=false) {
+    /**
+     * find all links by given tag string or id.
+     * Return array sorted by creation date DESC
+     * @param int $id Tag id
+     * @param string $string Tag as string
+     * @param array $options Array with limit|offset|sort|sortDirection
+     * @return array
+     */
+	public function linksByTag($id, $string, $options=array()) {
 		$ret = array();
+
+        if(!isset($options['limit'])) $options['limit'] = 5;
+        if(!isset($options['offset'])) $options['offset'] = false;
+        if(!isset($options['sort'])) $options['sort'] = false;
+        if(!isset($options['sortDirection'])) $options['sortDirection'] = false;
 
 		$querySelect = "SELECT ".self::COMBINED_SELECT_VALUES;
 		$queryFrom = " FROM `".DB_PREFIX."_combined` AS t";
@@ -324,16 +328,32 @@ class Management {
 			return $ret;
 		}
 
-		$queryOrder = "GROUP BY t.hash
-			ORDER BY t.created DESC";
-		$queryLimit = '';
-		if(!empty($limit)) {
-			$queryLimit .= " LIMIT $limit";
-			if($offset !== false) {
-				$queryLimit .= " OFFSET $offset";
-			}
-		}
-		$query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
+        $queryGroup = " GROUP BY t.hash";
+        $queryOrder = " ORDER BY";
+        if(!empty($options['sort'])) {
+            $queryOrder .= ' t.'.$options['sort'];
+        }
+        else {
+            $queryOrder .= " t.created";
+        }
+        if(!empty($options['sortDirection'])) {
+            $queryOrder .= ' '.$options['sortDirection'];
+        }
+        else {
+            $queryOrder .= " DESC";
+        }
+
+        $queryLimit = '';
+        # this allows the set the limit to false
+        if(!empty($options['limit'])) {
+            $queryLimit .= " LIMIT ".$options['limit'];
+            # offset can be 0
+            if($options['offset'] !== false) {
+                $queryLimit .= " OFFSET ".$options['offset'];
+            }
+        }
+        $query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryGroup.$queryOrder.$queryLimit);
+        
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);

@@ -93,6 +93,7 @@
         <?php } ?>
         </div>
         <div class="column is-half">
+            <?php if(!empty($linkCollection['results'])) { ?>
             <div class="is-pulled-right">
                 <a href="index.php?<?php echo $sortLink['default']; ?>"
                    class="button is-small <?php if($sortLink['active'] === 'default') { ?>is-link<?php } ?>">default</a>
@@ -101,6 +102,7 @@
                 <a href="index.php?<?php echo $sortLink['direction']; ?>"
                    class="button is-small <?php if($sortLink['activeDirection'] === true) { ?>is-link<?php } ?>"><span class="icon"><i class="ion-md-arrow-dropup"></i></span></a>
             </div>
+            <?php } ?>
         </div>
     </div>
 </section>

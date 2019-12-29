@@ -73,17 +73,20 @@ if(Summoner::simpleAuthCheck() === true) {
 $sortLink['active'] = 'default';
 $sortLink['activeDirection'] = false;
 
-$_saveSort = false;
+$_LinkColllectionQueryOptions = array(
+    'limit' => RESULTS_PER_PAGE,
+    'offset' =>(RESULTS_PER_PAGE * ($_curPage-1))
+);
+
 if(!empty($_sort) && $_sort === 'title') {
     $currentGetParameters['s'] = 'title';
     $sortLink['active'] = 'title';
-    $_saveSort = 'title';
+    $_LinkColllectionQueryOptions['sort'] = 'title';
 }
-$_saveSortDirection = false;
 if(!empty($_sortDirection) && $_sortDirection === 'asc') {
     $currentGetParameters['sd'] = 'asc';
     $sortLink['activeDirection'] = true;
-    $_saveSortDirection = 'asc';
+    $_LinkColllectionQueryOptions['sortDirection'] = 'asc';
 }
 
 switch($_requestMode) {
@@ -95,7 +98,7 @@ switch($_requestMode) {
             $tagname = $tagObj->getData('name');
             $subHeadline = $tagname.' <i class="ion-md-pricetag"></i>';
 
-			$linkCollection = $Management->linksByTag($_id,false,RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+			$linkCollection = $Management->linksByTag($_id,'', $_LinkColllectionQueryOptions);
 
             $currentGetParameters['id'] = $_id;
 		}
@@ -113,14 +116,7 @@ switch($_requestMode) {
             $catname = $catObj->getData('name');
             $subHeadline = $catname.' <i class="ion-md-filing"></i>';
 
-            $_options = array(
-                'limit' => RESULTS_PER_PAGE,
-                'offset' =>(RESULTS_PER_PAGE * ($_curPage-1))
-            );
-            if(!empty($_saveSort)) $_options['sort'] = $_saveSort;
-            if(!empty($_saveSortDirection)) $_options['sortDirection'] = $_saveSortDirection;
-
-			$linkCollection = $Management->linksByCategory($_id,'',$_options);
+			$linkCollection = $Management->linksByCategory($_id,'', $_LinkColllectionQueryOptions);
 
             $currentGetParameters['id'] = $_id;
 		}
