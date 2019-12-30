@@ -1,3 +1,7 @@
-If you are updating from a previous version:
+If you are updating from a previous version make sure every update info from the version
+your are updating from is done.
 
-2.3 -> x.x
+x.x
++ Run (after authentication) at /index.php?p=stats the "Search index update" to make the
+search work again correctly. At success, there is no confirmation. To validate you can now search
+for single words case-insensitive.

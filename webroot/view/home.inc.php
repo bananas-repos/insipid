@@ -54,6 +54,7 @@ if((isset($_POST['password']) && !empty($_POST['password'])) || (isset($_POST['u
 # search or new one.
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch']) && $honeypotCheck === false) {
 	$searchValue = trim($_POST['data']['searchfield']);
+	$searchValue = strtolower($searchValue);
 	$isUrl = Summoner::validate($searchValue,'url');
 	if($isUrl === true) {
 		# search for URL
@@ -129,6 +130,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 		$search .= ' '.implode(" ",$tagArr);
 		$search .= ' '.implode(" ",$catArr);
 		$search .= trim($search);
+		$search = strtolower($search);
 
 		$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 

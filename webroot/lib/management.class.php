@@ -463,7 +463,7 @@ class Management {
 				MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE) AS score
 				FROM `".DB_PREFIX."_link` AS t
 				WHERE MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE)";
-			$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
+			$queryStr .= " AND ".$this->_decideLinkTypeForQuery();
 			$queryStr .= " ORDER BY score DESC";
 
 			$query = $this->DB->query($queryStr);
@@ -652,7 +652,9 @@ class Management {
 	 * for simpler management we have the search data in a separate column
 	 * it is not fancy or even technical nice but it damn works
 	 */
-	private function _updateSearchIndex() {
+	public function updateSearchIndex() {
+	    $ret = false;
+
 		$allLinks = array();
 		$queryStr = "SELECT hash FROM `".DB_PREFIX."_link`";
 		$query = $this->DB->query($queryStr);
@@ -667,12 +669,10 @@ class Management {
 
 				$searchStr = $l['title'];
 				$searchStr .= ' '.$l['description'];
-				foreach($l['tags'] as $t) {
-					$searchStr .= ' '.$t['tag'];
-				}
-				foreach($l['categories'] as $c) {
-					$searchStr .= ' '.$c['category'];
-				}
+				$searchStr .= ' '.implode(' ',$l['tags']);
+                $searchStr .= ' '.implode(' ',$l['categories']);
+                $searchStr = trim($searchStr);
+                $searchStr = strtolower($searchStr);
 
 				# now update the search string
 				$queryStr = "UPDATE `".DB_PREFIX."_link`
@@ -683,7 +683,11 @@ class Management {
 
 				unset($LinkObj,$l,$searchStr,$t,$c,$queryStr);
 			}
+
+			$ret = true;
 		}
+
+		return $ret;
 	}
 
 	/**

@@ -87,6 +87,13 @@
                 <input type="submit" class="button is-info is-small" value="Create backup" name="statsCreateDBBackup">
             </form>
         </div>
+        <div class="column is-one-quarter">
+            <h4 class="is-size-4">Search index</h4>
+            <p>Update search index</p>
+            <form method="post">
+                <input type="submit" class="button is-info is-small" value="Update index" name="statsUpdateSearchIndex">
+            </form>
+        </div>
 		<?php } ?>
 	</div>
 </section>

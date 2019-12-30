@@ -135,11 +135,12 @@ class Link {
 		$this->load($this->_data['hash']);
 	}
 
-	/**
-	 * create a new link with the given data
-	 * @param array $data
-	 * @return boolean|int
-	 */
+    /**
+     * create a new link with the given data
+     * @param array $data
+     * @param bool $returnId
+     * @return boolean|int
+     */
 	public function create($data, $returnId = false) {
 		$ret = false;
 
@@ -181,9 +182,11 @@ class Link {
 			$tagArr = Summoner::prepareTagOrCategoryStr($data['tag']);
 
 			$search = $data['title'];
-			$search .= ' ' . $data['description'];
-			$search .= ' ' . implode(" ", $tagArr);
-			$search .= ' ' . implode(" ", $catArr);
+			$search .= ' '.$data['description'];
+			$search .= ' '.implode(" ", $tagArr);
+			$search .= ' '.implode(" ", $catArr);
+            $search = trim($search);
+			$search = strtolower($search);
 
 			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 

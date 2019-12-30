@@ -56,6 +56,19 @@ if(isset($_POST['statsCreateDBBackup'])) {
     exit();
 }
 
+if(isset($_POST['statsUpdateSearchIndex'])) {
+
+    if($Management->updateSearchIndex() === true) {
+        $TemplateData['refresh'] = 'index.php?p=stats';
+    }
+    else {
+        $submitFeedback['message'] = 'Something went wrong while search index update';
+        $submitFeedback['status'] = 'error';
+    }
+}
+
+
+
 $linkAmount = $Management->linkAmount();
 $tagAmount = $Management->tagAmount();
 $categoryAmount = $Management->categoryAmount();

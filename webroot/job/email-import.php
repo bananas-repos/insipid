@@ -181,6 +181,7 @@ if(!empty($emails)) {
 				$newdata['search'] .= ' '.implode(" ",$newdata['tagArr']);
 				$newdata['search'] .= ' '.implode(" ",$newdata['catArr']);
 				$newdata['search'] = trim($newdata['search']);
+                $newdata['search'] = strtolower($newdata['search']);
 
 				if(DEBUG === true) var_dump($newdata);
 
