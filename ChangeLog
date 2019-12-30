@@ -5,6 +5,7 @@ version x.x - Guardian of Steel (tba)
     ++ Done by uncheck the store image locally option
     + Sorting in category overview
     + Sorting in tag overview
+    + Simple complete DB dump as download as backup solution
     + Fixed a bug in tag selection SQL query
 
 version 2.2 - Guardian of Ice - (2019-02-27)

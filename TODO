@@ -1,5 +1,6 @@
 TODO / Feature list
-+ backup. Complete and single
++ Export and import if your data
++ DB backup on the tables used in insipid and not whole db
 + snapshots
 + bookmark js snippet
 + theme support

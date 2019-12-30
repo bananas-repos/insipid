@@ -80,6 +80,13 @@
                 <input type="submit" class="button is-info is-small" value="Delete all" name="statsDeleteLocalStorage">
             </form>
 		</div>
+        <div class="column is-one-quarter">
+            <h4 class="is-size-4">Full DB backup</h4>
+            <p>Create a complete DB export from your data.</p>
+            <form method="post">
+                <input type="submit" class="button is-info is-small" value="Create backup" name="statsCreateDBBackup">
+            </form>
+        </div>
 		<?php } ?>
 	</div>
 </section>

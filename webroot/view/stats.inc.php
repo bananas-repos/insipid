@@ -34,13 +34,26 @@ if(Summoner::simpleAuthCheck() === true) {
 if(isset($_POST['statsDeleteLocalStorage'])) {
 
     if($Management->clearLocalStorage() === true) {
-        
         $TemplateData['refresh'] = 'index.php?p=stats';
     }
     else {
         $submitFeedback['message'] = 'Something went wrong while storage cleaning';
         $submitFeedback['status'] = 'error';
     }
+}
+
+if(isset($_POST['statsCreateDBBackup'])) {
+    require_once 'lib/Mysqldump.php';
+    $backupTmpFile = tempnam(sys_get_temp_dir(),'inspid');
+
+    $dump = new Ifsnop\Mysqldump\Mysqldump('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USERNAME, DB_PASSWORD);
+    $dump->start($backupTmpFile);
+
+    header('Content-Type: application/octet-stream');
+    header("Content-Transfer-Encoding: Binary");
+    header("Content-disposition: attachment; filename=inspid-db-backup-full.sql");
+    readfile($backupTmpFile);
+    exit();
 }
 
 $linkAmount = $Management->linkAmount();
