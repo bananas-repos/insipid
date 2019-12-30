@@ -353,7 +353,7 @@ class Management {
             }
         }
         $query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryGroup.$queryOrder.$queryLimit);
-        
+
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);

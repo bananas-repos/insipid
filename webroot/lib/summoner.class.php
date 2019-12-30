@@ -564,7 +564,7 @@ class Summoner {
      * http_build_query with modify array
      * modify will add: key AND value not empty
      * modify will remove: only key with no value
-     * 
+     *
      * @param $array
      * @param bool $modify
      * @return string
