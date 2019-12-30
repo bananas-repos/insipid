@@ -221,7 +221,7 @@
 <?php
 	if(!empty($orderedCategories)) {
 		foreach ($orderedCategories as $k=>$v) {
-			$links = $Management->linksByCategory($v['id'],false);
+			$links = $Management->linksByCategory($v['id'],'');
 ?>
 		<div class="column is-one-quarter">
 			<div class="content">

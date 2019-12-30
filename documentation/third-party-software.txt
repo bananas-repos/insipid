@@ -1,0 +1,1 @@
+Inispid uses https://github.com/ifsnop/mysqldump-php as a simple complete DB dump as backup strategy

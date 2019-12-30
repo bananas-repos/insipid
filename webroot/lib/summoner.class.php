@@ -111,7 +111,6 @@ class Summoner {
 
 		$value = preg_replace($pattern, '', $input);
 
-		#if($input === $value) {
 		if($value === "") {
 			$ret = true;
 		}
@@ -559,5 +558,35 @@ class Summoner {
             }
             return true;
         }
+    }
+
+    /**
+     * http_build_query with modify array
+     * modify will add: key AND value not empty
+     * modify will remove: only key with no value
+     *
+     * @param $array
+     * @param bool $modify
+     * @return string
+     */
+    static function createFromParameterLinkQuery($array,$modify=false) {
+        $ret = '';
+
+        if(!empty($modify)) {
+            foreach($modify as $k=>$v) {
+                if(empty($v)) {
+                    unset($array[$k]);
+                }
+                else {
+                    $array[$k] = $v;
+                }
+            }
+        }
+
+        if(!empty($array)) {
+            $ret = http_build_query($array);
+        }
+
+        return $ret;
     }
 }
