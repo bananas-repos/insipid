@@ -160,6 +160,7 @@ class Mysqldump
             'skip-dump-date' => false,
             'skip-definer' => false,
             'where' => '',
+            'include-views' => array(),
             /* deprecated */
             'disable-foreign-keys-check' => true
         );
@@ -197,7 +198,7 @@ class Mysqldump
         }
 
         // Dump the same views as tables, mimic mysqldump behaviour
-        $this->dumpSettings['include-views'] = $this->dumpSettings['include-tables'];
+        //$this->dumpSettings['include-views'] = $this->dumpSettings['include-tables'];
 
         // Create a new compressManager to manage compressed output
         $this->compressManager = CompressManagerFactory::create($this->dumpSettings['compress']);
