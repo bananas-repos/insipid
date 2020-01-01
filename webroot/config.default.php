@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -50,6 +50,12 @@ define("USE_PAGE_AUTH",false);
 # results per page
 define("RESULTS_PER_PAGE",12);
 
+# if the location of email-import.php needs to be in a web accessible folder
+# you can protect it by setting EMAIL_JOB_PROTECT to true
+# and EMAIL_JOB_PROTECT_SECRET to a special secret string
+# AND remove the default provided .htaccess file in the job folder
+define('EMAIL_JOB_PROTECT', false); # Default false
+define('EMAIL_JOB_PROTECT_SECRET', 'YOUR_SOME_SECRET_STRING'); # Your own secret string
 # settings for importing from e-mail
 # SSL/TLS only
 # IMAP (reading), SMTP (sending)

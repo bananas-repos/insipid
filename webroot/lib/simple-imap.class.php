@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * simple IMAP SSL/TLS email connection based on the imap PHP functions
  * the code supports SSL/TLS and IMAP only

@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -45,6 +45,29 @@ else {
 }
 
 require('../config.php');
+
+// if the file needs to be in a web accessible folder
+// you can either use the provided htaccess file
+// or active the "protection" with a secret given by URL / cli param
+if(defined('EMAIL_JOB_PROTECT') && EMAIL_JOB_PROTECT === true
+    && defined('EMAIL_JOB_PROTECT_SECRET')) {
+
+    $_hiddenSouce = false;
+
+    $cliOptions = getopt("",array("hiddenSouce::"));
+    if(!empty($cliOptions)) {
+        $_hiddenSouce = trim($cliOptions['hiddenSouce']);
+    }
+    elseif(isset($_GET['hiddenSouce']) && !empty($_GET['hiddenSouce'])) {
+        $_hiddenSouce = trim($_GET['hiddenSouce']);
+    }
+
+    if($_hiddenSouce !== EMAIL_JOB_PROTECT_SECRET) {
+        error_log('ERROR Required param wrong.');
+        exit("401\n");
+    }
+}
+
 require('../lib/summoner.class.php');
 require('../lib/tag.class.php');
 require('../lib/category.class.php');
