@@ -26,6 +26,10 @@
  *
  */
 
+/**
+ * Simple Class ImportExport used to create and process a xml file
+ * Different from the complete mysql dump
+ */
 class ImportExport {
 
 	private $_currentXW;

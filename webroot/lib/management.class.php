@@ -649,7 +649,7 @@ class Management {
 	}
 
 	/**
-	 * Export given link for download and later import
+	 * Export given link for download as a xml file
 	 * @param $hash
 	 * @param bool $linkObj Use already existing link obj
 	 * @return bool
