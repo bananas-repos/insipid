@@ -150,6 +150,12 @@
 				</span>
 				<span>Edit</span>
 			</a>
+            <a href="index.php?p=editlink&id=<?php echo $linkData['hash']; ?>&m=export" class="button is-small is-success">
+				<span class="icon">
+					<i class="ion-md-download"></i>
+				</span>
+                <span>Export</span>
+            </a>
 		</div>
 	</div>
 	<?php } ?>

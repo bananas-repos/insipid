@@ -586,9 +586,9 @@ class Management {
 	/**
 	 * Load link by given hash. Do not use Link class directly.
 	 * Otherwise the authentication will be ignored.
-	 * @param $hash
-	 * @param bool $fullInfo
-	 * @param $withObject
+	 * @param String $hash  Link hash
+	 * @param bool $fullInfo Load all the info we have
+	 * @param bool $withObject An array with data and the link obj itself
 	 * @return array|mixed
 	 */
 	public function loadLink($hash,$fullInfo=true,$withObject=false) {
@@ -643,6 +643,35 @@ class Management {
 					$ret = true;
 				}
 			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Export given link for download and later import
+	 * @param $hash
+	 * @param bool $linkObj Use already existing link obj
+	 * @return bool
+	 */
+	public function exportLinkData($hash,$linkObj=false) {
+		$ret = false;
+
+		if (!empty($hash)) {
+			$linkData = $this->loadLink($hash, true, true);
+			if (!empty($linkData)) {
+				$data = $linkData;
+			}
+		}
+		elseif(!empty($linkObj) && is_a($linkObj,'Link')) {
+			$data = $linkObj->getData();
+		}
+
+		if(!empty($data) && isset($data['link'])) {
+
+			require_once 'lib/import-export.class.php';
+			$ImEx = new ImportExport();
+			$ret = $ImEx->createSingleLinkExportXML($data);
 		}
 
 		return $ret;
