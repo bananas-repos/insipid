@@ -668,7 +668,6 @@ class Management {
 		}
 
 		if(!empty($data) && isset($data['link'])) {
-
 			require_once 'lib/import-export.class.php';
 			$ImEx = new ImportExport();
 			$ret = $ImEx->createSingleLinkExportXML($data);

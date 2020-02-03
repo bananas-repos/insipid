@@ -68,7 +68,6 @@ if($_isAwm === true) {
 
 if($_requestMode && $_requestMode == "export") {
 	$_i = $linkObj->getData('id');
-	$_i = false;
 	if(!empty($_i)) {
 
 		$exportFilename = 'inspid-single-export-'.$_i.'.xml';
