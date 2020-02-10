@@ -27,6 +27,9 @@
  */
 ?>
 <section class="section">
+
+	<?php require('_displaySubmitStatus.inc.php'); ?>
+
 	<div class="columns">
 		<div class="column">
 			<p class="has-text-right">
@@ -92,6 +95,34 @@
             <p>Update search index</p>
             <form method="post">
                 <input type="submit" class="button is-info is-small" value="Update index" name="statsUpdateSearchIndex">
+            </form>
+        </div>
+        <div class="column is-one-quarter">
+            <h4 class="is-size-4">Import XML</h4>
+            <p>Single or multiple</p>
+            <form method="post" enctype="multipart/form-data">
+                <div class="file">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="importxmlfile">
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="ion-md-cloud-upload"></i>
+                            </span>
+                            <span class="file-label">
+                                Choose a file…
+                            </span>
+                        </span>
+                    </label>
+                </div>
+                <div class="field">
+                    <label class="checkbox">
+                        <input type="checkbox" value="overwrite" name="importOverwrite">
+                        Overwrite existing
+                    </label>
+                </div>
+                <div class="field">
+                    <input type="submit" class="button is-info is-small" value="Import" name="statsImportXML">
+                </div>
             </form>
         </div>
 		<?php } ?>

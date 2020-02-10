@@ -78,6 +78,26 @@ if(isset($_POST['statsCreateDBBackup'])) {
     exit();
 }
 
+if(isset($_POST['statsImportXML'])) {
+	$_options = array();
+
+	if(isset($_FILES['importxmlfile']) && !empty($_FILES['importxmlfile'])) {
+		$do = $Management->processImportFile($_FILES['importxmlfile'], $_options);
+		if(isset($do['status']) && $do['status'] === 'success') {
+			$submitFeedback['status'] = 'success';
+			$submitFeedback['message'] = $do['message'];
+		}
+		else {
+			$submitFeedback['message'] = $do['message'];
+			$submitFeedback['status'] = 'error';
+		}
+	}
+	else {
+		$submitFeedback['message'] = 'Please provide a import file';
+		$submitFeedback['status'] = 'error';
+	}
+}
+
 if(isset($_POST['statsUpdateSearchIndex'])) {
 
     if($Management->updateSearchIndex() === true) {

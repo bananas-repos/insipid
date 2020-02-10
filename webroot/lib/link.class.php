@@ -175,7 +175,7 @@ class Link {
 
 		$ret = false;
 
-		if (isset($data['title']) && !empty($data['title'])) {
+		if (isset($data['title']) && !empty($data['title']) && !empty($this->_data)) {
 
 			# categories and tag stuff
 			$catArr = Summoner::prepareTagOrCategoryStr($data['category']);
@@ -203,7 +203,6 @@ class Link {
 							`image` = '" . $this->DB->real_escape_string($data['image']) . "',
 							`search` = '" . $this->DB->real_escape_string($search) . "'
 						  WHERE `hash` = '" . $this->DB->real_escape_string($this->_data['hash']) . "'";
-
 			$query = $this->DB->query($queryStr);
 
 			if ($query !== false) {

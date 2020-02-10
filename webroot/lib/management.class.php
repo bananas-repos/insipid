@@ -718,6 +718,51 @@ class Management {
 		return $ret;
 	}
 
+
+	public function processImportFile($file, $options) {
+		$ret = array(
+			'status' => 'error',
+			'message' => 'Processing error'
+		);
+
+		$links = array();
+		require_once 'lib/import-export.class.php';
+		$ImEx = new ImportExport();
+		try {
+			$ImEx->loadImportFile($file);
+			$links = $ImEx->parseImportFile();
+		}
+		catch (Exception $e) {
+			$ret['message'] = $e->getMessage();
+		}
+
+		$_existing = 0;
+		$_new = 0;
+		if(!empty($links)) {
+			$_amount = count($links);
+			foreach($links as $linkToImport) {
+				if($this->_linkExistsById($linkToImport['id'])) {
+					$linkObj = new Link($this->DB);
+					$linkObj->load($linkToImport['hash']);
+					$do = $linkObj->update($linkToImport);
+					$_existing++;
+				}
+				else {
+					$_new++;
+					var_dump('new one');
+				}
+				//var_dump($linkToImport);
+			}
+			$ret = array(
+				'status' => 'success',
+				'message' => "Found $_amount link(s) to import. $_existing existing and $_new new one(s)."
+			);
+
+		}
+
+		return $ret;
+	}
+
 	/**
 	 * Return the query string for the correct status type
 	 * @return string
@@ -734,6 +779,22 @@ class Management {
 			default:
 				$ret = "t.status = 2";
 		}
+		return $ret;
+	}
+
+	private function _linkExistsById($id) {
+		$ret = false;
+
+		if(!empty($id)) {
+			$queryStr = "SELECT `id` 
+							FROM `" . DB_PREFIX . "_link` 
+							WHERE `id` = '" . $this->DB->real_escape_string($id) . "'";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$ret = true;
+			}
+		}
+
 		return $ret;
 	}
 }

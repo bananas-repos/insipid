@@ -2,6 +2,8 @@ TODO / Feature list
 + Export and import of your data
 + snapshots
 + bookmark js snippet
++ translation support
++ stats cleanup. Management functions should be standalone
 + theme support
 + more "secure" user authentication
 ++ multiple user accounts and stuff

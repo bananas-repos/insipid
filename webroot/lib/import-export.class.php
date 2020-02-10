@@ -32,7 +32,18 @@
  */
 class ImportExport {
 
+	/**
+	 * @var String The current memory xmlwriter
+	 */
 	private $_currentXW;
+
+	private $_xmlImportXSD = 'lib/xmlimport.xsd';
+
+
+	/**
+	 * @var
+	 */
+	private $_uploadedData;
 
 	public function __construct() {
 	}
@@ -49,6 +60,7 @@ class ImportExport {
 		xmlwriter_set_indent($this->_currentXW, 1);
 		xmlwriter_set_indent_string($this->_currentXW, ' ');
 		xmlwriter_start_document($this->_currentXW, '1.0', 'UTF-8');
+		xmlwriter_start_element($this->_currentXW, 'root');
 
 		xmlwriter_start_element($this->_currentXW, 'insipidlink');
 
@@ -77,6 +89,12 @@ class ImportExport {
 		xmlwriter_start_element($this->_currentXW, 'hash');
 		xmlwriter_start_cdata($this->_currentXW);
 		xmlwriter_text($this->_currentXW, $data['hash']);
+		xmlwriter_end_cdata($this->_currentXW);
+		xmlwriter_end_element($this->_currentXW);
+
+		xmlwriter_start_element($this->_currentXW, 'image');
+		xmlwriter_start_cdata($this->_currentXW);
+		xmlwriter_text($this->_currentXW, $data['image']);
 		xmlwriter_end_cdata($this->_currentXW);
 		xmlwriter_end_element($this->_currentXW);
 
@@ -114,11 +132,111 @@ class ImportExport {
 		xmlwriter_end_cdata($this->_currentXW);
 		xmlwriter_end_element($this->_currentXW);
 
+		xmlwriter_start_element($this->_currentXW, 'status');
+		xmlwriter_start_cdata($this->_currentXW);
+		xmlwriter_text($this->_currentXW, $data['status']);
+		xmlwriter_end_cdata($this->_currentXW);
+		xmlwriter_end_element($this->_currentXW);
+
 
 		xmlwriter_end_element($this->_currentXW); // insipidlink
+
+		xmlwriter_end_element($this->_currentXW); // root
 		xmlwriter_end_document($this->_currentXW); // document
 
 		return xmlwriter_output_memory($this->_currentXW);
+	}
+
+	/**
+	 * @param $file array $_FILES array. Just check if everything is there
+	 * and put it into _uploadedData
+	 * @throws Exception
+	 */
+	public function loadImportFile($file) {
+
+		if(!isset($file['name'])
+			|| !isset($file['type'])
+			|| !isset($file['size'])
+			|| !isset($file['tmp_name'])
+			|| !isset($file['error'])
+		) {
+			throw new Exception('Invalid Upload');
+		}
+
+		$workWith = $file['tmp_name'];
+		if(!empty($workWith)) {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mime = finfo_file($finfo, $workWith);
+			finfo_close($finfo);
+			if($mime != 'text/xml') {
+				throw new Exception('Invalid mime type');
+			}
+		} else {
+			throw new Exception('Invalid file upload information');
+		}
+
+		// now validate the xml file
+		$this->_uploadedData = file_get_contents($file['tmp_name']);
+
+		if(!empty($this->_uploadedData)) {
+			$_valid = $this->_validateXMLImport();
+			if($_valid !== true) {
+				$this->_uploadedData = '';
+				throw new Exception('Invalid xml format: '.$_valid);
+			}
+		}
+		else {
+			$this->_uploadedData = '';
+			throw new Exception('Empty upload file?');
+		}
+	}
+
+	/**
+	 * parse the data from _uploadedData and create an array we can use
+	 * @return array
+	 * @throws Exception
+	 */
+	public function parseImportFile() {
+		$ret = array();
+
+		if(!empty($this->_uploadedData)) {
+			$xml = simplexml_load_string($this->_uploadedData, "SimpleXMLElement", LIBXML_NOCDATA);
+			if(!empty($xml->insipidlink)) {
+				foreach($xml->insipidlink as $linkEntry) {
+					$_id = (string)$linkEntry->attributes()->id;
+					$ret[$_id]['id'] = $_id;
+					$ret[$_id]['link'] = (string)$linkEntry->link;
+					$ret[$_id]['description'] = (string)$linkEntry->description;
+					$ret[$_id]['title'] = (string)$linkEntry->title;
+					$ret[$_id]['hash'] = (string)$linkEntry->hash;
+					$ret[$_id]['created'] = (string)$linkEntry->created;
+					$ret[$_id]['updated'] = (string)$linkEntry->updated;
+					$ret[$_id]['private'] = (string)$linkEntry->status;
+					$ret[$_id]['image'] = (string)$linkEntry->image;
+
+					if($linkEntry->categories->count() > 0) {
+						$ret[$_id]['category'] = '';
+						foreach ($linkEntry->categories->category as $cat) {
+							$_cname = (string)$cat;
+							$ret[$_id]['category'] .= $_cname.",";
+						}
+					}
+
+					if($linkEntry->tags->count() > 0) {
+						$ret[$_id]['tag'] = '';
+						foreach ($linkEntry->tags->tag as $tag) {
+							$_tname = (string)$tag;
+							$ret[$_id]['tag'] .= $_tname.",";
+						}
+					}
+				}
+			}
+		}
+		else {
+			throw new Exception('Empty xml data. LoadImportFile needs to be called first.');
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -142,5 +260,48 @@ class ImportExport {
 
 			xmlwriter_end_element($this->_currentXW);
 		}
+	}
+
+	/**
+	 * validate an import of a export xml with the
+	 * saved xsd file _xmlImportXSD
+	 * @return bool|string
+	 */
+	private function _validateXMLImport() {
+		$ret = false;
+		$xmlReader = new XMLReader();
+		$xmlReader->XML($this->_uploadedData);
+		if(!empty($xmlReader)) {
+			$xmlReader->setSchema($this->_xmlImportXSD);
+			libxml_use_internal_errors(true);
+			while($xmlReader->read()) {
+				if (!$xmlReader->isValid()) {
+					$ret = $this->_xmlErrors();
+					break;
+				} else {
+					$ret = true;
+					break;
+				}
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Reads libxml_get_errors and creates a simple string with all
+	 * the info we need.
+	 * @return string
+	 */
+	private function _xmlErrors() {
+		$errors = libxml_get_errors();
+		$result = array();
+		foreach ($errors as $error) {
+			$errorString = "Error $error->code in $error->file (Line:{$error->line}):";
+			$errorString .= trim($error->message);
+			$result[] = $errorString;
+		}
+		libxml_clear_errors();
+		return implode("\n",$result);
 	}
 }
