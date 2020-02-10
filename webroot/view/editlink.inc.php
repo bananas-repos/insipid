@@ -95,6 +95,8 @@ if($_requestMode && $_requestMode == "export") {
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink'])) {
 	$fData = $_POST['data'];
 
+	var_dump($fData);
+
 	$formData['private'] = 2;
 	if(isset($fData['private'])) {
 		$formData['private'] = 1;
@@ -162,23 +164,6 @@ elseif(isset($_POST['deleteLink'])) {
 }
 
 $formData = $linkData;
-# prepare the tag string
-$formData['tag'] = '';
-if(!empty($linkData['tags'])) {
-	foreach($linkData['tags'] as $k=>$v) {
-		$formData['tag'] .= $v.',';
-	}
-	$formData['tag'] = trim($formData['tag']," ,");
-}
-
-# prepare the category string
-$formData['category'] = '';
-if(!empty($linkData['categories'])) {
-	foreach($linkData['categories'] as $k=>$v) {
-		$formData['category'] .= $v.',';
-	}
-	$formData['category'] = trim($formData['category']," ,");
-}
 
 $existingCategories = $Management->categories();
 $existingTags = $Management->tags();
