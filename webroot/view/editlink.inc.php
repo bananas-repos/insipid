@@ -95,8 +95,6 @@ if($_requestMode && $_requestMode == "export") {
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink'])) {
 	$fData = $_POST['data'];
 
-	var_dump($fData);
-
 	$formData['private'] = 2;
 	if(isset($fData['private'])) {
 		$formData['private'] = 1;
