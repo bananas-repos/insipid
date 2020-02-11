@@ -719,6 +719,13 @@ class Management {
 	}
 
 
+	/**
+	 * process the given xml file. Based on the export file
+	 * options are overwrite => true|false
+	 * @param $file
+	 * @param $options
+	 * @return array
+	 */
 	public function processImportFile($file, $options) {
 		$ret = array(
 			'status' => 'error',
@@ -742,20 +749,27 @@ class Management {
 			$_amount = count($links);
 			foreach($links as $linkToImport) {
 				if($this->_linkExistsById($linkToImport['id'])) {
-					$linkObj = new Link($this->DB);
-					$linkObj->load($linkToImport['hash']);
-					$do = $linkObj->update($linkToImport);
+					if(isset($options['overwrite']) && $options['overwrite'] === true) {
+						$linkObj = new Link($this->DB);
+						$linkObj->load($linkToImport['hash']);
+						$do = $linkObj->update($linkToImport);
+					}
 					$_existing++;
 				}
 				else {
 					$_new++;
 					var_dump('new one');
 				}
-				//var_dump($linkToImport);
+			}
+			if(isset($options['overwrite']) && $options['overwrite'] === true) {
+				$_msg = "Found $_amount link(s) to import. Overwritten $_existing existing and imported $_new new one(s).";
+			}
+			else {
+				$_msg = "Found $_amount link(s) to import. Skipped $_existing existing and imported $_new new one(s).";
 			}
 			$ret = array(
 				'status' => 'success',
-				'message' => "Found $_amount link(s) to import. $_existing existing and $_new new one(s)."
+				'message' => $_msg
 			);
 
 		}
@@ -782,6 +796,11 @@ class Management {
 		return $ret;
 	}
 
+	/**
+	 * Check if given id (not hash) exists in link database
+	 * @param $id
+	 * @return bool
+	 */
 	private function _linkExistsById($id) {
 		$ret = false;
 

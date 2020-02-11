@@ -82,6 +82,12 @@ if(isset($_POST['statsImportXML'])) {
 	$_options = array();
 
 	if(isset($_FILES['importxmlfile']) && !empty($_FILES['importxmlfile'])) {
+
+		$_options['overwrite'] = false;
+		if(isset($_POST['importOverwrite'])) {
+			$_options['overwrite'] = true;
+		}
+
 		$do = $Management->processImportFile($_FILES['importxmlfile'], $_options);
 		if(isset($do['status']) && $do['status'] === 'success') {
 			$submitFeedback['status'] = 'success';
