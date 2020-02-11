@@ -10,4 +10,4 @@ To validate you can now search for single words case-insensitive.
 define('EMAIL_JOB_PROTECT', false);
 define('EMAIL_JOB_PROTECT_SECRET', 'SOME_SECRET_STRING');
 
-+ All Files in webroot/asset/js/ EXCEPT the new editlink.js can be removed
++ All files in webroot/asset/js/ EXCEPT the new editlink.js can be removed
