@@ -208,13 +208,14 @@ if(!empty($emails)) {
 
 				if(DEBUG === true) var_dump($newdata);
 
-                $DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
-
                 $linkObj = new Link($DB);
                 $linkID = false;
 
 				# check for duplicate
                 $existing = $linkObj->load($newdata['hash']);
+
+				$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
                 if(!empty($existing) && isset($existing['id'])) {
                     $linkID = $existing['id'];
                     error_log('INFO Updating existing link with tag or category '.$newdata['link']);

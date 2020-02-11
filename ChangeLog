@@ -2,6 +2,7 @@ version x.x - Seven Portals (tba)
 
     + Now including update instructions
     + DB export only insipid tables and not the whole DB itself.
+    + Simple xml export and import
     + #2 Protection if the email-import.php file if it needs to be
         in a web accessible folder
     + Fixed the search for words. See update instructions how to correct your data

@@ -718,7 +718,6 @@ class Management {
 		return $ret;
 	}
 
-
 	/**
 	 * process the given xml file. Based on the export file
 	 * options are overwrite => true|false
@@ -748,6 +747,8 @@ class Management {
 		if(!empty($links)) {
 			$_amount = count($links);
 			foreach($links as $linkToImport) {
+				$do = false;
+
 				if($this->_linkExistsById($linkToImport['id'])) {
 					if(isset($options['overwrite']) && $options['overwrite'] === true) {
 						$linkObj = new Link($this->DB);
@@ -757,8 +758,55 @@ class Management {
 					$_existing++;
 				}
 				else {
+					$linkObj = new Link($this->DB);
+
+					$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+					try{
+						$do = $linkObj->create(array(
+							'hash' => $linkToImport['hash'],
+							'link' => $linkToImport['link'],
+							'status' => $linkToImport['private'],
+							'description' => $linkToImport['description'],
+							'title' => $linkToImport['title'],
+							'search' => '',
+							'image' => $linkToImport['image']
+						), true);
+					} catch (Exception $e) {
+						continue;
+					}
+
+					if(!empty($do)) {
+
+						$linkToImport['catArr'] = Summoner::prepareTagOrCategoryStr($linkToImport['category']);
+						$linkToImport['tagArr'] = Summoner::prepareTagOrCategoryStr($linkToImport['tag']);
+
+						if(!empty($linkToImport['catArr'])) {
+							foreach($linkToImport['catArr'] as $c) {
+								$catObj = new Category($this->DB);
+								$catObj->initbystring($c);
+								$catObj->setRelation($do);
+
+								unset($catObj);
+							}
+						}
+						if(!empty($linkToImport['tagArr'])) {
+							foreach($linkToImport['tagArr'] as $t) {
+								$tagObj = new Tag($this->DB);
+								$tagObj->initbystring($t);
+								$tagObj->setRelation($do);
+
+								unset($tagObj);
+							}
+						}
+
+						$this->DB->commit();
+
+						$this->updateSearchIndex();
+					}
+					else {
+						$this->DB->rollback();
+					}
 					$_new++;
-					var_dump('new one');
 				}
 			}
 			if(isset($options['overwrite']) && $options['overwrite'] === true) {
@@ -771,7 +819,6 @@ class Management {
 				'status' => 'success',
 				'message' => $_msg
 			);
-
 		}
 
 		return $ret;

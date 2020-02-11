@@ -9,3 +9,5 @@ To validate you can now search for single words case-insensitive.
 + Update config file with tow new settings. See config.default for more info
 define('EMAIL_JOB_PROTECT', false);
 define('EMAIL_JOB_PROTECT_SECRET', 'SOME_SECRET_STRING');
+
++ All Files in webroot/asset/js/ EXCEPT the new editlink.js can be removed
