@@ -1,4 +1,4 @@
-version x.x - Seven Portals (tba)
+version 2.4 - Seven Portals (2020-02-16)
 
     + Now including update instructions
     + DB export only insipid tables and not the whole DB itself.
