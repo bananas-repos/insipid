@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -150,6 +150,12 @@
 				</span>
 				<span>Edit</span>
 			</a>
+            <a href="index.php?p=editlink&id=<?php echo $linkData['hash']; ?>&m=export" class="button is-small is-success">
+				<span class="icon">
+					<i class="ion-md-download"></i>
+				</span>
+                <span>Export</span>
+            </a>
 		</div>
 	</div>
 	<?php } ?>

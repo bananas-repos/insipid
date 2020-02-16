@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -45,6 +45,29 @@ else {
 }
 
 require('../config.php');
+
+// if the file needs to be in a web accessible folder
+// you can either use the provided htaccess file
+// or active the "protection" with a secret given by URL / cli param
+if(defined('EMAIL_JOB_PROTECT') && EMAIL_JOB_PROTECT === true
+    && defined('EMAIL_JOB_PROTECT_SECRET')) {
+
+    $_hiddenSouce = false;
+
+    $cliOptions = getopt("",array("hiddenSouce::"));
+    if(!empty($cliOptions)) {
+        $_hiddenSouce = trim($cliOptions['hiddenSouce']);
+    }
+    elseif(isset($_GET['hiddenSouce']) && !empty($_GET['hiddenSouce'])) {
+        $_hiddenSouce = trim($_GET['hiddenSouce']);
+    }
+
+    if($_hiddenSouce !== EMAIL_JOB_PROTECT_SECRET) {
+        error_log('ERROR Required param wrong.');
+        exit("401\n");
+    }
+}
+
 require('../lib/summoner.class.php');
 require('../lib/tag.class.php');
 require('../lib/category.class.php');
@@ -181,16 +204,18 @@ if(!empty($emails)) {
 				$newdata['search'] .= ' '.implode(" ",$newdata['tagArr']);
 				$newdata['search'] .= ' '.implode(" ",$newdata['catArr']);
 				$newdata['search'] = trim($newdata['search']);
+                $newdata['search'] = strtolower($newdata['search']);
 
 				if(DEBUG === true) var_dump($newdata);
-
-                $DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
                 $linkObj = new Link($DB);
                 $linkID = false;
 
 				# check for duplicate
                 $existing = $linkObj->load($newdata['hash']);
+
+				$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
                 if(!empty($existing) && isset($existing['id'])) {
                     $linkID = $existing['id'];
                     error_log('INFO Updating existing link with tag or category '.$newdata['link']);

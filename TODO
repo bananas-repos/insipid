@@ -1,8 +1,7 @@
 TODO / Feature list
-+ Export and import if your data
-+ DB backup on the tables used in insipid and not whole db
 + snapshots
-+ bookmark js snippet
++ translation support
++ stats cleanup. Management functions should be standalone
 + theme support
 + more "secure" user authentication
 ++ multiple user accounts and stuff

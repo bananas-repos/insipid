@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -463,7 +463,7 @@ class Management {
 				MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE) AS score
 				FROM `".DB_PREFIX."_link` AS t
 				WHERE MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE)";
-			$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
+			$queryStr .= " AND ".$this->_decideLinkTypeForQuery();
 			$queryStr .= " ORDER BY score DESC";
 
 			$query = $this->DB->query($queryStr);
@@ -586,9 +586,9 @@ class Management {
 	/**
 	 * Load link by given hash. Do not use Link class directly.
 	 * Otherwise the authentication will be ignored.
-	 * @param $hash
-	 * @param bool $fullInfo
-	 * @param $withObject
+	 * @param String $hash  Link hash
+	 * @param bool $fullInfo Load all the info we have
+	 * @param bool $withObject An array with data and the link obj itself
 	 * @return array|mixed
 	 */
 	public function loadLink($hash,$fullInfo=true,$withObject=false) {
@@ -649,10 +649,40 @@ class Management {
 	}
 
 	/**
+	 * Export given link for download as a xml file
+	 * @param $hash
+	 * @param bool $linkObj Use already existing link obj
+	 * @return bool
+	 */
+	public function exportLinkData($hash,$linkObj=false) {
+		$ret = false;
+
+		if (!empty($hash)) {
+			$linkData = $this->loadLink($hash, true, true);
+			if (!empty($linkData)) {
+				$data = $linkData;
+			}
+		}
+		elseif(!empty($linkObj) && is_a($linkObj,'Link')) {
+			$data = $linkObj->getData();
+		}
+
+		if(!empty($data) && isset($data['link'])) {
+			require_once 'lib/import-export.class.php';
+			$ImEx = new ImportExport();
+			$ret = $ImEx->createSingleLinkExportXML($data);
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * for simpler management we have the search data in a separate column
 	 * it is not fancy or even technical nice but it damn works
 	 */
-	private function _updateSearchIndex() {
+	public function updateSearchIndex() {
+	    $ret = false;
+
 		$allLinks = array();
 		$queryStr = "SELECT hash FROM `".DB_PREFIX."_link`";
 		$query = $this->DB->query($queryStr);
@@ -667,12 +697,10 @@ class Management {
 
 				$searchStr = $l['title'];
 				$searchStr .= ' '.$l['description'];
-				foreach($l['tags'] as $t) {
-					$searchStr .= ' '.$t['tag'];
-				}
-				foreach($l['categories'] as $c) {
-					$searchStr .= ' '.$c['category'];
-				}
+				$searchStr .= ' '.implode(' ',$l['tags']);
+                $searchStr .= ' '.implode(' ',$l['categories']);
+                $searchStr = trim($searchStr);
+                $searchStr = strtolower($searchStr);
 
 				# now update the search string
 				$queryStr = "UPDATE `".DB_PREFIX."_link`
@@ -683,7 +711,117 @@ class Management {
 
 				unset($LinkObj,$l,$searchStr,$t,$c,$queryStr);
 			}
+
+			$ret = true;
 		}
+
+		return $ret;
+	}
+
+	/**
+	 * process the given xml file. Based on the export file
+	 * options are overwrite => true|false
+	 * @param $file
+	 * @param $options
+	 * @return array
+	 */
+	public function processImportFile($file, $options) {
+		$ret = array(
+			'status' => 'error',
+			'message' => 'Processing error'
+		);
+
+		$links = array();
+		require_once 'lib/import-export.class.php';
+		$ImEx = new ImportExport();
+		try {
+			$ImEx->loadImportFile($file);
+			$links = $ImEx->parseImportFile();
+		}
+		catch (Exception $e) {
+			$ret['message'] = $e->getMessage();
+		}
+
+		$_existing = 0;
+		$_new = 0;
+		if(!empty($links)) {
+			$_amount = count($links);
+			foreach($links as $linkToImport) {
+				$do = false;
+
+				if($this->_linkExistsById($linkToImport['id'])) {
+					if(isset($options['overwrite']) && $options['overwrite'] === true) {
+						$linkObj = new Link($this->DB);
+						$linkObj->load($linkToImport['hash']);
+						$do = $linkObj->update($linkToImport);
+					}
+					$_existing++;
+				}
+				else {
+					$linkObj = new Link($this->DB);
+
+					$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+					try{
+						$do = $linkObj->create(array(
+							'hash' => $linkToImport['hash'],
+							'link' => $linkToImport['link'],
+							'status' => $linkToImport['private'],
+							'description' => $linkToImport['description'],
+							'title' => $linkToImport['title'],
+							'search' => '',
+							'image' => $linkToImport['image']
+						), true);
+					} catch (Exception $e) {
+						continue;
+					}
+
+					if(!empty($do)) {
+
+						$linkToImport['catArr'] = Summoner::prepareTagOrCategoryStr($linkToImport['category']);
+						$linkToImport['tagArr'] = Summoner::prepareTagOrCategoryStr($linkToImport['tag']);
+
+						if(!empty($linkToImport['catArr'])) {
+							foreach($linkToImport['catArr'] as $c) {
+								$catObj = new Category($this->DB);
+								$catObj->initbystring($c);
+								$catObj->setRelation($do);
+
+								unset($catObj);
+							}
+						}
+						if(!empty($linkToImport['tagArr'])) {
+							foreach($linkToImport['tagArr'] as $t) {
+								$tagObj = new Tag($this->DB);
+								$tagObj->initbystring($t);
+								$tagObj->setRelation($do);
+
+								unset($tagObj);
+							}
+						}
+
+						$this->DB->commit();
+
+						$this->updateSearchIndex();
+					}
+					else {
+						$this->DB->rollback();
+					}
+					$_new++;
+				}
+			}
+			if(isset($options['overwrite']) && $options['overwrite'] === true) {
+				$_msg = "Found $_amount link(s) to import. Overwritten $_existing existing and imported $_new new one(s).";
+			}
+			else {
+				$_msg = "Found $_amount link(s) to import. Skipped $_existing existing and imported $_new new one(s).";
+			}
+			$ret = array(
+				'status' => 'success',
+				'message' => $_msg
+			);
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -702,6 +840,27 @@ class Management {
 			default:
 				$ret = "t.status = 2";
 		}
+		return $ret;
+	}
+
+	/**
+	 * Check if given id (not hash) exists in link database
+	 * @param $id
+	 * @return bool
+	 */
+	private function _linkExistsById($id) {
+		$ret = false;
+
+		if(!empty($id)) {
+			$queryStr = "SELECT `id` 
+							FROM `" . DB_PREFIX . "_link` 
+							WHERE `id` = '" . $this->DB->real_escape_string($id) . "'";
+			$query = $this->DB->query($queryStr);
+			if(!empty($query) && $query->num_rows > 0) {
+				$ret = true;
+			}
+		}
+
 		return $ret;
 	}
 }

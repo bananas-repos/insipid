@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -135,11 +135,12 @@ class Link {
 		$this->load($this->_data['hash']);
 	}
 
-	/**
-	 * create a new link with the given data
-	 * @param array $data
-	 * @return boolean|int
-	 */
+    /**
+     * create a new link with the given data
+     * @param array $data
+     * @param bool $returnId
+     * @return boolean|int
+     */
 	public function create($data, $returnId = false) {
 		$ret = false;
 
@@ -174,16 +175,18 @@ class Link {
 
 		$ret = false;
 
-		if (isset($data['title']) && !empty($data['title'])) {
+		if (isset($data['title']) && !empty($data['title']) && !empty($this->_data)) {
 
 			# categories and tag stuff
 			$catArr = Summoner::prepareTagOrCategoryStr($data['category']);
 			$tagArr = Summoner::prepareTagOrCategoryStr($data['tag']);
 
 			$search = $data['title'];
-			$search .= ' ' . $data['description'];
-			$search .= ' ' . implode(" ", $tagArr);
-			$search .= ' ' . implode(" ", $catArr);
+			$search .= ' '.$data['description'];
+			$search .= ' '.implode(" ", $tagArr);
+			$search .= ' '.implode(" ", $catArr);
+            $search = trim($search);
+			$search = strtolower($search);
 
 			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
@@ -200,7 +203,6 @@ class Link {
 							`image` = '" . $this->DB->real_escape_string($data['image']) . "',
 							`search` = '" . $this->DB->real_escape_string($search) . "'
 						  WHERE `hash` = '" . $this->DB->real_escape_string($this->_data['hash']) . "'";
-
 			$query = $this->DB->query($queryStr);
 
 			if ($query !== false) {

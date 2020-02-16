@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2019 Johannes Keßler
+ * Copyright 2016-2020 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -46,7 +46,29 @@ if(isset($_POST['statsCreateDBBackup'])) {
     require_once 'lib/Mysqldump.php';
     $backupTmpFile = tempnam(sys_get_temp_dir(),'inspid');
 
-    $dump = new Ifsnop\Mysqldump\Mysqldump('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USERNAME, DB_PASSWORD);
+    // mysqldump was modifed to make this work
+    // include-views was not working while using include-tables
+    $dumpSettings = array(
+        'include-tables' => array(
+            DB_PREFIX.'_category',
+            DB_PREFIX.'_categoryrelation',
+            DB_PREFIX.'_link',
+            DB_PREFIX.'_tag',
+            DB_PREFIX.'_tagrelation'
+        ),
+        'include-views' => array(
+            DB_PREFIX.'_combined'
+        ),
+        'default-character-set' => \Ifsnop\Mysqldump\Mysqldump::UTF8MB4
+    );
+    $dump = new Ifsnop\Mysqldump\Mysqldump(
+        'mysql:host='.DB_HOST.';dbname='.DB_NAME,
+        DB_USERNAME,
+        DB_PASSWORD,
+        $dumpSettings
+    );
+
+
     $dump->start($backupTmpFile);
 
     header('Content-Type: application/octet-stream');
@@ -55,6 +77,45 @@ if(isset($_POST['statsCreateDBBackup'])) {
     readfile($backupTmpFile);
     exit();
 }
+
+if(isset($_POST['statsImportXML'])) {
+	$_options = array();
+
+	if(isset($_FILES['importxmlfile']) && !empty($_FILES['importxmlfile'])) {
+
+		$_options['overwrite'] = false;
+		if(isset($_POST['importOverwrite'])) {
+			$_options['overwrite'] = true;
+		}
+
+		$do = $Management->processImportFile($_FILES['importxmlfile'], $_options);
+		if(isset($do['status']) && $do['status'] === 'success') {
+			$submitFeedback['status'] = 'success';
+			$submitFeedback['message'] = $do['message'];
+		}
+		else {
+			$submitFeedback['message'] = $do['message'];
+			$submitFeedback['status'] = 'error';
+		}
+	}
+	else {
+		$submitFeedback['message'] = 'Please provide a import file';
+		$submitFeedback['status'] = 'error';
+	}
+}
+
+if(isset($_POST['statsUpdateSearchIndex'])) {
+
+    if($Management->updateSearchIndex() === true) {
+        $TemplateData['refresh'] = 'index.php?p=stats';
+    }
+    else {
+        $submitFeedback['message'] = 'Something went wrong while search index update';
+        $submitFeedback['status'] = 'error';
+    }
+}
+
+
 
 $linkAmount = $Management->linkAmount();
 $tagAmount = $Management->tagAmount();

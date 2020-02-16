@@ -1,3 +1,14 @@
+version 2.4 - Seven Portals (2020-02-16)
+
+    + Now including update instructions
+    + DB export only insipid tables and not the whole DB itself.
+    + Simple xml export and import
+    + #2 Protection if the email-import.php file if it needs to be
+        in a web accessible folder
+    + Fixed the search for words. See update instructions how to correct your data
+    + Removed JS and replaced it with plain old working JS
+    + Dropped IE support. Edge still working.
+
 version 2.3 - Guardian of Steel (2019-12-30)
 
     + Improved documentation
