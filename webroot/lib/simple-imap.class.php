@@ -1,6 +1,15 @@
 <?php
 /**
+ * Insipid
+ * Personal web-bookmark-system
+ *
  * Copyright 2016-2020 Johannes Keßler
+ *
+ * Development starting from 2011: Johannes Keßler
+ * https://www.bananas-playground.net/projekt/insipid/
+ *
+ * creator:
+ * Luke Reeves <luke@neuro-tech.net>
  *
  * simple IMAP SSL/TLS email connection based on the imap PHP functions
  * the code supports SSL/TLS and IMAP only
