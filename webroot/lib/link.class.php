@@ -107,6 +107,7 @@ class Link {
 
 				# add stuff
 				$this->_image();
+				$this->_snapshot();
 			}
 		}
 
@@ -225,6 +226,8 @@ class Link {
 					}
 				}
 
+				$this->DB->commit();
+
 				# decide to store or remove the image
 				if (isset($data['localImage'])) {
 					$image = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/thumbnail-' . $this->_data['hash'];
@@ -239,7 +242,23 @@ class Link {
 					}
 				}
 
-				$this->DB->commit();
+				# decide if we want to make a local snapshot
+				if(isset($data['snapshot'])) {
+					$snapshot = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/snapshot-' . $this->_data['hash'];
+					if ($data['snapshot'] === true) {
+						if (!file_exists($snapshot) || $_imageUrlChanged === true) {
+							require_once 'lib/snapshot.class.php';
+							$snap = new Snapshot();
+							$snap->doSnapshot($this->_data['link']);
+						}
+					} elseif ($data['snapshot'] === false) {
+						if (file_exists($snapshot)) {
+							unlink($snapshot);
+						}
+					}
+				}
+
+
 				$ret = true;
 			} else {
 				$this->DB->rollback();
@@ -258,6 +277,7 @@ class Link {
 		$this->_removeTagRelation(false);
 		$this->_removeCategoryRelation(false);
 		$this->_deleteImage();
+		$this->_deleteSnapshot();
 	}
 
 	/**
@@ -373,6 +393,20 @@ class Link {
 	}
 
 	/**
+	 * determine of we have a local stored snapshot
+	 * if so populate the snapshotLink attribute
+	 */
+	private function _snapshot() {
+		if (!empty($this->_data['hash'])) {
+			$snapshot = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'];
+			if (file_exists($snapshot)) {
+				$this->_data['snapshotLink'] = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'];
+				$this->_data['snapshot'] = true;
+			}
+		}
+	}
+
+	/**
 	 * remove the local stored image
 	 */
 	private function _deleteImage() {
@@ -380,6 +414,18 @@ class Link {
 			$image = ABSOLUTE_PATH.'/'.$this->_data['imageToShow'];
 			if (file_exists($image)) {
 				unlink($image);
+			}
+		}
+	}
+
+	/**
+	 * remove the local stored image
+	 */
+	private function _deleteSnapshot() {
+		if (!empty($this->_data['hash']) && !empty($this->_data['snapshotLink'])) {
+			$snapshot = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'];
+			if (file_exists($snapshot)) {
+				unlink($snapshot);
 			}
 		}
 	}

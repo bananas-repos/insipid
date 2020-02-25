@@ -34,7 +34,7 @@
 class Snapshot {
 	private $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed';
 
-	public _constructor() {}
+	public function __constructor() {}
 
 	/**
 	 * call given url with google PageSpeed API
@@ -43,7 +43,7 @@ class Snapshot {
 	 * @param String $url URL to take a screenshot from
 	 * @return
 	 */
-	public function doScreenshot($url) {
+	public function doSnapshot($url) {
 		if(!empty($url)) {
 			$theCall = Summoner::curlCall($url);
 			var_dump($theCall);

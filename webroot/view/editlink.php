@@ -190,8 +190,22 @@
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<label>Private</label>
-				<input class="checkbox" type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
+				<label>Options</label>
+			</div>
+			<div class="column">
+				<label class="checkbox">
+					<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
+					Private
+				</label>
+				<label class="checkbox">
+					<input type="checkbox" name="data[snapshot]" value="1" <?php if(Summoner::ifset($formData, 'snapshot')) echo "checked"; ?>  />
+					Save a snapshot
+				</label>
+			</div>
+		</div>
+		<div class="columns">
+			<div class="column is-one-quarter">
+				&nbsp;
 			</div>
 			<div class="column">
 				<input type="submit" class="button is-info" name="refreshlink" value="Refresh from source">
