@@ -32,7 +32,7 @@
  * right now it uses google pagespeedonline.
  */
 class Snapshot {
-	private $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed';
+	private $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=';
 
 	public function __constructor() {}
 
@@ -45,7 +45,7 @@ class Snapshot {
 	 */
 	public function doSnapshot($url) {
 		if(!empty($url)) {
-			$theCall = Summoner::curlCall($url);
+			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
 			var_dump($theCall);
 		}
 	}

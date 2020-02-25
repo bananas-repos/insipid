@@ -199,7 +199,7 @@
 				</label>
 				<label class="checkbox">
 					<input type="checkbox" name="data[snapshot]" value="1" <?php if(Summoner::ifset($formData, 'snapshot')) echo "checked"; ?>  />
-					Save a snapshot
+					Save a snapshot (This can take some time)
 				</label>
 			</div>
 		</div>
