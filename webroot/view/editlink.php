@@ -109,8 +109,26 @@
 				</p>
 				<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" /><br />
 				<br />
-				<input class="checkbox" type="checkbox" name="data[localImage]" value="1" <?php if(Summoner::ifset($formData, 'localImage')) echo "checked"; ?> />
-				Store image locally
+				<label class="checkbox">
+					<input type="checkbox" name="data[localImage]" value="1" <?php if(Summoner::ifset($formData, 'localImage')) echo "checked"; ?> />
+					Store image locally
+				</label>
+			</div>
+		</div>
+		<div class="columns">
+			<div class="column is-one-quarter">
+				<p>
+					Thumbnail of the webpage. Not the image provided with html meta data.
+				</p>
+			</div>
+			<div class="column">
+				<?php if(isset($linkData['snapshotLink'])) { ?>
+				<p><a href="<?php echo $linkData['snapshotLink']; ?>" target="_blank">View Thumbnail</a></p>
+				<?php } ?>
+				<label class="checkbox">
+					<input type="checkbox" name="data[snapshot]" value="1" <?php if(Summoner::ifset($formData, 'snapshot')) echo "checked"; ?>  />
+					Save a thumbnail (This can take some time)
+				</label>
 			</div>
 		</div>
         <div class="columns">
@@ -196,10 +214,6 @@
 				<label class="checkbox">
 					<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
 					Private
-				</label>
-				<label class="checkbox">
-					<input type="checkbox" name="data[snapshot]" value="1" <?php if(Summoner::ifset($formData, 'snapshot')) echo "checked"; ?>  />
-					Save a snapshot (This can take some time)
 				</label>
 			</div>
 		</div>

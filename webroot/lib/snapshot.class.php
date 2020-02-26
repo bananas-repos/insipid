@@ -40,21 +40,25 @@ class Snapshot {
 	 * call given url with google PageSpeed API
 	 * to recieve image data
 	 *
-	 * @param String $url URL to take a screenshot from
+	 * @param String $url URL to take a thumbnail from
 	 * @return
 	 */
-	public function doSnapshot($url) {
-		if(!empty($url)) {
-			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
-			var_dump($theCall);
-		}
-	}
+	public function doSnapshot($url,$filename) {
+		$ret = false;
 
-	/**
-	 * save given screenshot data
-	 *
-	 * @param $data
-	 * @return bool
-	 */
-	public function saveScreenshot($data) {}
+		if(!empty($url) && is_writable(dirname($filename))) {
+			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
+			if(!empty($theCall)) {
+				$jsonData = json_decode($theCall,true);
+				if(!empty($jsonData) && isset($jsonData['screenshot']['data'])) {
+					$imageData = $jsonData['screenshot']['data'];
+					$imageData = str_replace(['_', '-'], ['/', '+'], $imageData);
+					$imageData = base64_decode($imageData);
+					$ret = file_put_contents($filename, $imageData);
+				}
+			}
+		}
+
+		return $ret;
+	}
 }

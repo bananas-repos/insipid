@@ -75,6 +75,7 @@ class Link {
 				$this->_categories();
 				$this->_image();
 				$this->_private();
+				$this->_snapshot();
 			}
 		}
 
@@ -107,7 +108,6 @@ class Link {
 
 				# add stuff
 				$this->_image();
-				$this->_snapshot();
 			}
 		}
 
@@ -162,6 +162,9 @@ class Link {
 		$this->DB->query($queryStr);
 		if ($returnId === true) {
 			$ret = $this->DB->insert_id;
+		}
+		else {
+			error_log('ERROR Failed to rcreate link: '.var_export($data,true));
 		}
 
 		return $ret;
@@ -249,7 +252,10 @@ class Link {
 						if (!file_exists($snapshot) || $_imageUrlChanged === true) {
 							require_once 'lib/snapshot.class.php';
 							$snap = new Snapshot();
-							$snap->doSnapshot($this->_data['link']);
+							$do = $snap->doSnapshot($this->_data['link'], $snapshot);
+							if(empty($do)) {
+								error_log('ERROR Failed to create snapshot: '.var_export($data,true));
+							}
 						}
 					} elseif ($data['snapshot'] === false) {
 						if (file_exists($snapshot)) {
@@ -262,6 +268,7 @@ class Link {
 				$ret = true;
 			} else {
 				$this->DB->rollback();
+				error_log('ERROR Failed to update link: '.var_export($data,true));
 			}
 
 		}

@@ -1,5 +1,9 @@
 version 2.5 - Winnowing Hall (tbd)
 
+    + Added a thumbnail by talking to Google page speed API
+      Planned was a full page snapshot, but only got the thumbnail.
+      Needs some more work with headless chrome.
+
 version 2.4 - Seven Portals (2020-02-16)
 
     + Now including update instructions

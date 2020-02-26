@@ -59,7 +59,6 @@ if(empty($linkData)) {
 }
 
 $linkObj = new Link($DB);
-$linkObj->load($_id);
 
 if($_isAwm === true) {
 	$submitFeedback['message'] = 'To accept this link (link has moderation status), just save it. Otherwise just delete.';
@@ -67,6 +66,8 @@ if($_isAwm === true) {
 }
 
 if($_requestMode && $_requestMode == "export") {
+	$linkObj->load($_id);
+
 	$_i = $linkObj->getData('id');
 	if(!empty($_i)) {
 
@@ -117,6 +118,8 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink']))
 	$formData['tag'] = trim($fData['tag']);
 
 	if(!empty($formData['title'])) {
+		$linkObj->load($_id);
+
 		$update = $linkObj->update($formData);
 
 		if($update === true) {
