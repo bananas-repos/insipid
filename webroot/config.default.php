@@ -71,3 +71,7 @@ define('EMAIL_REPORT_BACK',false);
 define('EMAIL_REPLY_BACK_VALID','');
 define('EMAIL_REPLY_BACK_ADDRESS','');
 define('EMAIL_REPLY_BACK_SUBJECT','Insipid email import response');
+
+# Use wkhtmltopdf to create a whole page screenshot of a given link
+define('WKHTMLTOPDF_USE',false);
+define('WKHTMLTOPDF_COMMAND','/absolute/path/to/wkhtmltoimage');

@@ -131,6 +131,24 @@
 				</label>
 			</div>
 		</div>
+		<?php if(defined('WKHTMLTOPDF_USE') && WKHTMLTOPDF_USE === true) { ?>
+		<div class="columns">
+			<div class="column is-one-quarter">
+				<p>
+					Full page screenshot.
+				</p>
+			</div>
+			<div class="column">
+				<?php if(isset($linkData['pagescreenshotLink'])) { ?>
+				<p><a href="<?php echo $linkData['pagescreenshotLink']; ?>" target="_blank">View page screenshot</a></p>
+				<?php } ?>
+				<label class="checkbox">
+					<input type="checkbox" name="data[pagescreenshot]" value="1" <?php if(Summoner::ifset($formData, 'pagescreenshot')) echo "checked"; ?>  />
+					Save a full page screenshot (This can take some time)
+				</label>
+			</div>
+		</div>
+		<?php } ?>
         <div class="columns">
             <div class="column is-one-quarter">
                 <p>Tags:</p>

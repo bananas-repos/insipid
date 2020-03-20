@@ -33,6 +33,7 @@
  */
 class Snapshot {
 	private $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=';
+	private $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
 
 	public function __constructor() {}
 
@@ -57,6 +58,25 @@ class Snapshot {
 					$ret = file_put_contents($filename, $imageData);
 				}
 			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * use configired WKHTMLTOPDF_COMMAND to create a whole page screenshot
+	 * of the given link and store it locally
+	 *
+	 * @param String $url URL to take the screenshot from
+	 * @return
+	 */
+	public function wholePageSnpashot($url,$filename) {
+		$ret = false;
+
+		if(!empty($url) && is_writable(dirname($filename))) {
+			$cmd = WKHTMLTOPDF_COMMAND;
+			$params = $this->_wkhtmltoimageOptions." ".$url." ".$filename;
+			$run = Summoner::systemcall($cmd,$params);
 		}
 
 		return $ret;

@@ -76,6 +76,7 @@ class Link {
 				$this->_image();
 				$this->_private();
 				$this->_snapshot();
+				$this->_pageScreenshot();
 			}
 		}
 
@@ -233,7 +234,7 @@ class Link {
 
 				# decide to store or remove the image
 				if (isset($data['localImage'])) {
-					$image = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/thumbnail-' . $this->_data['hash'];
+					$image = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/thumbnail-' . $this->_data['hash'].'.jpg';
 					if ($data['localImage'] === true) {
 						if (!file_exists($image) || $_imageUrlChanged === true) {
 							Summoner::downloadFile($data['image'], $image);
@@ -247,7 +248,7 @@ class Link {
 
 				# decide if we want to make a local snapshot
 				if(isset($data['snapshot'])) {
-					$snapshot = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/snapshot-' . $this->_data['hash'];
+					$snapshot = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/snapshot-' . $this->_data['hash'].'.jpg';
 					if ($data['snapshot'] === true) {
 						if (!file_exists($snapshot) || $_imageUrlChanged === true) {
 							require_once 'lib/snapshot.class.php';
@@ -260,6 +261,25 @@ class Link {
 					} elseif ($data['snapshot'] === false) {
 						if (file_exists($snapshot)) {
 							unlink($snapshot);
+						}
+					}
+				}
+
+				# decide if we want to make a local full page scrrenshot
+				if(isset($data['pagescreenshot'])) {
+					$pagescreenshot = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/pagescreenshot-' . $this->_data['hash'].'.jpg';
+					if ($data['pagescreenshot'] === true) {
+						if (!file_exists($pagescreenshot) || $_imageUrlChanged === true) {
+							require_once 'lib/snapshot.class.php';
+							$snap = new Snapshot();
+							$do = $snap->wholePageSnpashot($this->_data['link'], $pagescreenshot);
+							if(empty($do)) {
+								error_log('ERROR Failed to create snapshot: '.var_export($data,true));
+							}
+						}
+					} elseif ($data['pagescreenshot'] === false) {
+						if (file_exists($pagescreenshot)) {
+							unlink($pagescreenshot);
 						}
 					}
 				}
@@ -285,6 +305,7 @@ class Link {
 		$this->_removeCategoryRelation(false);
 		$this->_deleteImage();
 		$this->_deleteSnapshot();
+		$this->_deletePageScreenshot();
 	}
 
 	/**
@@ -391,24 +412,38 @@ class Link {
 	private function _image() {
 		if (!empty($this->_data['hash'])) {
 			$this->_data['imageToShow'] = $this->_data['image'];
-			$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
+			$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'].'.jpg';
 			if (file_exists($image)) {
-				$this->_data['imageToShow'] = LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'];
+				$this->_data['imageToShow'] = LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'].'.jpg';
 				$this->_data['localImage'] = true;
 			}
 		}
 	}
 
 	/**
-	 * determine of we have a local stored snapshot
+	 * determine if we have a local stored snapshot
 	 * if so populate the snapshotLink attribute
 	 */
 	private function _snapshot() {
 		if (!empty($this->_data['hash'])) {
-			$snapshot = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'];
+			$snapshot = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.jpg';
 			if (file_exists($snapshot)) {
-				$this->_data['snapshotLink'] = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'];
+				$this->_data['snapshotLink'] = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.jpg';
 				$this->_data['snapshot'] = true;
+			}
+		}
+	}
+
+	/**
+	 * determine if we have a local full page screenshot
+	 * if so populate the pagescreenshotLink attribute
+	 */
+	private function _pageScreenshot() {
+		if (!empty($this->_data['hash'])) {
+			$pagescreenshot = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/pagescreenshot-'.$this->_data['hash'].'.jpg';
+			if (file_exists($pagescreenshot)) {
+				$this->_data['pagescreenshotLink'] = LOCAL_STORAGE.'/pagescreenshot-'.$this->_data['hash'].'.jpg';
+				$this->_data['pagescreenshot'] = true;
 			}
 		}
 	}
@@ -426,13 +461,25 @@ class Link {
 	}
 
 	/**
-	 * remove the local stored image
+	 * remove the local stored snapshot
 	 */
 	private function _deleteSnapshot() {
 		if (!empty($this->_data['hash']) && !empty($this->_data['snapshotLink'])) {
-			$snapshot = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'];
+			$snapshot = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.jpg';
 			if (file_exists($snapshot)) {
 				unlink($snapshot);
+			}
+		}
+	}
+
+	/**
+	 * remove the local stored pagescreenshot
+	 */
+	private function _deletePageScreenshot() {
+		if (!empty($this->_data['hash']) && !empty($this->_data['pagescreenshotLink'])) {
+			$pagescreenshot = LOCAL_STORAGE.'/pagescreenshot-'.$this->_data['hash'].'.jpg';
+			if (file_exists($pagescreenshot)) {
+				unlink($pagescreenshot);
 			}
 		}
 	}

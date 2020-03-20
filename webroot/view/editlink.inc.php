@@ -111,6 +111,11 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink']))
 		$formData['snapshot'] = true;
 	}
 
+	$formData['pagescreenshot'] = false;
+	if(isset($fData['pagescreenshot'])) {
+		$formData['pagescreenshot'] = true;
+	}
+
 	$formData['description'] = trim($fData['description']);
 	$formData['title'] = trim($fData['title']);
 	$formData['image'] = trim($fData['image']);

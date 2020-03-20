@@ -635,4 +635,16 @@ class Summoner {
 			'status' => $status
 		);
 	}
+
+	/**
+	 * just a very basis system call execution
+	 * needs error handling and stuff
+	 */
+	static function systemcall($command,$params) {
+		//escapeshellarg
+		$command = escapeshellcmd($command." ".$params);
+		exec($command,$return);
+
+		return $return;
+	}
 }
