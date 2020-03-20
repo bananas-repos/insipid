@@ -1,0 +1,14 @@
+Whole page screenshot of a website
+
+# Requirements
+wkhtmlimage from https://wkhtmltopdf.org (tested with wkhtmltoimage 0.12.5)
+
+# Setup
+Change WKHTMLTOPDF_USE to true and alter the path WKHTMLTOPDF_COMMAND to your wkhtmltoimage install
+
+# Why wkhtmltoimage and not something newer or better?
+puppeteer is kinda overkill and the whole npm is, well, moren then that...
+https://developers.google.com/web/tools/puppeteer
+
+chromdriver and chrome was also some overkill and there was no simple
+php implementation.
