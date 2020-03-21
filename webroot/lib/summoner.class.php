@@ -637,7 +637,7 @@ class Summoner {
 	}
 
 	/**
-	 * just a very basis system call execution
+	 * just a very basic system call execution
 	 * needs error handling and stuff
 	 */
 	static function systemcall($command,$params) {

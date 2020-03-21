@@ -273,7 +273,7 @@ class Link {
 							require_once 'lib/snapshot.class.php';
 							$snap = new Snapshot();
 							$do = $snap->wholePageSnpashot($this->_data['link'], $pagescreenshot);
-							if(empty($do)) {
+							if(!empty($do)) {
 								error_log('ERROR Failed to create snapshot: '.var_export($data,true));
 							}
 						}

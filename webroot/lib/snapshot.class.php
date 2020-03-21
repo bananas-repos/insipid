@@ -73,10 +73,18 @@ class Snapshot {
 	public function wholePageSnpashot($url,$filename) {
 		$ret = false;
 
+		require_once 'lib/shellcommand.class.php';
+
 		if(!empty($url) && is_writable(dirname($filename))) {
 			$cmd = WKHTMLTOPDF_COMMAND;
 			$params = $this->_wkhtmltoimageOptions." ".$url." ".$filename;
-			$run = Summoner::systemcall($cmd,$params);
+			$command = new ShellCommand($cmd." ".$params);
+			if ($command->execute()) {
+			    $ret = $command->getOutput();
+			} else {
+				error_log($command->getError());
+				$ret = $command->getExitCode();
+			}
 		}
 
 		return $ret;
