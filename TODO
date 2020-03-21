@@ -1,8 +1,8 @@
 TODO / Feature list
-+ snapshots
 + translation support
 + stats cleanup. Management functions should be standalone
 + theme support
 + more "secure" user authentication
 ++ multiple user accounts and stuff
-
++ adapt new php 7
+++ http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op

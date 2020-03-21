@@ -1,14 +1,21 @@
 If you are updating from a previous version make sure every update info from
 the version your are updating from is done.
 
+## version 2.5 - Winnowing Hall
+
++ Update config file with the two new constants. See config.default and
+  snapshots-of-linked-webpage.txt for more information
+  define('WKHTMLTOPDF_USE',false);
+  define('WKHTMLTOPDF_COMMAND','/absolute/path/to/wkhtmltoimage');
+
 ## version 2.4 - Seven Portals (2020-02-16)
 
 + Run (after authentication) at /index.php?p=stats the "Search index update"
-to make the search work again correctly. At success, there is no confirmation.
-To validate you can now search for single words case-insensitive.
+  to make the search work again correctly. At success, there is no confirmation.
+  To validate you can now search for single words case-insensitive.
 
 + Update config file with two new settings. See config.default for more info
-define('EMAIL_JOB_PROTECT', false);
-define('EMAIL_JOB_PROTECT_SECRET', 'SOME_SECRET_STRING');
+  define('EMAIL_JOB_PROTECT', false);
+  define('EMAIL_JOB_PROTECT_SECRET', 'SOME_SECRET_STRING');
 
 + All files in webroot/asset/js/ EXCEPT the new editlink.js can be removed

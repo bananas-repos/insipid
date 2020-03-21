@@ -31,6 +31,8 @@
  */
 class Summoner {
 
+	private const BROWSER_AGENT_STRING = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0';
+
 	/**
 	 * validate the given string with the given type. Optional check the string
 	 * length
@@ -164,7 +166,7 @@ class Summoner {
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-		curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0');
+		curl_setopt($ch, CURLOPT_USERAGENT,self::BROWSER_AGENT_STRING);
 
 		// curl_setopt($ch, CURLOPT_VERBOSE, true);
 		//curl_setopt($ch, CURLOPT_HEADER, true);
@@ -207,7 +209,7 @@ class Summoner {
 			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-			curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0');
+			curl_setopt($ch, CURLOPT_USERAGENT, self::BROWSER_AGENT_STRING);
 
 			if(!empty($port)) {
 				curl_setopt($ch, CURLOPT_PORT, $port);
@@ -632,5 +634,17 @@ class Summoner {
 			'message' => $message,
 			'status' => $status
 		);
+	}
+
+	/**
+	 * just a very basic system call execution
+	 * needs error handling and stuff
+	 */
+	static function systemcall($command,$params) {
+		//escapeshellarg
+		$command = escapeshellcmd($command." ".$params);
+		exec($command,$return);
+
+		return $return;
 	}
 }
