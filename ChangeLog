@@ -3,9 +3,9 @@ version 2.5 - Winnowing Hall (tbd)
     + Added a thumbnail by talking to Google page speed API
       Planned was a full page snapshot, but only got the thumbnail.
       Needs some more work with headless chrome.
-    + Insted you can now decide to make a full page screenshot
+    + Instead you can now decide to make a full page screenshot
       using wkhtmltoimage. See documentation about it.
-    + Improved dokumentation
+    + Improved documentation
 
 version 2.4 - Seven Portals (2020-02-16)
 
