@@ -1,4 +1,4 @@
-version 2.5 - Winnowing Hall (tbd)
+version 2.5 - Winnowing Hall (2020-03-21)
 
     + Added a thumbnail by talking to Google page speed API
       Planned was a full page snapshot, but only got the thumbnail.
