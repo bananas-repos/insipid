@@ -89,7 +89,7 @@
 
 <?php if($showAddForm) { ?>
 <section class="section">
-	<form method="post">
+	<form method="post" autocomplete=off>
 		<input type="hidden" name="password" />
 		<input type="hidden" name="username" />
 		<div class="columns">
@@ -146,31 +146,73 @@
 		<div class="columns">
 			<div class="column is-half">
 				<label class="label">Category</label>
-				<div class="control">
-					<input type="text" name="data[category]" list="categorylist"
-						class="flexdatalist input" multiple='multiple'
-						data-min-length="0" data-cache="0"
-						value="<?php echo Summoner::ifset($formData, 'category'); ?>" />
-					<datalist id="categorylist">
-					<?php foreach($existingCategories as $c) { ?>
-						<option value="<?php echo $c['name']; ?>"><?php echo $c['name']; ?></option>
-					<?php } ?>
-					</datalist>
-				</div>
+
+                <div class="field is-grouped is-grouped-multiline" id="category-listbox">
+                    <div class="control" id="category-template" style="display: none;">
+                        <div class="tags has-addons">
+                            <span class="tag"></span>
+                            <a class="tag is-delete" onclick="removeTag('','category')"></a>
+                        </div>
+                    </div>
+
+                    <?php foreach($formData['categories'] as $t) { ?>
+                        <div class="control" id="category-<?php echo $t; ?>">
+                            <div class="tags has-addons">
+                                <span class="tag"><?php echo $t; ?></span>
+                                <a class="tag is-delete" onclick="removeTag('<?php echo $t; ?>','category')"></a>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input type="text" placeholder="categoryname"
+                               name="categorylistinput" list="category-datalist" value="" onkeypress="addTag(event,'category')" />
+                    </div>
+                    <p class="help">Enter a new one or select an existing from the suggested and press enter.</p>
+                </div>
+                <datalist id="category-datalist">
+                    <?php foreach($existingCategories as $c) { ?>
+                        <option value="<?php echo $c['name']; ?>"><?php echo $c['name']; ?></option>
+                    <?php } ?>
+                </datalist>
+                <input type="hidden" name="data[category]" id="category-save" value="<?php echo implode(',',$formData['categories']); ?>" />
+
 			</div>
 			<div class="column is-half">
 				<label class="label">Tag</label>
-				<div class="control">
-					<input type="text" name="data[tag]" list="taglist"
-						class="flexdatalist input" multiple='multiple'
-						data-min-length="0" data-cache="0"
-						value="<?php echo Summoner::ifset($formData, 'tag'); ?>" />
-					<datalist id="taglist">
-					<?php foreach($existingTags as $t) { ?>
-						<option value="<?php echo $t['name']; ?>"><?php echo $t['name']; ?></option>
-					<?php } ?>
-					</datalist>
-				</div>
+
+                <div class="field is-grouped is-grouped-multiline" id="tag-listbox">
+                    <div class="control" id="tag-template" style="display: none;">
+                        <div class="tags has-addons">
+                            <span class="tag"></span>
+                            <a class="tag is-delete" onclick="removeTag('','tag')"></a>
+                        </div>
+                    </div>
+
+                    <?php foreach($formData['tags'] as $t) { ?>
+                        <div class="control" id="tag-<?php echo $t; ?>">
+                            <div class="tags has-addons">
+                                <span class="tag"><?php echo $t; ?></span>
+                                <a class="tag is-delete" onclick="removeTag('<?php echo $t; ?>','tag')"></a>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <input type="text" placeholder="tagname"
+                               name="taglistinput" list="tag-datalist" value="" onkeypress="addTag(event,'tag')" />
+                    </div>
+                    <p class="help">Enter a new one or select an existing from the suggested and press enter.</p>
+                </div>
+                <datalist id="tag-datalist">
+                    <?php foreach($existingTags as $t) { ?>
+                        <option value="<?php echo $t['name']; ?>"><?php echo $t['name']; ?></option>
+                    <?php } ?>
+                </datalist>
+                <input type="hidden" name="data[tag]" id="tag-save" value="<?php echo implode(',',$formData['tags']); ?>" />
 			</div>
 		</div>
 
@@ -191,9 +233,7 @@
 	</form>
 </section>
 
-<link rel="stylesheet" href="asset/css/jquery.flexdatalist.min.css">
-<script type="text/javascript" src="asset/js/jquery.min.js"></script>
-<script type="text/javascript" src="asset/js/jquery.flexdatalist.min.js"></script>
+<script type="text/javascript" src="asset/js/editlink.js"></script>
 
 
 <?php } ?>
