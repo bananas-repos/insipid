@@ -177,7 +177,7 @@
                 	<input type="text" placeholder="tagname"
 						   name="taglistinput" list="tag-datalist" value="" onkeypress="addTag(event,'tag')" />
 					</div>
-					<p class="help">Enter a new one or select an existing from the suggested and press enter.</p>
+					<p class="help">Enter a new one or select an existing from the suggested and press enter. Special chars check after save!</p>
 				</div>
                 <datalist id="tag-datalist">
                     <?php foreach($existingTags as $t) { ?>
@@ -214,7 +214,7 @@
 						<input type="text" placeholder="categoryname"
 							   name="categorylistinput" list="category-datalist" value="" onkeypress="addTag(event,'category')" />
 					</div>
-					<p class="help">Enter a new one or select an existing from the suggested and press enter.</p>
+					<p class="help">Enter a new one or select an existing from the suggested and press enter. Special chars check after save!</p>
 				</div>
 				<datalist id="category-datalist">
 					<?php foreach($existingCategories as $c) { ?>

@@ -385,34 +385,44 @@ class Summoner {
 	 */
 	static function prepareTagOrCategoryStr($string) {
 		$ret = array();
+        $_ret = array();
 
 		$string = trim($string, ", ");
 		if(strstr($string, ",")) {
 			$_t = explode(",", $string);
-			foreach($_t as $new) {
-				$ret[$new] = $new;
+			foreach($_t as $n) {
+				$_ret[$n] = $n;
 			}
 			unset($_t);
-			unset($new);
+			unset($n);
 
-			foreach($ret as $e) {
+			foreach($_ret as $e) {
 				if(strstr($e, " ")) {
 					unset($ret[$e]);
 					$_t = explode(" ", $e);
 					foreach($_t as $new) {
 						$new = trim($new);
-						if(!empty($new)) {
+						$_c = self::validate($new,'nospace');
+						if(!empty($new) && $_c === true) {
 							$ret[$new] = $new;
 						}
 					}
 				}
+				else {
+                    $new = trim($e);
+                    $_c = self::validate($new,'nospace');
+                    if(!empty($new) && $_c === true) {
+                        $ret[$new] = $new;
+                    }
+                }
 			}
 		}
 		else {
 			$_t = explode(" ", $string);
 			foreach($_t as $new) {
 				$new = trim($new);
-				if(!empty($new)) {
+                $_c = self::validate($new,'nospace');
+				if(!empty($new) && $_c === true) {
 				   $ret[$new] = $new;
 				}
 			}

@@ -32,7 +32,7 @@ ini_set('error_reporting',-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
-define('DEBUG',false);
+define('DEBUG',true);
 
 ## check request
 $_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
