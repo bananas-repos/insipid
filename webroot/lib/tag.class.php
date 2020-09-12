@@ -49,11 +49,13 @@ class Tag {
 		$this->DB = $databaseConnectionObject;
 	}
 
-	/**
-	 * by given string load the info from the DB and even create if not existing
-	 * @param string $string
-	 */
-	public function initbystring($string) {
+    /**
+     * by given string load the info from the DB and even create if not existing
+     * @param string $string
+     * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
+     */
+	public function initbystring($string, $doNotCreate=false) {
+	    $ret = 0;
 		$this->_id = false;
 		if(!empty($string)) {
 			$queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
@@ -63,18 +65,26 @@ class Tag {
 				$result = $query->fetch_assoc();
 				$this->_id = $result['id'];
 				$this->_data = $result;
+				$ret = 1;
 			}
 			else {
-				$queryStr = "INSERT INTO `".DB_PREFIX."_tag`
-								SET `name` = '".$this->DB->real_escape_string($string)."'";
-				$this->DB->query($queryStr);
-				if(!empty($this->DB->insert_id)) {
-					$this->_id = $this->DB->insert_id;
-					$this->_data['id'] = $this->_id;
-					$this->_data['name'] = $string;
-				}
+			    if(!$doNotCreate) {
+                    $queryStr = "INSERT INTO `" . DB_PREFIX . "_tag`
+                                    SET `name` = '" . $this->DB->real_escape_string($string) . "'";
+                    $this->DB->query($queryStr);
+                    if (!empty($this->DB->insert_id)) {
+                        $this->_id = $this->DB->insert_id;
+                        $this->_data['id'] = $this->_id;
+                        $this->_data['name'] = $string;
+                        $ret = 2;
+                    }
+                }
+			    else {
+			        $ret=3;
+                }
 			}
 		}
+		return $ret;
 	}
 
 	/**
@@ -114,11 +124,11 @@ class Tag {
 		return $ret;
 	}
 
-	/**
-	 * set the relation to the given link to the loaded tag
-	 * @param int $linkid
-	 * @return boolean
-	 */
+    /**
+     * set the relation to the given link to the loaded tag
+     * @param int $linkid
+     * @return void
+     */
 	public function setRelation($linkid) {
 		if(!empty($linkid) && !empty($this->_id)) {
 			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
@@ -127,6 +137,26 @@ class Tag {
 			$this->DB->query($queryStr);
 		}
 	}
+
+    /**
+     * Return an array of any linkid related to the current loaded tag
+     * @return array
+     */
+	public function getReleations() {
+	    $ret = array();
+
+	    $queryStr = "SELECT linkid 
+	                FROM `".DB_PREFIX."_tagrelation` 
+	                WHERE tagid = '".$this->DB->real_escape_string($this->_id)."'";
+	    $query = $this->DB->query($queryStr);
+        if(!empty($query) && $query->num_rows > 0) {
+            while($result = $query->fetch_assoc()) {
+                $ret[] = $result['linkid'];
+            }
+        }
+
+        return $ret;
+    }
 
 	/**
 	 * deletes the current loaded tag from db
@@ -162,4 +192,19 @@ class Tag {
 
 		return $ret;
 	}
+
+    /**
+     * Rename current loaded tag name
+     * @param $newValue
+     * @return void
+     */
+	public function rename($newValue) {
+	    if(!empty($newValue)) {
+	        $queryStr = "UPDATE `".DB_PREFIX."_tag`
+	                    SET `name` = '".$this->DB->real_escape_string($newValue)."'
+	                    WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
+	        $this->DB->query($queryStr);
+            $this->_data['name'] = $newValue;
+        }
+    }
 }

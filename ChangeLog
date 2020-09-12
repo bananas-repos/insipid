@@ -1,4 +1,13 @@
+version 2.5.2 - Darkmere (2020-09-12)
+
+    + Fixed bug #8 It is possible to add empty tags and categories.
+        Special chars check done on server side. JS has problems with unicode.
+    + Fixed bug #7 Edit categories/tags. Rename and move
+    + Fixed feature #3 Reduce whitespace in frontend
+
+
 version 2.5.1 - Caves of Circe (2020-03-22)
+
     + Bugfix release
 
 version 2.5 - Winnowing Hall (2020-03-21)

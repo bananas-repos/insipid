@@ -25,3 +25,13 @@ h4 a {
 .card {
 	border-top: 1px solid #cccccc;
 }
+
+/* overwrites */
+.section {
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+}
+
+.column {
+	padding: .5rem;
+}

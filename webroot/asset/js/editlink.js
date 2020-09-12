@@ -32,7 +32,9 @@ function addTag(e,targetStartString) {
         let listBox = document.getElementById(targetStartString + '-listbox');
         let newTagTemplate = document.getElementById(targetStartString + '-template');
 
-        if(saveInput && listBox && elem && newTagTemplate) {
+        let checkString = _checkForSpaceString(elem.value,'nospace');
+
+        if(saveInput && listBox && elem && newTagTemplate && checkString) {
             let toAdd = elem.value;
             let newSaveValue = _appendToCommaString(saveInput.value,toAdd);
 
@@ -127,7 +129,19 @@ function _fillTagTemplate(el,newTagString,targetStartString) {
     let aEl = el.querySelector('a');
     aEl.setAttribute('onclick', "removeTag('"+newTagString+"','"+targetStartString+"');");
 
-
-
     return el;
+}
+
+/**
+ * simple check if the string is empty or contains whitespace chars
+ * @param stringTocheck
+ * @returns {boolean}
+ * @private
+ */
+function _checkForSpaceString(stringTocheck) {
+    let check = stringTocheck.replace(/\s/gm,'');
+    if(check === stringTocheck && check.length > 0) {
+        return true;
+    }
+    return false;
 }

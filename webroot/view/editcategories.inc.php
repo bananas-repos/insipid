@@ -35,25 +35,69 @@ Summoner::simpleAuth();
 
 if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['updateCategories'])) {
 	$categoryData = $_POST['category'];
+    $newCategory = $_POST['newCategory'];
+
+    # first update then deletion and then add
+    # adding a new one which matches an existing one will update it.
+
+    $submitFeedback['message'] = array();
+    $submitFeedback['status'] = 'success';
+
+    $catToUpdate = array();
+    foreach ($categoryData as $cid=>$cNewValue) {
+        $_c = Summoner::validate($cNewValue,'nospace');
+        if($_c === true) {
+            $catToUpdate[$cid] = $cNewValue;
+        }
+    }
 
 	$deleteCategoryData = array();
 	if(isset($_POST['deleteCategory'])) {
 		$deleteCategoryData = $_POST['deleteCategory'];
 	}
 
-	$newCategory = $_POST['newCategory'];
-
-	# first deletion, then update and then add
-	# adding a new one which matches an existing one will update it.
-
-	$submitFeedback['message'] = array();
-	$submitFeedback['status'] = 'success';
+    $catDoNotDeleteFromUpdate = array();
+    if(!empty($catToUpdate)) {
+        $submitFeedback['message'][] = 'Categories renamed successfully.';
+        foreach ($catToUpdate as $k=>$v) {
+            $catObjAlternative = new Category($DB);
+            $do = $catObjAlternative->initbystring($v,true);
+            if($do === 1) { # existing
+                // the target cat should not be removed!
+                $catDoNotDeleteFromUpdate[$catObjAlternative->getData('id')] = $catObjAlternative->getData('id');
+                $catObjOld = new Category($DB);
+                if(!empty($catObjOld->initbyid($k))) {
+                    $linksToUpdate = $catObjOld->getReleations();
+                    if(!empty($linksToUpdate)) {
+                        foreach($linksToUpdate as $linkId) {
+                            $catObjAlternative->setRelation($linkId);
+                        }
+                        $catObjOld->delete();
+                    }
+                }
+                else {
+                    $submitFeedback['message'][] = 'Categories could not be renamed.';
+                    $submitFeedback['status'] = 'error';
+                }
+            }
+            elseif ($do === 3) { # not existing one. Can be renamed
+                $catObjRename = new Category($DB);
+                if(!empty($catObjRename->initbyid($k))) {
+                    $catObjRename->rename($v);
+                }
+            }
+            else {
+                $submitFeedback['message'][] = 'Categories could not be renamed.';
+                $submitFeedback['status'] = 'error';
+            }
+        }
+    }
 
 	if(!empty($deleteCategoryData)) {
 		$submitFeedback['message'][] = 'Categories deleted successfully.';
 
 		foreach($deleteCategoryData as $k=>$v) {
-			if($v == "delete") {
+            if($v == "delete" && !isset($catDoNotDeleteFromUpdate[$k])) {
 				$catObj = new Category($DB);
 				$load = $catObj->initbyid($k);
 				if($load !== false) {
