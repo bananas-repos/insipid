@@ -35,25 +35,69 @@ Summoner::simpleAuth();
 
 if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags'])) {
 	$tagData = $_POST['tag'];
+    $newTag = $_POST['newTag'];
 
-	$deleteTagData = array();
-	if(isset($_POST['deleteTag'])) {
-		$deleteTagData = $_POST['deleteTag'];
-	}
+    # first update then deletion and then add
+    # adding a new one which matches an existing one will update it.
 
-	$newTag = $_POST['newTag'];
+    $submitFeedback['message'] = array();
+    $submitFeedback['status'] = 'success';
 
-	# first deletion, then update and then add
-	# adding a new one which matches an existing one will update it.
+	$tagToUpdate = array();
+	foreach ($tagData as $tid=>$tNewValue) {
+	    $_c = Summoner::validate($tNewValue,'nospace');
+	    if($_c === true) {
+	        $tagToUpdate[$tid] = $tNewValue;
+        }
+    }
 
-	$submitFeedback['message'] = array();
-	$submitFeedback['status'] = 'success';
+    $deleteTagData = array();
+    if(isset($_POST['deleteTag'])) {
+        $deleteTagData = $_POST['deleteTag'];
+    }
+
+    $tagDoNotDeleteFromUpdate = array();
+	if(!empty($tagToUpdate)) {
+        $submitFeedback['message'][] = 'Tags renamed successfully.';
+	    foreach ($tagToUpdate as $k=>$v) {
+            $tagObjAlternative = new Tag($DB);
+            $do = $tagObjAlternative->initbystring($v,true);
+            if($do === 1) { # existing
+                // the target tag should not be removed!
+                $tagDoNotDeleteFromUpdate[$tagObjAlternative->getData('id')] = $tagObjAlternative->getData('id');
+                $tagObjOld = new Tag($DB);
+                if(!empty($tagObjOld->initbyid($k))) {
+                    $linksToUpdate = $tagObjOld->getReleations();
+                    if(!empty($linksToUpdate)) {
+                        foreach($linksToUpdate as $linkId) {
+                            $tagObjAlternative->setRelation($linkId);
+                        }
+                        $tagObjOld->delete();
+                    }
+                }
+                else {
+                    $submitFeedback['message'][] = 'Tags could not be renamed.';
+                    $submitFeedback['status'] = 'error';
+                }
+            }
+            elseif ($do === 3) { # not existing one. Can be renamed
+                $tagObjRename = new Tag($DB);
+                if(!empty($tagObjRename->initbyid($k))) {
+                    $tagObjRename->rename($v);
+                }
+            }
+            else {
+                $submitFeedback['message'][] = 'Tags could not be renamed.';
+                $submitFeedback['status'] = 'error';
+            }
+        }
+    }
 
 	if(!empty($deleteTagData)) {
 		$submitFeedback['message'][] = 'Tags deleted successfully.';
 
 		foreach($deleteTagData as $k=>$v) {
-			if($v == "delete") {
+			if($v == "delete" && !isset($tagDoNotDeleteFromUpdate[$k])) {
 				$tagObj = new Tag($DB);
 				$load = $tagObj->initbyid($k);
 				if($load !== false) {
