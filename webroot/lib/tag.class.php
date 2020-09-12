@@ -207,5 +207,4 @@ class Tag {
             $this->_data['name'] = $newValue;
         }
     }
-
 }
