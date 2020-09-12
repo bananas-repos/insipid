@@ -1,4 +1,4 @@
-version x.x.x - Darkmere ()
+version 2.5.2 - Darkmere (2020-09-12)
 
     + Fixed bug #8 It is possible to add empty tags and categories.
         Special chars check done on server side. JS has problems with unicode.
