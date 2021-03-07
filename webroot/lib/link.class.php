@@ -55,15 +55,15 @@ class Link {
 
 		if (!empty($hash)) {
 			$queryStr = "SELECT
-				any_value(`id`) as id,
-				any_value(`link`) as link,
-				any_value(`created`) as created,
-				any_value(`updated`) as `updated`,
-				any_value(`status`) as `status`,
-				any_value(`description`) as description,
-				any_value(`title`) as title,
-				any_value(`image`) as image,
-				any_value(`hash`) as hash
+				`id`,
+				`link`,
+				`created`,
+				`updated`,
+				`status`,
+				`description`,
+				`title`,
+				`image`,
+				`hash`
 				FROM `" . DB_PREFIX . "_link`
 				WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 			$query = $this->DB->query($queryStr);
@@ -93,13 +93,7 @@ class Link {
 		$this->_data = array();
 
 		if (!empty($hash)) {
-			$queryStr = "SELECT
-				any_value(`id`) as id,
-				any_value(`link`) as link,
-				any_value(`description`) as description,
-				any_value(`title`) as title,
-				any_value(`image`) as image,
-				any_value(`hash`) as hash
+			$queryStr = "SELECT `id`,`link`,`description`,`title`,`image`,`hash`
 				FROM `" . DB_PREFIX . "_link`
 				WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 

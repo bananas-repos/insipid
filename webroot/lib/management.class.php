@@ -30,18 +30,18 @@ class Management {
 
 	const LINK_QUERY_STATUS = 2;
 
-	const COMBINED_SELECT_VALUES = "any_value(`id`) as id,
-				any_value(`link`) as link,
-				any_value(`created`) as created,
-				any_value(`status`) as `status`,
-				any_value(`description`) as description,
-				any_value(`title`) as title,
-				any_value(`image`) as image,
-				any_value(`hash`) as hash,
-				any_value(`tag`) as tag,
-				any_value(`category`) as category,
-				any_value(`categoryId`) as categoryId,
-				any_value(`tagId`) as tagId";
+	const COMBINED_SELECT_VALUES = "`id`,
+				`link`,
+				`created`,
+				`status`,
+				`description`,
+				`title`,
+				`image`,
+				`hash`,
+				`tag`,
+				`category`,
+				`categoryId`,
+				`tagId`";
 
 	/**
 	 * the database object
@@ -98,7 +98,7 @@ class Management {
 		if($stats === true) {
 			$queryStr = "SELECT
 				COUNT(*) AS amount,
-				any_value(cr.categoryid) AS categoryId
+				cr.categoryid AS categoryId
 				FROM `".DB_PREFIX."_categoryrelation` AS cr, `".DB_PREFIX."_link` AS t
 				WHERE cr.linkid = t.id";
 			$queryStr .= " AND ".$this->_decideLinkTypeForQuery();
@@ -112,9 +112,7 @@ class Management {
 			}
 		}
 
-		$queryStr = "SELECT
-			any_value(`id`) as id,
-			any_value(`name`) as name
+		$queryStr = "SELECT `id`, `name`
 			FROM `".DB_PREFIX."_category`
 			ORDER BY `name` ASC";
 		if(!empty($limit)) {
@@ -148,9 +146,8 @@ class Management {
 		$statsInfo = array();
 
 		if($stats === true) {
-			$queryStr = "SELECT
-				COUNT(*) AS amount,
-				any_value(tr.tagid) AS tagId
+			$queryStr = "SELECT COUNT(*) AS amount,
+				tr.tagid AS tagId
 				FROM `".DB_PREFIX."_tagrelation` AS tr,  `".DB_PREFIX."_link` AS t
 				WHERE tr.linkid = t.id";
 			$queryStr .= " AND ".$this->_decideLinkTypeForQuery();
@@ -164,9 +161,7 @@ class Management {
 			}
 		}
 
-		$queryStr = "SELECT
-			any_value(`id`) as id,
-			any_value(`name`) as name
+		$queryStr = "SELECT `id`, `name`
 			FROM `".DB_PREFIX."_tag`
 			ORDER BY `name` ASC";
 		if(!empty($limit)) {
@@ -864,4 +859,3 @@ class Management {
 		return $ret;
 	}
 }
-
