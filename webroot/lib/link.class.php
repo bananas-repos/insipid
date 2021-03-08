@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -86,6 +86,7 @@ class Link {
 	/**
 	 * loads only the info needed to display the link
 	 * for edit use $this->load
+	 *
 	 * @param $hash
 	 * @return array
 	 */
@@ -93,7 +94,7 @@ class Link {
 		$this->_data = array();
 
 		if (!empty($hash)) {
-			$queryStr = "SELECT `id`,`link`,`description`,`title`,`image`,`hash`
+			$queryStr = "SELECT `id`,`link`,`description`,`title`,`image`,`hash`, `created`
 				FROM `" . DB_PREFIX . "_link`
 				WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 
@@ -109,8 +110,21 @@ class Link {
 		return $this->_data;
 	}
 
+	public function loadFromDataShortInfo($data) {
+		$this->_data = array();
+
+		if(isset($data['id']) && isset($data['link']) && isset($data['created']) && isset($data['status'])
+			&& isset($data['title']) && isset($data['hash']) && isset($data['description']) && isset($data['image'])) {
+			$this->_data = $data;
+			$this->_image();
+		}
+
+		return $this->_data;
+	}
+
 	/**
 	 * return all or data for given key on the current loaded link
+	 *
 	 * @param bool $key
 	 * @return array|mixed
 	 */

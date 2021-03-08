@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -261,7 +261,7 @@
 <?php
 	if(!empty($orderedCategories)) {
 		foreach ($orderedCategories as $k=>$v) {
-			$links = $Management->linksByCategory($v['id'],'');
+			$links = $Management->linksByCategory($v['id']);
 ?>
 		<div class="column is-one-quarter">
 			<div class="content">

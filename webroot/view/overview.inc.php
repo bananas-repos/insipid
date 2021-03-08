@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -98,7 +98,7 @@ switch($_requestMode) {
             $tagname = $tagObj->getData('name');
             $subHeadline = $tagname.' <i class="ion-md-pricetag"></i>';
 
-			$linkCollection = $Management->linksByTag($_id,'', $_LinkColllectionQueryOptions);
+			$linkCollection = $Management->linksByTag($_id, $_LinkColllectionQueryOptions);
 
             $currentGetParameters['id'] = $_id;
 		}
@@ -116,7 +116,7 @@ switch($_requestMode) {
             $catname = $catObj->getData('name');
             $subHeadline = $catname.' <i class="ion-md-filing"></i>';
 
-			$linkCollection = $Management->linksByCategory($_id,'', $_LinkColllectionQueryOptions);
+			$linkCollection = $Management->linksByCategory($_id, $_LinkColllectionQueryOptions);
 
             $currentGetParameters['id'] = $_id;
 		}

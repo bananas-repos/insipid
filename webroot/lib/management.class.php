@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -227,12 +227,12 @@ class Management {
     /**
      * find all links by given category string or id.
      * Return array sorted by creation date DESC
+	 *
      * @param int $id Category ID
-     * @param string $string Category as string
      * @param array $options Array with limit|offset|sort|sortDirection
      * @return array
      */
-	public function linksByCategory($id, $string, $options=array()) {
+	public function linksByCategory($id, $options=array()) {
 		$ret = array();
 
 		if(!isset($options['limit'])) $options['limit'] = 5;
@@ -240,20 +240,17 @@ class Management {
         if(!isset($options['sort'])) $options['sort'] = false;
         if(!isset($options['sortDirection'])) $options['sortDirection'] = false;
 
-		$querySelect = "SELECT ".self::COMBINED_SELECT_VALUES;
-		$queryFrom = " FROM `".DB_PREFIX."_combined` AS t";
+		$querySelect = "SELECT `id`, `link`, `created`, `status`, `title`, `hash`, `description`, `image`";
+		$queryFrom = " FROM `".DB_PREFIX."_link` AS t
+						LEFT JOIN insipid_categoryrelation AS cr ON cr.linkid = t.id";
 		$queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
 		if(!empty($id) && is_numeric($id)) {
-			$queryWhere .= " AND t.categoryId = '" . $this->DB->real_escape_string($id) . "'";
-		}
-		elseif(!empty($string) && is_string($string)) {
-			$queryWhere .= " AND t.category = '" . $this->DB->real_escape_string($string) . "'";
+			$queryWhere .= " AND cr.categoryId = '" . $this->DB->real_escape_string($id) . "'";
 		}
 		else {
 			return $ret;
 		}
 
-        $queryGroup = " GROUP BY t.hash";
 		$queryOrder = " ORDER BY";
 		if(!empty($options['sort'])) {
             $queryOrder .= ' t.'.$options['sort'];
@@ -277,12 +274,12 @@ class Management {
 				$queryLimit .= " OFFSET ".$options['offset'];
 			}
 		}
-		$query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryGroup.$queryOrder.$queryLimit);
+		$query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
 
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
-				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
+				$ret['results'][] = $linkObj->loadFromDataShortInfo($result);
 				unset($linkObj);
 			}
 
@@ -297,12 +294,12 @@ class Management {
     /**
      * find all links by given tag string or id.
      * Return array sorted by creation date DESC
+	 *
      * @param int $id Tag id
-     * @param string $string Tag as string
      * @param array $options Array with limit|offset|sort|sortDirection
      * @return array
      */
-	public function linksByTag($id, $string, $options=array()) {
+	public function linksByTag($id, $options=array()) {
 		$ret = array();
 
         if(!isset($options['limit'])) $options['limit'] = 5;
@@ -310,20 +307,17 @@ class Management {
         if(!isset($options['sort'])) $options['sort'] = false;
         if(!isset($options['sortDirection'])) $options['sortDirection'] = false;
 
-		$querySelect = "SELECT ".self::COMBINED_SELECT_VALUES;
-		$queryFrom = " FROM `".DB_PREFIX."_combined` AS t";
+		$querySelect = "SELECT `id`, `link`, `created`, `status`, `title`, `hash`, `description`, `image`";
+		$queryFrom = " FROM `".DB_PREFIX."_link` AS t
+						LEFT JOIN insipid_tagrelation AS tr ON tr.linkid = t.id";
 		$queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
 		if(!empty($id) && is_numeric($id)) {
-			$queryWhere .= " AND t.tagId = '" . $this->DB->real_escape_string($id) . "'";
-		}
-		elseif(!empty($string) && is_string($string)) {
-			$queryWhere .= " AND t.tag = '" . $this->DB->real_escape_string($string) . "'";
+			$queryWhere .= " AND tr.tagId = '".$this->DB->real_escape_string($id)."'";
 		}
 		else {
 			return $ret;
 		}
 
-        $queryGroup = " GROUP BY t.hash";
         $queryOrder = " ORDER BY";
         if(!empty($options['sort'])) {
             $queryOrder .= ' t.'.$options['sort'];
@@ -347,12 +341,12 @@ class Management {
                 $queryLimit .= " OFFSET ".$options['offset'];
             }
         }
-        $query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryGroup.$queryOrder.$queryLimit);
+        $query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
 
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {
 				$linkObj = new Link($this->DB);
-				$ret['results'][] = $linkObj->loadShortInfo($result['hash']);
+				$ret['results'][] = $linkObj->loadFromDataShortInfo($result);
 				unset($linkObj);
 			}
 
@@ -402,6 +396,7 @@ class Management {
 
 	/**
 	 * return the latest added link for given category id
+	 *
 	 * @param int $categoryid
 	 * @return array
 	 */
@@ -409,8 +404,9 @@ class Management {
 		$ret = array();
 
 		if(!empty($categoryid) && is_numeric($categoryid)) {
-			$queryStr = "SELECT ".self::COMBINED_SELECT_VALUES." 
-			FROM `".DB_PREFIX."_combined` AS t";
+			$queryStr = "SELECT `id`, `link`, `created`, `status`, `description`, `title`, `image`, `hash`,
+						`tag`, `category`, `categoryId`, `tagId`
+						FROM `".DB_PREFIX."_combined` AS t";
 			$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
 			$queryStr .= " AND t.categoryId = '" . $this->DB->real_escape_string($categoryid) . "'
 			ORDER BY t.created DESC
