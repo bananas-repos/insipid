@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -58,7 +58,7 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
 
     $tagDoNotDeleteFromUpdate = array();
 	if(!empty($tagToUpdate)) {
-        $submitFeedback['message'][] = 'Tags renamed successfully.';
+        $submitFeedback['message'][] = $T->t('edit.tags.renamed');
 	    foreach ($tagToUpdate as $k=>$v) {
             $tagObjAlternative = new Tag($DB);
             $do = $tagObjAlternative->initbystring($v,true);
@@ -76,7 +76,7 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
                     }
                 }
                 else {
-                    $submitFeedback['message'][] = 'Tags could not be renamed.';
+                    $submitFeedback['message'][] = $T->t('edit.tags.rename.fail');
                     $submitFeedback['status'] = 'error';
                 }
             }
@@ -87,14 +87,14 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
                 }
             }
             else {
-                $submitFeedback['message'][] = 'Tags could not be renamed.';
+                $submitFeedback['message'][] = $T->t('edit.tags.rename.fail');
                 $submitFeedback['status'] = 'error';
             }
         }
     }
 
 	if(!empty($deleteTagData)) {
-		$submitFeedback['message'][] = 'Tags deleted successfully.';
+		$submitFeedback['message'][] = $T->t('edit.tags.delete');
 
 		foreach($deleteTagData as $k=>$v) {
 			if($v == "delete" && !isset($tagDoNotDeleteFromUpdate[$k])) {
@@ -104,7 +104,7 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
 					$tagObj->delete();
 				}
 				else {
-					$submitFeedback['message'][] = 'Tags could not be deleted.';
+					$submitFeedback['message'][] = $T->t('edit.tags.delete.fail');
 					$submitFeedback['status'] = 'error';
 				}
 			}
@@ -112,14 +112,14 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
 	}
 
 	if(!empty($newTag)) {
-		$submitFeedback['message'][] = 'Tags added successfully.';
+		$submitFeedback['message'][] = $T->t('edit.tags.added');
 		$tagArr = Summoner::prepareTagOrCategoryStr($newTag);
 
 		foreach($tagArr as $c) {
 			$tagObj = new Tag($DB);
 			$do = $tagObj->initbystring($c);
 			if($do === false) {
-				$submitFeedback['message'][] = 'Tag could not be added.';
+				$submitFeedback['message'][] = $T->t('edit.tags.add.fail');
 				$submitFeedback['status'] = 'error';
 			}
 		}
@@ -128,4 +128,4 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
 
 # show all the tags we have
 $tagCollection = $Management->tags(false, true);
-$subHeadline = 'All the tags <i class="ion-md-filing"></i>';
+$subHeadline = $T->t('view.tags').' <i class="ion-md-pricetags"></i>';

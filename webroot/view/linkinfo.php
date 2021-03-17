@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -26,29 +26,9 @@
  *
  */
 ?>
-
-<?php if(empty($linkData)) { ?>
 <section class="section">
 	<div class="columns">
-		<div class="column">
-			<div class="notification is-danger">
-				<h5>Error</h5>
-				<p>Something went wrong...</p>
-			</div>
-		</div>
-	</div>
-</section>
-<?php } ?>
-
-<section class="section">
-	<div class="columns">
-		<div class="column">
-			<p class="has-text-right">
-				<a href="index.php" title="... back to home" class="button">
-					<i class="icon ion-md-home"></i>
-				</a>
-			</p>
-		</div>
+		<?php require('_headNavIcons.inc.php'); ?>
 	</div>
 
 	<div class="columns">
@@ -61,7 +41,7 @@
 <section class="section">
 	<div class="columns">
 		<div class="column is-one-third">
-			<p>Title:</p>
+			<p><?php echo $T->t('view.title'); ?></p>
 		</div>
 		<div class="column is-two-third">
 			<p><?php echo $linkData['title']; ?></p>
@@ -69,7 +49,7 @@
 	</div>
 	<div class="columns">
 		<div class="column is-one-third">
-			<p>Description:</p>
+			<p><?php echo $T->t('view.description'); ?></p>
 		</div>
 		<div class="column is-two-third">
 			<p><?php echo $linkData['description']; ?></p>
@@ -77,7 +57,7 @@
 	</div>
 	<div class="columns">
 		<div class="column is-one-third">
-			<p>URL:</p>
+			<p><?php echo $T->t('view.url'); ?></p>
 		</div>
 		<div class="column is-two-third">
 			<p><a href="<?php echo $linkData['link']; ?>" target="_blank"><?php echo $linkData['link']; ?></a></p>
@@ -86,18 +66,18 @@
 	<div class="columns">
 		<div class="column is-one-third">
 			<p>
-				Image: (<small>If provided</small>)
+				<?php echo $T->t('view.image'); ?> (<small><?php echo $T->t('view.image.provided'); ?></small>)
 			</p>
 		</div>
 		<div class="column is-two-third">
 			<p>
-				<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="Image if provided...">
+				<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.image.provided'); ?>">
 			</p>
 		</div>
 	</div>
 	<div class="columns">
 		<div class="column is-one-third">
-			<p>Date added:</p>
+			<p><?php echo $T->t('view.date.added'); ?></p>
 		</div>
 		<div class="column is-two-third">
 			<p><?php echo $linkData['created']; ?></p>
@@ -105,7 +85,7 @@
 	</div>
 	<div class="columns">
 		<div class="column is-one-third">
-			<p>Tags:</p>
+			<p><?php echo $T->t('view.tags'); ?></p>
 		</div>
 		<div class="column is-two-third">
 			<?php
@@ -124,7 +104,7 @@
 	</div>
 	<div class="columns">
 		<div class="column is-one-third">
-			<p>Category:</p>
+			<p><?php echo $T->t('view.categories'); ?></p>
 		</div>
 		<div class="column is-two-third">
 			<?php
@@ -148,13 +128,13 @@
 				<span class="icon">
 					<i class="ion-md-create"></i>
 				</span>
-				<span>Edit</span>
+				<span><?php echo $T->t('view.edit'); ?></span>
 			</a>
             <a href="index.php?p=editlink&id=<?php echo $linkData['hash']; ?>&m=export" class="button is-small is-success">
 				<span class="icon">
 					<i class="ion-md-download"></i>
 				</span>
-                <span>Export</span>
+                <span><?php echo $T->t('view.export'); ?></span>
             </a>
 		</div>
 	</div>

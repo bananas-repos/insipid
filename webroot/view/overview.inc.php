@@ -105,7 +105,7 @@ switch($_requestMode) {
 		else {
 			# show all the tags we have
 			$tagCollection = $Management->tags(false, true);
-			$subHeadline = 'All the tags <i class="ion-md-pricetags"></i>';
+			$subHeadline = $T->t('view.tags').' <i class="ion-md-pricetags"></i>';
 		}
 	break;
 	case 'category':
@@ -123,7 +123,7 @@ switch($_requestMode) {
 		else {
 			# show all the categories we have
 			$categoryCollection = $Management->categories(false, true);
-			$subHeadline = 'All the categories <i class="ion-md-filing"></i>';
+			$subHeadline = $T->t('view.categories').' <i class="ion-md-filing"></i>';
 		}
 	break;
 	case 'awm':

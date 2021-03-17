@@ -3,3 +3,9 @@ Insipid is a web-based bookmark manager similar to the Delicious service.
 https://www.bananas-playground.net/projekt/insipid/
 
 Documentation can be found in the documentation folder of each release.
+
+Uses:
+https://bulma.io/
+https://github.com/PHPMailer/PHPMailer
+https://ionicons.com/
+https://github.com/ifsnop/mysqldump-php

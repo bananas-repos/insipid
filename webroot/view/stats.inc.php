@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -37,7 +37,7 @@ if(isset($_POST['statsDeleteLocalStorage'])) {
         $TemplateData['refresh'] = 'index.php?p=stats';
     }
     else {
-        $submitFeedback['message'] = 'Something went wrong while storage cleaning';
+        $submitFeedback['message'] = $T->t('stats.storage.clean.fail');
         $submitFeedback['status'] = 'error';
     }
 }
@@ -99,7 +99,7 @@ if(isset($_POST['statsImportXML'])) {
 		}
 	}
 	else {
-		$submitFeedback['message'] = 'Please provide a import file';
+		$submitFeedback['message'] = $T->t('stats.import.missing.file');
 		$submitFeedback['status'] = 'error';
 	}
 }
@@ -110,7 +110,7 @@ if(isset($_POST['statsUpdateSearchIndex'])) {
         $TemplateData['refresh'] = 'index.php?p=stats';
     }
     else {
-        $submitFeedback['message'] = 'Something went wrong while search index update';
+        $submitFeedback['message'] = $T->t('stats.search.index.fail');
         $submitFeedback['status'] = 'error';
     }
 }
@@ -122,4 +122,3 @@ $tagAmount = $Management->tagAmount();
 $categoryAmount = $Management->categoryAmount();
 $localStorageAmount = $Management->storageAmount();
 $localStorageAmount = Summoner::humanFileSize($localStorageAmount);
-

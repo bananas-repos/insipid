@@ -1,6 +1,11 @@
 If you are updating from a previous version make sure every update info from
 the version your are updating from is done.
 
+## version 2.6 - Darkmere
+
++ Update config file with the new language setting. See config.default and
+  translation.txt for more information
+
 ## version 2.5 - Winnowing Hall
 
 + Update config file with the two new constants. See config.default and

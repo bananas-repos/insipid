@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -27,27 +27,10 @@
  */
 ?>
 <section class="section">
-<?php if(empty($linkData)) { ?>
-	<div class="columns">
-		<div class="column">
-			<div class="notification is-danger">
-				<h5>Error</h5>
-				<p>Something went wrong...</p>
-			</div>
-		</div>
-	</div>
-<?php } ?>
-
 <?php require('_displaySubmitStatus.inc.php'); ?>
 
 	<div class="columns">
-		<div class="column">
-			<p class="has-text-right">
-				<a href="index.php" title="... back to home" class="button">
-					<i class="icon ion-md-home"></i>
-				</a>
-			</p>
-		</div>
+		<?php require('_headNavIcons.inc.php'); ?>
 	</div>
 
 	<div class="columns">
@@ -64,18 +47,18 @@
 	<form method="post" autocomplete="off">
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p>Date added:</p>
+				<p><?php echo $T->t('edit.link.date.added'); ?></p>
 			</div>
 			<div class="column">
 				<p>
 					<?php echo $linkData['created']; ?>
-					(Last update: <?php echo $linkData['updated']; ?>)
+					(<?php echo $T->t('edit.link.last.update'); ?> <?php echo $linkData['updated']; ?>)
 				</p>
 			</div>
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p>Title:</p>
+				<p><?php echo $T->t('edit.link.title'); ?></p>
 			</div>
 			<div class="column">
 				<input class="input" type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
@@ -83,7 +66,7 @@
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p>Description:</p>
+				<p><?php echo $T->t('edit.link.description'); ?></p>
 			</div>
 			<div class="column">
 				<input class="input" type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
@@ -91,7 +74,7 @@
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p>URL:</p>
+				<p><?php echo $T->t('edit.link.url'); ?></p>
 			</div>
 			<div class="column">
 				<p><a href="<?php echo $linkData['link']; ?>" target="_blank"><?php echo $linkData['link']; ?></a></p>
@@ -100,34 +83,34 @@
 		<div class="columns">
 			<div class="column is-one-quarter">
 				<p>
-					Image: (<small>If provided</small>)
+					<?php echo $T->t('edit.link.image'); ?>: (<small><?php echo $T->t('edit.link.image.provided'); ?></small>)
 				</p>
 			</div>
 			<div class="column">
 				<p>
-					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="Image if provided...">
+					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('edit.link.image.provided'); ?>">
 				</p>
 				<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" /><br />
 				<br />
 				<label class="checkbox">
 					<input type="checkbox" name="data[localImage]" value="1" <?php if(Summoner::ifset($formData, 'localImage')) echo "checked"; ?> />
-					Store image locally
+					<?php echo $T->t('edit.link.image.save'); ?>
 				</label>
 			</div>
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
 				<p>
-					Thumbnail of the webpage. Not the image provided with html meta data.
+					<?php echo $T->t('edit.link.thumbnail.webpage'); ?>
 				</p>
 			</div>
 			<div class="column">
 				<?php if(isset($linkData['snapshotLink'])) { ?>
-				<p><a href="<?php echo $linkData['snapshotLink']; ?>" target="_blank">View Thumbnail</a></p>
+				<p><a href="<?php echo $linkData['snapshotLink']; ?>" target="_blank"><?php echo $T->t('edit.link.thumbnail.view'); ?></a></p>
 				<?php } ?>
 				<label class="checkbox">
 					<input type="checkbox" name="data[snapshot]" value="1" <?php if(Summoner::ifset($formData, 'snapshot')) echo "checked"; ?>  />
-					Save a thumbnail (This can take some time)
+					<?php echo $T->t('edit.link.thumbnail.save'); ?>
 				</label>
 			</div>
 		</div>
@@ -135,23 +118,23 @@
 		<div class="columns">
 			<div class="column is-one-quarter">
 				<p>
-					Full page screenshot.
+					<?php echo $T->t('edit.link.full.screenshot'); ?>
 				</p>
 			</div>
 			<div class="column">
 				<?php if(isset($linkData['pagescreenshotLink'])) { ?>
-				<p><a href="<?php echo $linkData['pagescreenshotLink']; ?>" target="_blank">View page screenshot</a></p>
+				<p><a href="<?php echo $linkData['pagescreenshotLink']; ?>" target="_blank"><?php echo $T->t('edit.link.full.screenshot.view'); ?></a></p>
 				<?php } ?>
 				<label class="checkbox">
 					<input type="checkbox" name="data[pagescreenshot]" value="1" <?php if(Summoner::ifset($formData, 'pagescreenshot')) echo "checked"; ?>  />
-					Save a full page screenshot (This can take some time)
+					<?php echo $T->t('edit.link.full.screenshot.save'); ?>
 				</label>
 			</div>
 		</div>
 		<?php } ?>
         <div class="columns">
             <div class="column is-one-quarter">
-                <p>Tags:</p>
+                <p><?php echo $T->t('edit.link.tags'); ?></p>
             </div>
             <div class="column">
                 <div class="field is-grouped is-grouped-multiline" id="tag-listbox">
@@ -177,7 +160,7 @@
                 	<input type="text" placeholder="tagname"
 						   name="taglistinput" list="tag-datalist" value="" onkeypress="addTag(event,'tag')" />
 					</div>
-					<p class="help">Enter a new one or select an existing from the suggested and press enter. Special chars check after save!</p>
+					<p class="help"><?php echo $T->t('edit.link.tags.description'); ?></p>
 				</div>
                 <datalist id="tag-datalist">
                     <?php foreach($existingTags as $t) { ?>
@@ -189,7 +172,7 @@
         </div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p>Category:</p>
+				<p><?php echo $T->t('edit.link.category'); ?></p>
 			</div>
 			<div class="column">
 				<div class="field is-grouped is-grouped-multiline" id="category-listbox">
@@ -214,7 +197,7 @@
 						<input type="text" placeholder="categoryname"
 							   name="categorylistinput" list="category-datalist" value="" onkeypress="addTag(event,'category')" />
 					</div>
-					<p class="help">Enter a new one or select an existing from the suggested and press enter. Special chars check after save!</p>
+					<p class="help"><?php echo $T->t('edit.link.tags.description'); ?></p>
 				</div>
 				<datalist id="category-datalist">
 					<?php foreach($existingCategories as $c) { ?>
@@ -226,12 +209,12 @@
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<label>Options</label>
+				<label><?php echo $T->t('edit.link.options'); ?></label>
 			</div>
 			<div class="column">
 				<label class="checkbox">
 					<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
-					Private
+					<?php echo $T->t('edit.link.private'); ?>
 				</label>
 			</div>
 		</div>
@@ -240,17 +223,17 @@
 				&nbsp;
 			</div>
 			<div class="column">
-				<input type="submit" class="button is-info" name="refreshlink" value="Refresh from source">
-				<input type="submit" class="button is-success" name="editlink" value="Save">
+				<input type="submit" class="button is-info" name="refreshlink" value="<?php echo $T->t('edit.link.refresh'); ?>">
+				<input type="submit" class="button is-success" name="editlink" value="<?php echo $T->t('edit.link.save'); ?>">
 			</div>
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<label>DELETE</label>
+				<label><?php echo $T->t('edit.link.delete'); ?></label>
 				<input class="checkbox" type="checkbox" name="data[delete]" value="1" />
 			</div>
 			<div class="column">
-				<input type="submit" class="button is-danger" name="deleteLink" value="DELETE">
+				<input type="submit" class="button is-danger" name="deleteLink" value="<?php echo $T->t('edit.link.delete'); ?>">
 			</div>
 		</div>
 	</form>

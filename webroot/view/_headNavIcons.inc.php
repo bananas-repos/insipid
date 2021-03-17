@@ -26,21 +26,16 @@
  *
  */
 ?>
-<!doctype html>
-<html dir="ltr">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-
-		<meta name="robots" content="noindex,nofollow" />
-
-		<title>Your personal bookmarks - Insipid</title>
-
-        <link rel="stylesheet" href="asset/css/bulma.min.css">
-        <link rel="stylesheet" href="asset/ionicons/css/ionicons.min.css">
-        <link rel="stylesheet" href="asset/css/style.css">
-  	</head>
-	<body>
-
-	<div class="container">
+<div class="column">
+	<p class="has-text-right">
+		<a href="index.php?p=overview&m=tag" title="<?php echo $T->t('view.nav.all.tags'); ?>" class="button">
+			<span class="icon"><i class="ion-md-pricetags"></i></span>
+		</a>
+		<a href="index.php?p=overview&m=category" title="<?php echo $T->t('view.nav.all.categories'); ?>" class="button">
+			<span class="icon"><i class="ion-md-filing"></i></span>
+		</a>
+		<a href="index.php" title="<?php echo $T->t('view.nav.back.home'); ?>" class="button">
+			<span class="icon"><i class="ion-md-home"></i></span>
+		</a>
+	</p>
+</div>

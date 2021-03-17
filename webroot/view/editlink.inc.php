@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -61,7 +61,7 @@ if(empty($linkData)) {
 $linkObj = new Link($DB);
 
 if($_isAwm === true) {
-	$submitFeedback['message'] = 'To accept this link (link has moderation status), just save it. Otherwise just delete.';
+	$submitFeedback['message'] = $T->t('edit.link.accept.new.link');
 	$submitFeedback['status'] = 'success';
 }
 
@@ -82,12 +82,12 @@ if($_requestMode && $_requestMode == "export") {
 			exit();
 		}
 		else {
-			$submitFeedback['message'] = 'Export could not generated.';
+			$submitFeedback['message'] = $T->t('edit.link.export.fail');
 			$submitFeedback['status'] = 'error';
 		}
 	}
 	else {
-		$submitFeedback['message'] = 'Required data for export could not be loaded.';
+		$submitFeedback['message'] = $T->t('edit.link.export.data.fail');
 		$submitFeedback['status'] = 'error';
 	}
 
@@ -128,19 +128,19 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink']))
 		$update = $linkObj->update($formData);
 
 		if($update === true) {
-			$submitFeedback['message'] = 'Link updated successfully.';
+			$submitFeedback['message'] = $T->t('edit.link.updated');
 			$submitFeedback['status'] = 'success';
 			// update link info
 			$linkObj->reload();
 			$linkData = $linkObj->getData();
 		}
 		else {
-			$submitFeedback['message'] = 'Something went wrong...';
+			$submitFeedback['message'] = $T->t('edit.link.update.failed');
 			$submitFeedback['status'] = 'error';
 		}
 	}
 	else {
-		$submitFeedback['message'] = 'Please provide a title.';
+		$submitFeedback['message'] = $T->t('edit.link.update.title.missing');
 		$submitFeedback['status'] = 'error';
 	}
 }
