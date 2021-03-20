@@ -47,7 +47,7 @@
 	<form method="post" autocomplete="off">
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p><?php echo $T->t('edit.link.date.added'); ?></p>
+				<p><?php echo $T->t('view.date.added'); ?></p>
 			</div>
 			<div class="column">
 				<p>
@@ -58,7 +58,7 @@
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p><?php echo $T->t('edit.link.title'); ?></p>
+				<p><?php echo $T->t('view.title'); ?></p>
 			</div>
 			<div class="column">
 				<input class="input" type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
@@ -66,7 +66,7 @@
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p><?php echo $T->t('edit.link.description'); ?></p>
+				<p><?php echo $T->t('view.description'); ?></p>
 			</div>
 			<div class="column">
 				<input class="input" type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
@@ -74,7 +74,7 @@
 		</div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p><?php echo $T->t('edit.link.url'); ?></p>
+				<p><?php echo $T->t('view.url'); ?></p>
 			</div>
 			<div class="column">
 				<p><a href="<?php echo $linkData['link']; ?>" target="_blank"><?php echo $linkData['link']; ?></a></p>
@@ -83,12 +83,12 @@
 		<div class="columns">
 			<div class="column is-one-quarter">
 				<p>
-					<?php echo $T->t('edit.link.image'); ?>: (<small><?php echo $T->t('edit.link.image.provided'); ?></small>)
+					<?php echo $T->t('view.image'); ?>: (<small><?php echo $T->t('view.image.provided'); ?></small>)
 				</p>
 			</div>
 			<div class="column">
 				<p>
-					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('edit.link.image.provided'); ?>">
+					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.image.provided'); ?>">
 				</p>
 				<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" /><br />
 				<br />
@@ -134,7 +134,7 @@
 		<?php } ?>
         <div class="columns">
             <div class="column is-one-quarter">
-                <p><?php echo $T->t('edit.link.tags'); ?></p>
+                <p><?php echo $T->t('view.tags'); ?></p>
             </div>
             <div class="column">
                 <div class="field is-grouped is-grouped-multiline" id="tag-listbox">
@@ -172,7 +172,7 @@
         </div>
 		<div class="columns">
 			<div class="column is-one-quarter">
-				<p><?php echo $T->t('edit.link.category'); ?></p>
+				<p><?php echo $T->t('view.category'); ?></p>
 			</div>
 			<div class="column">
 				<div class="field is-grouped is-grouped-multiline" id="category-listbox">
@@ -214,7 +214,7 @@
 			<div class="column">
 				<label class="checkbox">
 					<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
-					<?php echo $T->t('edit.link.private'); ?>
+					<?php echo $T->t('view.private'); ?>
 				</label>
 			</div>
 		</div>
