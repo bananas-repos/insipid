@@ -64,7 +64,7 @@
 					<div class="control">
 						<div class="tags has-addons">
 							<a class="tag is-dark" href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
-							<a class="tag is-info" title="<?php echo $T->t('view.link.more.info'); ?>" href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-md-information-circle-outline"></i></a>
+							<a class="tag is-info" title="<?php echo $T->t('view.more.info'); ?>" href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-md-information-circle-outline"></i></a>
 						</div>
 					</div>
 <?php } ?>
