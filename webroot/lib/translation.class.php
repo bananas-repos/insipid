@@ -26,7 +26,11 @@
  *
  */
 
-
+/**
+ * Class Translation
+ *
+ * A very simple way to load and provide the translation
+ */
 class Translation {
 
 	/**

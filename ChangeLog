@@ -2,8 +2,9 @@ version 2.6 - Hypostyle
 
 	+ Fixed sql problems with Maria DB. Any_value is not supported there
 	+ Fixed some query and data loading brain fucks..
-	+ Updated third party informations in readme
+	+ Updated third party information in readme
 	+ Fixed xml import xsd
+	+ Added translation support. More information in translation.txt
 
 version 2.5.2 - Darkmere (2020-09-12)
 
