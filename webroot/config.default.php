@@ -26,8 +26,7 @@
  *
  */
 
-#
-## database config
+# database config
 define('DB_HOST','127.0.0.1'); # Address of the database server
 define('DB_USERNAME','user'); # Username to access the database server and database itself
 define('DB_PASSWORD','test'); # Password for username
@@ -49,6 +48,11 @@ define("USE_PAGE_AUTH",false);
 
 # results per page
 define("RESULTS_PER_PAGE",12);
+
+# language setting
+# default is eng
+# valid values to match the files are: https://de.wikipedia.org/wiki/ISO_639#ISO_639-3
+define('FRONTEND_LANGUAGE','eng');
 
 # if the location of email-import.php needs to be in a web accessible folder
 # you can protect it by setting EMAIL_JOB_PROTECT to true

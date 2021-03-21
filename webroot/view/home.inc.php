@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -65,7 +65,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 		$searchResult = $Management->searchForLinkBySearchData($searchValue);
 	}
 	else {
-		$submitFeedback['message'] = 'Invalid input';
+		$submitFeedback['message'] = $T->t('home.input.invalid');
 		$submitFeedback['status'] = 'error';
 	}
 
@@ -93,7 +93,7 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 	}
 	else {
 		# nothing found
-		$submitFeedback['message'] = 'Nothing found...';
+		$submitFeedback['message'] = $T->t('home.input.search.not.found');
 		$submitFeedback['status'] = 'error';
 	}
 }
@@ -125,24 +125,18 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 		$catArr = Summoner::prepareTagOrCategoryStr($formData['category']);
 		$tagArr = Summoner::prepareTagOrCategoryStr($formData['tag']);
 
-		$search = $formData['title'];
-		$search .= ' '.$formData['description'];
-		$search .= ' '.implode(" ",$tagArr);
-		$search .= ' '.implode(" ",$catArr);
-		$search .= trim($search);
-		$search = strtolower($search);
-
 		$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
 		$linkObj = new Link($DB);
 		$linkID = $linkObj->create(array(
 			'hash' => $hash,
-			'search' => $search,
 			'link' => $formData['url'],
 			'status' => $formData['private'],
 			'description' => $formData['description'],
 			'title' => $formData['title'],
-			'image' => $formData['image']
+			'image' => $formData['image'],
+			'tagArr'  => $tagArr,
+			'catArr' => $catArr
 		),true);
 
 		if(!empty($linkID)) {
@@ -168,19 +162,19 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 
 			$DB->commit();
 
-			$submitFeedback['message'] = 'Link added successfully.';
+			$submitFeedback['message'] = $T->t('home.input.added');
 			$submitFeedback['status'] = 'success';
 			$TemplateData['refresh'] = 'index.php?p=linkinfo&id='.$hash;
 		}
 		else {
 			$DB->rollback();
-			$submitFeedback['message'] = 'Something went wrong...';
+			$submitFeedback['message'] = $T->t('home.input.add.fail');
 			$submitFeedback['status'] = 'error';
 			$showAddForm = true;
 		}
 	}
 	else {
-		$submitFeedback['message'] = 'Please provide a valid URL and title.';
+		$submitFeedback['message'] = $T->t('home.input.invalid.data');
 		$submitFeedback['status'] = 'error';
 		$showAddForm = true;
 	}

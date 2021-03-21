@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -35,32 +35,20 @@
 				<div class="field has-addons">
 					<div class="control is-expanded">
 						<div class="control has-icons-left">
-							<input class="input" type="text" name="data[searchfield]" placeholder="Search your bookmarks or add a new one">
+							<input class="input" type="text" name="data[searchfield]" placeholder="<?php echo $T->t('home.input.placeholder'); ?>">
 							<span class="icon is-small is-left">
 								<i class="ion-link"></i>
 							</span>
 						</div>
 					</div>
 					<div class="control">
-						<input type="submit" class="button is-info" value="Search" name="submitsearch">
+						<input type="submit" class="button is-info" value="<?php echo $T->t('home.input.search'); ?>" name="submitsearch">
 					</div>
 				</div>
 			</form>
 		</div>
 
-		<div class="column">
-			<p class="has-text-right">
-				<a href="index.php?p=overview&m=tag" title="all tags" class="button">
-					<span class="icon"><i class="ion-md-pricetags"></i></span>
-				</a>
-				<a href="index.php?p=overview&m=category" title="all categories" class="button">
-					<span class="icon"><i class="ion-md-filing"></i></span>
-				</a>
-				<a href="index.php" title="... back to home" class="button">
-					<span class="icon"><i class="ion-md-home"></i></span>
-				</a>
-			</p>
-		</div>
+		<?php require('_headNavIcons.inc.php'); ?>
 	</div>
 	<?php require('_displaySubmitStatus.inc.php'); ?>
 </section>
@@ -70,13 +58,13 @@
 	<div class="columns">
 		<div class="column">
 			<div class="content">
-				<h3>Something has been found...</h3>
+				<h3><?php echo $T->t('home.input.search.found'); ?></h3>
 				<div class="field is-grouped is-grouped-multiline">
 <?php foreach ($searchResult as $sr) { ?>
 					<div class="control">
 						<div class="tags has-addons">
 							<a class="tag is-dark" href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
-							<a class="tag is-info" title="more details..." href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-md-information-circle-outline"></i></a>
+							<a class="tag is-info" title="<?php echo $T->t('view.more.info'); ?>" href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-md-information-circle-outline"></i></a>
 						</div>
 					</div>
 <?php } ?>
@@ -95,7 +83,7 @@
 		<div class="columns">
 			<div class="column">
 				<div class="content">
-					<h3>This URL was not found. Want to add it?</h3>
+					<h3><?php echo $T->t('home.input.url.not.found.add'); ?></h3>
 				</div>
 				<div class="field has-addons">
 					<div class="control is-expanded">
@@ -113,7 +101,7 @@
 		<div class="columns">
 			<div class="column is-half">
 				<div class="field">
-					<label class="label">Title</label>
+					<label class="label"><?php echo $T->t('view.title'); ?></label>
 					<div class="control">
 						<input class="input" type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
 					</div>
@@ -121,7 +109,7 @@
 			</div>
 			<div class="column is-half">
 				<div class="field">
-					<label class="label">Description</label>
+					<label class="label"><?php echo $T->t('view.description'); ?></label>
 					<div class="control">
 						<input class="input" type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
 					</div>
@@ -131,11 +119,11 @@
 
 		<div class="columns">
 			<div class="column is-half">
-				<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'imageToShow'); ?>" alt="Image from provided link" />
+				<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'imageToShow'); ?>" alt="<?php echo $T->t('view.image.of.link'); ?>" />
 			</div>
 			<div class="column is-half">
 				<div class="field">
-					<label class="label">Image Link</label>
+					<label class="label"><?php echo $T->t('view.image.link'); ?></label>
 					<div class="control">
 						<input class="input" type="url" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
 					</div>
@@ -145,7 +133,7 @@
 
 		<div class="columns">
 			<div class="column is-half">
-				<label class="label">Category</label>
+				<label class="label"><?php echo $T->t('view.categories'); ?></label>
 
                 <div class="field is-grouped is-grouped-multiline" id="category-listbox">
                     <div class="control" id="category-template" style="display: none;">
@@ -169,7 +157,7 @@
                         <input type="text" placeholder="categoryname"
                                name="categorylistinput" list="category-datalist" value="" onkeypress="addTag(event,'category')" />
                     </div>
-                    <p class="help">Enter a new one or select an existing from the suggested and press enter.</p>
+                    <p class="help"><?php echo $T->t('view.tag.help'); ?></p>
                 </div>
                 <datalist id="category-datalist">
                     <?php foreach($existingCategories as $c) { ?>
@@ -180,7 +168,7 @@
 
 			</div>
 			<div class="column is-half">
-				<label class="label">Tag</label>
+				<label class="label"><?php echo $T->t('view.tag'); ?></label>
 
                 <div class="field is-grouped is-grouped-multiline" id="tag-listbox">
                     <div class="control" id="tag-template" style="display: none;">
@@ -205,7 +193,7 @@
                         <input type="text" placeholder="tagname"
                                name="taglistinput" list="tag-datalist" value="" onkeypress="addTag(event,'tag')" />
                     </div>
-                    <p class="help">Enter a new one or select an existing from the suggested and press enter.</p>
+                    <p class="help"><?php echo $T->t('view.tag.help'); ?></p>
                 </div>
                 <datalist id="tag-datalist">
                     <?php foreach($existingTags as $t) { ?>
@@ -220,12 +208,12 @@
 			<div class="column is-half">
 				<label class="checkbox is-pulled-right">
 					<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
-					Private
+					<?php echo $T->t('view.private'); ?>
 				</label>
 			</div>
 			<div class="column is-half">
 				<div class="control">
-					<input type="submit" class="button is-primary" name="addnewone" value="Add new Link">
+					<input type="submit" class="button is-primary" name="addnewone" value="<?php echo $T->t('home.input.new.link'); ?>">
 				</div>
 			</div>
 		</div>
@@ -261,7 +249,7 @@
 <?php
 	if(!empty($orderedCategories)) {
 		foreach ($orderedCategories as $k=>$v) {
-			$links = $Management->linksByCategory($v['id'],'');
+			$links = $Management->linksByCategory($v['id']);
 ?>
 		<div class="column is-one-quarter">
 			<div class="content">

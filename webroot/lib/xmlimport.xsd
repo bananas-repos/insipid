@@ -17,7 +17,7 @@
                                             <xs:complexType>
                                                 <xs:simpleContent>
                                                     <xs:extension base="xs:string">
-                                                        <xs:attribute type="xs:byte" name="id" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="id" use="optional"/>
                                                     </xs:extension>
                                                 </xs:simpleContent>
                                             </xs:complexType>
@@ -32,7 +32,7 @@
                                             <xs:complexType>
                                                 <xs:simpleContent>
                                                     <xs:extension base="xs:string">
-                                                        <xs:attribute type="xs:byte" name="id" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="id" use="optional"/>
                                                     </xs:extension>
                                                 </xs:simpleContent>
                                             </xs:complexType>
@@ -45,7 +45,7 @@
                             <xs:element type="xs:string" name="exportcreated"/>
                             <xs:element type="xs:string" name="status"/>
                         </xs:sequence>
-                        <xs:attribute type="xs:byte" name="id" use="optional"/>
+                        <xs:attribute type="xs:string" name="id" use="optional"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>

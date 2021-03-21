@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -51,6 +51,7 @@ class Category {
 
 	/**
 	 * by given string load the info from the DB and even create if not existing
+	 *
 	 * @param string $string
      * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
 	 * @return bool|int

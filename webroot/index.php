@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -59,6 +59,7 @@ require('lib/management.class.php');
 require('lib/tag.class.php');
 require('lib/category.class.php');
 require('lib/link.class.php');
+require('lib/translation.class.php');
 
 ## main vars
 $Summoner = new Summoner();
@@ -66,6 +67,8 @@ $Summoner = new Summoner();
 $DB = false;
 # the template data as an array
 $TemplateData = array();
+# translation
+$T = new Translation();
 # the default view
 $View = 'home.php';
 # the default script

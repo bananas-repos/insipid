@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -28,22 +28,8 @@
 ?>
 <section class="section">
 
-	<?php require('_displaySubmitStatus.inc.php'); ?>
-
 	<div class="columns">
-		<div class="column">
-			<p class="has-text-right">
-				<a href="index.php?p=overview&m=tag" title="all tags" class="button">
-					<span class="icon"><i class="ion-md-pricetags"></i></span>
-				</a>
-				<a href="index.php?p=overview&m=category" title="all categories" class="button">
-					<span class="icon"><i class="ion-md-filing"></i></span>
-				</a>
-				<a href="index.php" title="... back to home" class="button">
-					<span class="icon"><i class="ion-md-home"></i></span>
-				</a>
-			</p>
-		</div>
+		<?php require('_headNavIcons.inc.php'); ?>
 	</div>
 
 	<div class="columns">
@@ -51,55 +37,57 @@
 			<h2 class="is-size-2">Stats</h2>
 		</div>
 	</div>
+
+	<?php require('_displaySubmitStatus.inc.php'); ?>
 </section>
 
 <section class="section">
 	<div class="columns is-multiline">
 		<div class="column is-one-quarter">
-			<h4 class="is-size-4">Links</h4>
-			<p># of Links: <?php echo $linkAmount; ?></p>
-			<p><a href="index.php?p=overview&m=all">View all</a></p>
+			<h4 class="is-size-4"><?php echo $T->t('view.links'); ?></h4>
+			<p># <?php echo $linkAmount; ?></p>
+			<p><a href="index.php?p=overview&m=all"><?php echo $T->t('stats.view.all'); ?></a></p>
 		</div>
 		<div class="column is-one-quarter">
-			<h4 class="is-size-4">Tags</h4>
-			<p># of Tags: <?php echo $tagAmount; ?></p>
-			<p><a href="index.php?p=overview&m=tag">View all</a></p>
+			<h4 class="is-size-4"><?php echo $T->t('view.tags'); ?></h4>
+			<p># <?php echo $tagAmount; ?></p>
+			<p><a href="index.php?p=overview&m=tag"><?php echo $T->t('stats.view.all'); ?></a></p>
 		</div>
 		<div class="column is-one-quarter">
-			<h4 class="is-size-4">Categories</h4>
-			<p># of Categories: <?php echo $categoryAmount; ?></p>
-			<p><a href="index.php?p=overview&m=category">View all</a></p>
+			<h4 class="is-size-4"><?php echo $T->t('view.categories'); ?></h4>
+			<p># <?php echo $categoryAmount; ?></p>
+			<p><a href="index.php?p=overview&m=category"><?php echo $T->t('stats.view.all'); ?></a></p>
 		</div>
 		<?php if($_displayEditButton === true) { ?>
 		<div class="column is-one-quarter">
-			<h4 class="is-size-4">Moderation</h4>
-			<p># Moderation needed: <?php echo $moderationAmount; ?></p>
-			<p><a href="index.php?p=overview&m=awm">View all</a></p>
+			<h4 class="is-size-4"><?php echo $T->t('stats.moderation'); ?></h4>
+			<p># <?php echo $moderationAmount; ?></p>
+			<p><a href="index.php?p=overview&m=awm"><?php echo $T->t('stats.view.all'); ?></a></p>
 		</div>
 		<div class="column is-one-quarter">
-			<h4 class="is-size-4">Local image storage</h4>
-			<p>Diskspace used: <?php echo $localStorageAmount; ?></p>
+			<h4 class="is-size-4"><?php echo $T->t('stats.image.storage'); ?></h4>
+			<p><?php echo $T->t('stats.image.storage.diskspace'); ?>: <?php echo $localStorageAmount; ?></p>
             <form method="post">
-                <input type="submit" class="button is-info is-small" value="Delete all" name="statsDeleteLocalStorage">
+                <input type="submit" class="button is-info is-small" value="<?php echo $T->t('stats.image.delete.all'); ?>" name="statsDeleteLocalStorage">
             </form>
 		</div>
         <div class="column is-one-quarter">
-            <h4 class="is-size-4">Full DB backup</h4>
-            <p>Create a complete DB export from your data.</p>
+            <h4 class="is-size-4"><?php echo $T->t('stats.full.backup'); ?></h4>
+            <p><?php echo $T->t('stats.full.backup.help'); ?></p>
             <form method="post">
-                <input type="submit" class="button is-info is-small" value="Create backup" name="statsCreateDBBackup">
+                <input type="submit" class="button is-info is-small" value="<?php echo $T->t('stats.full.backup.create'); ?>" name="statsCreateDBBackup">
             </form>
         </div>
         <div class="column is-one-quarter">
-            <h4 class="is-size-4">Search index</h4>
-            <p>Update search index</p>
+            <h4 class="is-size-4"><?php echo $T->t('stats.search.index'); ?></h4>
+            <p><?php echo $T->t('stats.search.index.help'); ?></p>
             <form method="post">
-                <input type="submit" class="button is-info is-small" value="Update index" name="statsUpdateSearchIndex">
+                <input type="submit" class="button is-info is-small" value="<?php echo $T->t('stats.search.index.update'); ?>" name="statsUpdateSearchIndex">
             </form>
         </div>
         <div class="column is-one-quarter">
-            <h4 class="is-size-4">Import XML</h4>
-            <p>Single or multiple</p>
+            <h4 class="is-size-4"><?php echo $T->t('stats.import.xml'); ?></h4>
+            <p><?php echo $T->t('stats.import.xml.help'); ?></p>
             <form method="post" enctype="multipart/form-data">
                 <div class="file">
                     <label class="file-label">
@@ -109,7 +97,7 @@
                                 <i class="ion-md-cloud-upload"></i>
                             </span>
                             <span class="file-label">
-                                Choose a file…
+                                <?php echo $T->t('stats.import.xml.file'); ?>
                             </span>
                         </span>
                     </label>
@@ -117,11 +105,11 @@
                 <div class="field">
                     <label class="checkbox">
                         <input type="checkbox" value="overwrite" name="importOverwrite">
-                        Overwrite existing
+						<?php echo $T->t('stats.import.xml.overwrite'); ?>
                     </label>
                 </div>
                 <div class="field">
-                    <input type="submit" class="button is-info is-small" value="Import" name="statsImportXML">
+                    <input type="submit" class="button is-info is-small" value="<?php echo $T->t('stats.import.xml.import'); ?>" name="statsImportXML">
                 </div>
             </form>
         </div>

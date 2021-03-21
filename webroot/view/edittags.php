@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -28,19 +28,7 @@
  ?>
 <section class="section">
 	<div class="columns">
-		<div class="column">
-			<p class="has-text-right">
-				<a href="index.php?p=overview&m=tag" title="all tags" class="button">
-					<span class="icon"><i class="ion-md-pricetags"></i></span>
-				</a>
-				<a href="index.php?p=overview&m=category" title="all categories" class="button">
-					<span class="icon"><i class="ion-md-filing"></i></span>
-				</a>
-				<a href="index.php" title="... back to home" class="button">
-					<span class="icon"><i class="ion-md-home"></i></span>
-				</a>
-			</p>
-		</div>
+		<?php require('_headNavIcons.inc.php'); ?>
 	</div>
 
 	<div class="columns">
@@ -48,8 +36,7 @@
 			<?php if(!empty($subHeadline)) { ?>
 			<h2 class="is-size-2"><?php echo $subHeadline; ?></h2>
 			<?php } ?>
-			<h3><a href="index.php?p=overview&m=tag">
-					<i class="icon ion-md-return-left"></i></a></h3>
+			<h3><a href="index.php?p=overview&m=tag"><i class="icon ion-md-return-left"></i></a></h3>
 		</div>
 	</div>
 
@@ -64,9 +51,9 @@
 		<form method="post">
 			<table class="table">
 				<tr>
-					<th>Name</th>
-					<th>New name</th>
-					<th>Deletion</th>
+					<th><?php echo $T->t('view.name'); ?></th>
+					<th><?php echo $T->t('view.new.name'); ?></th>
+					<th><?php echo $T->t('view.deletion'); ?></th>
 				</tr>
 			<?php foreach ($tagCollection as $k=>$v) { ?>
 				<tr>
@@ -82,7 +69,7 @@
 				</tr>
 			<?php } ?>
 				<tr>
-					<td>New tag</td>
+					<td><?php echo $T->t('edit.tags.new'); ?></td>
 					<td>
 						<input class="input" type="text" name="newTag">
 					</td>
@@ -92,7 +79,7 @@
 				</tr>
 				<tr>
 					<td colspan="3">
-						<input type="submit" class="button is-success" name="updateTags" value="Update tags">
+						<input type="submit" class="button is-success" name="updateTags" value="<?php echo $T->t('edit.tags.update'); ?>">
 					</td>
 				</tr>
 			</table>

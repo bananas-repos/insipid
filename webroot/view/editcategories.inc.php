@@ -58,7 +58,7 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
 
     $catDoNotDeleteFromUpdate = array();
     if(!empty($catToUpdate)) {
-        $submitFeedback['message'][] = 'Categories renamed successfully.';
+        $submitFeedback['message'][] = $T->t('edit.category.renamed');
         foreach ($catToUpdate as $k=>$v) {
             $catObjAlternative = new Category($DB);
             $do = $catObjAlternative->initbystring($v,true);
@@ -76,7 +76,7 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
                     }
                 }
                 else {
-                    $submitFeedback['message'][] = 'Categories could not be renamed.';
+                    $submitFeedback['message'][] = $T->t('edit.category.rename.fail');
                     $submitFeedback['status'] = 'error';
                 }
             }
@@ -87,14 +87,14 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
                 }
             }
             else {
-                $submitFeedback['message'][] = 'Categories could not be renamed.';
+                $submitFeedback['message'][] = $T->t('edit.category.rename.fail');
                 $submitFeedback['status'] = 'error';
             }
         }
     }
 
 	if(!empty($deleteCategoryData)) {
-		$submitFeedback['message'][] = 'Categories deleted successfully.';
+		$submitFeedback['message'][] = $T->t('edit.category.deleted');
 
 		foreach($deleteCategoryData as $k=>$v) {
             if($v == "delete" && !isset($catDoNotDeleteFromUpdate[$k])) {
@@ -104,7 +104,7 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
 					$catObj->delete();
 				}
 				else {
-					$submitFeedback['message'][] = 'Categories could not be deleted.';
+					$submitFeedback['message'][] = $T->t('edit.category.delete.fail');
 					$submitFeedback['status'] = 'error';
 				}
 			}
@@ -112,14 +112,14 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
 	}
 
 	if(!empty($newCategory)) {
-		$submitFeedback['message'][] = 'Categories added successfully.';
+		$submitFeedback['message'][] = $T->t('edit.category.added');
 		$catArr = Summoner::prepareTagOrCategoryStr($newCategory);
 
 		foreach($catArr as $c) {
 			$catObj = new Category($DB);
 			$do = $catObj->initbystring($c);
 			if($do === false) {
-				$submitFeedback['message'][] = 'Category could not be added.';
+				$submitFeedback['message'][] = $T->t('edit.category.add.fail');
 				$submitFeedback['status'] = 'error';
 			}
 		}
@@ -128,4 +128,4 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
 
 # show all the categories we have
 $categoryCollection = $Management->categories(false, true);
-$subHeadline = 'All the categories <i class="ion-md-filing"></i>';
+$subHeadline = $T->t('view.categories').' <i class="ion-md-filing"></i>';

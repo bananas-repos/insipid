@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -28,19 +28,7 @@
 ?>
 <section class="section">
 	<div class="columns">
-		<div class="column">
-			<p class="has-text-right">
-				<a href="index.php?p=overview&m=tag" title="all tags" class="button">
-					<span class="icon"><i class="ion-md-pricetags"></i></span>
-				</a>
-				<a href="index.php?p=overview&m=category" title="all categories" class="button">
-					<span class="icon"><i class="ion-md-filing"></i></span>
-				</a>
-				<a href="index.php" title="... back to home" class="button">
-					<span class="icon"><i class="ion-md-home"></i></span>
-				</a>
-			</p>
-		</div>
+		<?php require('_headNavIcons.inc.php'); ?>
 	</div>
 
 	<div class="columns">
@@ -57,11 +45,11 @@
             <nav class="pagination is-small" role="navigation" aria-label="pagination">
                 <?php if($pagination['curPage'] > 1) {
                     echo '<a href="index.php?'.Summoner::createFromParameterLinkQuery($currentGetParameters,array('page'=>($pagination['curPage']-1))).'" 
-                        class="pagination-previous">Previous</a>';
+                        class="pagination-previous">'.$T->t('view.previous').'</a>';
                 }
                 if($pagination['curPage'] < $pagination['pages']) {
                     echo '<a href="index.php?'.Summoner::createFromParameterLinkQuery($currentGetParameters,array('page'=>($pagination['curPage']+1))).'" 
-                        class="pagination-next">Next</a>';
+                        class="pagination-next">'.$T->t('view.next').'</a>';
                 }
                 ?>
                 <ul class="pagination-list">
@@ -73,8 +61,8 @@
 
                         if(in_array($i,$pagination['visibleRange'])) {
                             echo '<li><a href="index.php?'.Summoner::createFromParameterLinkQuery($currentGetParameters,array('page'=>$i)).'"
-                            class="pagination-link ' . $active . '"
-                            aria-label="Goto page ' . $i . '">' . $i . '</a></li>';
+                            class="pagination-link '.$active.'"
+                            aria-label="Goto page '.$i.'">'. $i.'</a></li>';
                         }
                         else {
                             if($i < $pagination['currentRangeStart'] && $ellipsisShown == 0) {
@@ -96,9 +84,9 @@
             <?php if(!empty($linkCollection['results'])) { ?>
             <div class="is-pulled-right">
                 <a href="index.php?<?php echo $sortLink['default']; ?>"
-                   class="button is-small <?php if($sortLink['active'] === 'default') { ?>is-link<?php } ?>">default</a>
+                   class="button is-small <?php if($sortLink['active'] === 'default') { ?>is-link<?php } ?>"><?php echo $T->t('view.sort.default'); ?></a>
                 <a href="index.php?<?php echo $sortLink['name']; ?>"
-                   class="button is-small <?php if($sortLink['active'] === 'title') { ?>is-link<?php } ?>">title</a>
+                   class="button is-small <?php if($sortLink['active'] === 'title') { ?>is-link<?php } ?>"><?php echo $T->t('view.sort.title'); ?></a>
                 <a href="index.php?<?php echo $sortLink['direction']; ?>"
                    class="button is-small <?php if($sortLink['activeDirection'] === true) { ?>is-link<?php } ?>"><span class="icon"><i class="ion-md-arrow-dropup"></i></span></a>
             </div>
@@ -131,11 +119,11 @@
 				</div>
 			</div>
 			<footer class="card-footer">
-				<a href="<?php echo $link['link']; ?>" target="_blank" class="card-footer-item">Visit link</a>
+				<a href="<?php echo $link['link']; ?>" target="_blank" class="card-footer-item"><?php echo $T->t('view.visit.link'); ?></a>
 				<?php if($isAwm === true) { ?>
-				<a href="index.php?p=editlink&id=<?php echo $link['hash']; ?>&awm=1" class="card-footer-item">Edit</a>
+				<a href="index.php?p=editlink&id=<?php echo $link['hash']; ?>&awm=1" class="card-footer-item"><?php echo $T->t('view.edit'); ?></a>
 				<?php } else { ?>
-				<a href="index.php?p=linkinfo&id=<?php echo $link['hash']; ?>" class="card-footer-item">More details</a>
+				<a href="index.php?p=linkinfo&id=<?php echo $link['hash']; ?>" class="card-footer-item"><?php echo $T->t('view.more.details'); ?></a>
 				<?php } ?>
 			</footer>
 		</div>
@@ -147,8 +135,8 @@
 	<div class="column">
 		<table class="table">
 			<tr>
-				<th>Name</th>
-				<th># of links</th>
+				<th><?php echo $T->t('view.name'); ?></th>
+				<th><?php echo $T->t('view.num.links'); ?></th>
 			</tr>
 		<?php foreach ($tagCollection as $k=>$v) { ?>
 			<tr>
@@ -163,7 +151,7 @@
 		<div class="content">
 			<a href="index.php?p=edittags" class="button is-small is-danger">
 				<span class="icon"><i class="ion-md-create"></i></span>
-				<span>Edit tags</span>
+				<span><?php echo $T->t('view.edit.tags'); ?></span>
 			</a>
 		</div>
 	</div>
@@ -174,8 +162,8 @@
 	<div class="column">
 		<table class="table">
 			<tr>
-				<th>Name</th>
-				<th># of links</th>
+				<th><?php echo $T->t('view.name'); ?></th>
+				<th><?php echo $T->t('view.num.links'); ?></th>
 			</tr>
 		<?php foreach ($categoryCollection as $k=>$v) { ?>
 			<tr>
@@ -190,7 +178,7 @@
 		<div class="content">
 			<a href="index.php?p=editcategories" class="button is-small is-danger">
 				<span class="icon"><i class="ion-md-create"></i></span>
-				<span>Edit categories</span>
+				<span><?php echo $T->t('view.edit.categories'); ?></span>
 			</a>
 		</div>
 	</div>

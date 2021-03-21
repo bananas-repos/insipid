@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -55,15 +55,15 @@ class Link {
 
 		if (!empty($hash)) {
 			$queryStr = "SELECT
-				any_value(`id`) as id,
-				any_value(`link`) as link,
-				any_value(`created`) as created,
-				any_value(`updated`) as `updated`,
-				any_value(`status`) as `status`,
-				any_value(`description`) as description,
-				any_value(`title`) as title,
-				any_value(`image`) as image,
-				any_value(`hash`) as hash
+				`id`,
+				`link`,
+				`created`,
+				`updated`,
+				`status`,
+				`description`,
+				`title`,
+				`image`,
+				`hash`
 				FROM `" . DB_PREFIX . "_link`
 				WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 			$query = $this->DB->query($queryStr);
@@ -86,6 +86,7 @@ class Link {
 	/**
 	 * loads only the info needed to display the link
 	 * for edit use $this->load
+	 *
 	 * @param $hash
 	 * @return array
 	 */
@@ -93,13 +94,7 @@ class Link {
 		$this->_data = array();
 
 		if (!empty($hash)) {
-			$queryStr = "SELECT
-				any_value(`id`) as id,
-				any_value(`link`) as link,
-				any_value(`description`) as description,
-				any_value(`title`) as title,
-				any_value(`image`) as image,
-				any_value(`hash`) as hash
+			$queryStr = "SELECT `id`,`link`,`description`,`title`,`image`,`hash`, `created`
 				FROM `" . DB_PREFIX . "_link`
 				WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 
@@ -115,8 +110,21 @@ class Link {
 		return $this->_data;
 	}
 
+	public function loadFromDataShortInfo($data) {
+		$this->_data = array();
+
+		if(isset($data['id']) && isset($data['link']) && isset($data['created']) && isset($data['status'])
+			&& isset($data['title']) && isset($data['hash']) && isset($data['description']) && isset($data['image'])) {
+			$this->_data = $data;
+			$this->_image();
+		}
+
+		return $this->_data;
+	}
+
 	/**
 	 * return all or data for given key on the current loaded link
+	 *
 	 * @param bool $key
 	 * @return array|mixed
 	 */
@@ -150,6 +158,16 @@ class Link {
 		if (!isset($data['hash']) || empty($data['hash'])) return false;
 		if (!isset($data['title']) || empty($data['title'])) return false;
 
+		$_t = parse_url($data['link']);
+		$data['search'] = $data['title'];
+		$data['search'] .= ' '.$data['description'];
+		$data['search'] .= ' '.implode(" ",$data['tagArr']);
+		$data['search'] .= ' '.implode(" ",$data['catArr']);
+		$data['search'] .= ' '.$_t['host'];
+		$data['search'] .= ' '.implode(' ',explode('/',$_t['path']));
+		$data['search'] = trim($data['search']);
+		$data['search'] = strtolower($data['search']);
+
 		$queryStr = "INSERT INTO `" . DB_PREFIX . "_link` SET
                         `link` = '" . $this->DB->real_escape_string($data['link']) . "',
                         `created` = NOW(),
@@ -173,6 +191,7 @@ class Link {
 
 	/**
 	 * update the current loaded link with the given data
+	 *
 	 * @param array $data
 	 * @return boolean|int
 	 */
@@ -186,10 +205,13 @@ class Link {
 			$catArr = Summoner::prepareTagOrCategoryStr($data['category']);
 			$tagArr = Summoner::prepareTagOrCategoryStr($data['tag']);
 
+			$_t = parse_url($this->_data['link']);
 			$search = $data['title'];
 			$search .= ' '.$data['description'];
 			$search .= ' '.implode(" ", $tagArr);
 			$search .= ' '.implode(" ", $catArr);
+			$search .= ' '.$_t['host'];
+			$search .= ' '.implode(' ',explode('/',$_t['path']));
             $search = trim($search);
 			$search = strtolower($search);
 
