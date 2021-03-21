@@ -686,10 +686,13 @@ class Management {
 				$LinkObj = new Link($this->DB);
 				$l = $LinkObj->load($link['hash']);
 
+				$_t = parse_url($l['link']);
 				$searchStr = $l['title'];
 				$searchStr .= ' '.$l['description'];
 				$searchStr .= ' '.implode(' ',$l['tags']);
                 $searchStr .= ' '.implode(' ',$l['categories']);
+				$searchStr .= ' '.$_t['host'];
+				$searchStr .= ' '.implode(' ',explode('/',$_t['path']));
                 $searchStr = trim($searchStr);
                 $searchStr = strtolower($searchStr);
 
@@ -759,7 +762,6 @@ class Management {
 							'status' => $linkToImport['private'],
 							'description' => $linkToImport['description'],
 							'title' => $linkToImport['title'],
-							'search' => '',
 							'image' => $linkToImport['image']
 						), true);
 					} catch (Exception $e) {

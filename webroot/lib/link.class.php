@@ -158,6 +158,16 @@ class Link {
 		if (!isset($data['hash']) || empty($data['hash'])) return false;
 		if (!isset($data['title']) || empty($data['title'])) return false;
 
+		$_t = parse_url($data['link']);
+		$data['search'] = $data['title'];
+		$data['search'] .= ' '.$data['description'];
+		$data['search'] .= ' '.implode(" ",$data['tagArr']);
+		$data['search'] .= ' '.implode(" ",$data['catArr']);
+		$data['search'] .= ' '.$_t['host'];
+		$data['search'] .= ' '.implode(' ',explode('/',$_t['path']));
+		$data['search'] = trim($data['search']);
+		$data['search'] = strtolower($data['search']);
+
 		$queryStr = "INSERT INTO `" . DB_PREFIX . "_link` SET
                         `link` = '" . $this->DB->real_escape_string($data['link']) . "',
                         `created` = NOW(),
@@ -181,6 +191,7 @@ class Link {
 
 	/**
 	 * update the current loaded link with the given data
+	 *
 	 * @param array $data
 	 * @return boolean|int
 	 */
@@ -194,10 +205,13 @@ class Link {
 			$catArr = Summoner::prepareTagOrCategoryStr($data['category']);
 			$tagArr = Summoner::prepareTagOrCategoryStr($data['tag']);
 
+			$_t = parse_url($this->_data['link']);
 			$search = $data['title'];
 			$search .= ' '.$data['description'];
 			$search .= ' '.implode(" ", $tagArr);
 			$search .= ' '.implode(" ", $catArr);
+			$search .= ' '.$_t['host'];
+			$search .= ' '.implode(' ',explode('/',$_t['path']));
             $search = trim($search);
 			$search = strtolower($search);
 

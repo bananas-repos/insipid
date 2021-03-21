@@ -2,6 +2,8 @@ version 2.6 - Hypostyle
 
 	+ Fixed sql problems with Maria DB. Any_value is not supported there
 	+ Fixed some query and data loading brain fucks..
+	+ Fixed #10. URL is now considered when building search information.
+		Update search index from stats view to update all the exiting information
 	+ Updated third party information in readme
 	+ Fixed xml import xsd
 	+ Added translation support. More information in translation.txt

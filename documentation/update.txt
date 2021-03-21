@@ -5,6 +5,7 @@ the version your are updating from is done.
 
 + Update config file with the new language setting. See config.default and
   translation.txt for more information
++ Run update search index to use the URL within the search index for your existing data.
 
 ## version 2.5 - Winnowing Hall
 

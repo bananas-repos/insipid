@@ -125,24 +125,18 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 		$catArr = Summoner::prepareTagOrCategoryStr($formData['category']);
 		$tagArr = Summoner::prepareTagOrCategoryStr($formData['tag']);
 
-		$search = $formData['title'];
-		$search .= ' '.$formData['description'];
-		$search .= ' '.implode(" ",$tagArr);
-		$search .= ' '.implode(" ",$catArr);
-		$search .= trim($search);
-		$search = strtolower($search);
-
 		$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
 		$linkObj = new Link($DB);
 		$linkID = $linkObj->create(array(
 			'hash' => $hash,
-			'search' => $search,
 			'link' => $formData['url'],
 			'status' => $formData['private'],
 			'description' => $formData['description'],
 			'title' => $formData['title'],
-			'image' => $formData['image']
+			'image' => $formData['image'],
+			'tagArr'  => $tagArr,
+			'catArr' => $catArr
 		),true);
 
 		if(!empty($linkID)) {

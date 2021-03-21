@@ -155,7 +155,6 @@ if(!empty($emails)) {
 				$newdata['title'] = '';
 				$newdata['image'] = '';
 				$newdata['status'] = '3'; # moderation required
-				$newdata['search'] = '';
 				$newdata['tagArr'] = array();
 				$newdata['catArr'] = array();
 				$newdata['hash'] = '';
@@ -199,13 +198,6 @@ if(!empty($emails)) {
 					continue;
 				}
 
-				$newdata['search'] = $newdata['title'];
-				$newdata['search'] .= ' '.$newdata['description'];
-				$newdata['search'] .= ' '.implode(" ",$newdata['tagArr']);
-				$newdata['search'] .= ' '.implode(" ",$newdata['catArr']);
-				$newdata['search'] = trim($newdata['search']);
-                $newdata['search'] = strtolower($newdata['search']);
-
 				if(DEBUG === true) var_dump($newdata);
 
                 $linkObj = new Link($DB);
@@ -225,12 +217,13 @@ if(!empty($emails)) {
                     try {
                         $linkID = $linkObj->create(array(
                             'hash' => $newdata['hash'],
-                            'search' => $newdata['search'],
                             'link' => $newdata['link'],
                             'status' => $newdata['status'],
                             'description' => $newdata['description'],
                             'title' => $newdata['title'],
-                            'image' => $newdata['image']
+                            'image' => $newdata['image'],
+							'tagArr' => $newdata['tagArr'],
+							'catArr' => $newdata['catArr']
                         ), true);
                     } catch (Exception $e) {
                         $_m = "WARN Can not create new link into DB." . $e->getMessage();
