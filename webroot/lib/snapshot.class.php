@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -32,19 +32,30 @@
  * right now it uses google pagespeedonline.
  */
 class Snapshot {
+	/**
+	 * @var string
+	 */
 	private $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=';
+
+	/**
+	 * @var string
+	 */
 	private $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
 
+	/**
+	 * Snapshot constructor
+	 */
 	public function __constructor() {}
 
 	/**
 	 * call given url with google PageSpeed API
-	 * to recieve image data
+	 * to receive image data
 	 *
 	 * @param String $url URL to take a thumbnail from
-	 * @return
+	 * @param string $filename
+	 * @return boolean
 	 */
-	public function doSnapshot($url,$filename) {
+	public function doSnapshot(string $url, string $filename): bool {
 		$ret = false;
 
 		if(!empty($url) && is_writable(dirname($filename))) {
@@ -64,13 +75,14 @@ class Snapshot {
 	}
 
 	/**
-	 * use configired WKHTMLTOPDF_COMMAND to create a whole page screenshot
+	 * use configured WKHTMLTOPDF_COMMAND to create a whole page screenshot
 	 * of the given link and store it locally
 	 *
 	 * @param String $url URL to take the screenshot from
-	 * @return
+	 * @param string $filename
+	 * @return boolean
 	 */
-	public function wholePageSnpashot($url,$filename) {
+	public function wholePageSnpashot(string $url, string $filename): bool {
 		$ret = false;
 
 		require_once 'lib/shellcommand.class.php';

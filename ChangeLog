@@ -1,6 +1,7 @@
 version 2.7 - Sacred Grove
 
 	+ Fixed bug #12. Missing translation key
+	+ Adapted some new PHP code formatting
 
 version 2.6 - Hypostyle
 

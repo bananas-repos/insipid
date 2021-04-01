@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -38,7 +38,7 @@ class EmailImportHelper {
 	 * @param string $string
 	 * @return array $ret
 	 */
-	static function extractEmailLinks($string) {
+	static function extractEmailLinks(string $string): array {
 		$ret = array();
 
 		#this matches a valid URL. An URL with | is still valid...
@@ -56,13 +56,14 @@ class EmailImportHelper {
 
 	/**
 	 * Check if given from is in the valid EMAIL_REPLY_BACK_VALID
-	 * @param $replyto
+	 *
+	 * @param string $replyTo
 	 * @return bool
 	 */
-	static function canSendReplyTo($replyto) {
+	static function canSendReplyTo(string $replyTo): bool {
 		if(defined("EMAIL_REPORT_BACK") && EMAIL_REPORT_BACK === true
 			&& defined("EMAIL_REPLY_BACK_VALID") && !empty(EMAIL_REPLY_BACK_VALID)) {
-			if(strstr($replyto,EMAIL_REPLY_BACK_VALID)) {
+			if(strstr($replyTo,EMAIL_REPLY_BACK_VALID)) {
 				return true;
 			}
 		}
@@ -82,10 +83,10 @@ class EmailImportHelper {
 	 *
 	 * this does not really quality check the values. It just checks if some headers are set
 	 *
-	 * @param $headers complete email headers as an array
+	 * @param array $headers complete email headers as an array
 	 * @return bool
 	 */
-	static function isAutoReplyMessage($headers) {
+	static function isAutoReplyMessage(array $headers): bool {
 		if(empty($headers)) {
 			return true;
 		}

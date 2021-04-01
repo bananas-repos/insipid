@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -45,11 +45,17 @@ class SimpleImap {
 
 	private $_connectionstring = '';
 
+	/**
+	 * SimpleImap constructor.
+	 */
 	function __construct() {
 	    # create the mailboxstring
 	    $this->_connectionstring = '{'.$this->_server.':'.$this->_port.'/imap/ssl}';
 	}
 
+	/**
+	 *
+	 */
 	function __destruct() {
 	    imap_close($this->_connection);
 	}
@@ -84,11 +90,12 @@ class SimpleImap {
 	/**
 	 * process the given mailbox and check for the special messages
 	 * return the body and headers from the found message
+	 *
 	 * @param string $subjectmarker
 	 * @return array emailId => array(body, header);
 	 * @throws Exception
 	 */
-	function messageWithValidSubject($subjectmarker) {
+	function messageWithValidSubject(string $subjectmarker): array {
 	    $ret = array();
 
 	    $messagecount = imap_num_msg($this->_connection);
@@ -160,38 +167,42 @@ class SimpleImap {
 
 	/**
 	 * This function causes a fetch of the complete, unfiltered RFC2822 format header of the specified message.
-	 * @param $messagenum Int
+	 *
+	 * @param integer $messagenum
 	 * @return string
 	 */
-	public function emailHeaders($messagenum) {
+	public function emailHeaders(int $messagenum): string {
 		return imap_fetchheader($this->_connection, $messagenum);
 	}
 
 	/**
 	 * return the email headers by given emailid
-	 * @param $messagenum
+	 *
+	 * @param integer $messagenum
 	 * @return object
 	 */
-	public function emailHeaders_rfc822($messagenum) {
+	public function emailHeaders_rfc822(int $messagenum) {
 		return imap_rfc822_parse_headers($this->emailHeaders($messagenum));
 	}
 
 	/**
 	 * Email headers parsed as an array
-	 * @param $messagenum
+	 *
+	 * @param integer $messagenum
 	 * @return array
 	 */
-	public function emailHeadersAsArray($messagenum) {
+	public function emailHeadersAsArray(int $messagenum): array {
 		preg_match_all('/([^: ]+): (.+?(?:\r\n\s(?:.+?))*)\r\n/m', $this->emailHeaders($messagenum), $matches );
 		return array_combine( $matches[1], $matches[2]);
 	}
 
-    /**
-     * Move given message to given folder
-     * @param $messageUid This is the message Uid as an int
-     * @param string $folder This is the target folder. Default is EMAIL_ARCHIVE_FOLDER
-     */
-	public function moveMessage($messageUid,$folder=EMAIL_ARCHIVE_FOLDER) {
+	/**
+	 * Move given message to given folder
+	 *
+	 * @param integer $messageUid This is the message Uid as an int
+	 * @param string $folder This is the target folder. Default is EMAIL_ARCHIVE_FOLDER
+	 */
+	public function moveMessage(int $messageUid, $folder=EMAIL_ARCHIVE_FOLDER) {
 	    if(!empty($messageUid) && !empty($folder)) {
 	        $messageUid = (string)$messageUid;
 	        imap_setflag_full($this->_connection,$messageUid,"\SEEN", ST_UID);
@@ -207,7 +218,7 @@ class SimpleImap {
 	 * @param int $messagenum
 	 * @return string
 	 */
-	private function _extractSubject($messagenum) {
+	private function _extractSubject(int $messagenum): string {
 	    $ret = '';
 
 	    $headerinfo = $this->emailHeaders_rfc822($messagenum);
@@ -221,12 +232,13 @@ class SimpleImap {
 
 	/**
 	 * extract the body of the given message
+	 *
 	 * @see http://php.net/manual/en/function.imap-fetchstructure.php
 	 *
 	 * @param int $messagenum
 	 * @return string
 	 */
-	private function _extractBody($messagenum) {
+	private function _extractBody(int $messagenum): string {
 	    $ret = '';
 
 	    $emailstructure = imap_fetchstructure($this->_connection, $messagenum);

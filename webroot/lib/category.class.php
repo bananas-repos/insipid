@@ -53,10 +53,10 @@ class Category {
 	 * by given string load the info from the DB and even create if not existing
 	 *
 	 * @param string $string
-     * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
-	 * @return bool|int
+	 * @param bool $doNotCreate
+	 * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
 	 */
-    public function initbystring($string, $doNotCreate=false) {
+    public function initbystring(string $string, $doNotCreate=false): int {
         $ret = 0;
 		$this->_id = false;
         if(!empty($string)) {
@@ -91,11 +91,12 @@ class Category {
 
 	/**
 	 * by given DB table id load all the info we need
+	 *
 	 * @param int $id
-	 * @return mixed
+	 * @return integer
 	 */
-	public function initbyid($id) {
-		$this->_id = false;
+	public function initbyid(int $id): int {
+		$this->_id = 0;
 
 		if(!empty($id)) {
 			$queryStr = "SELECT id,name
@@ -114,10 +115,11 @@ class Category {
 
 	/**
 	 * return all or data fpr given key on the current loaded tag
+	 *
 	 * @param bool $key
-	 * @return array|mixed
+	 * @return array
 	 */
-	public function getData($key=false) {
+	public function getData($key=false): array {
 		$ret = $this->_data;
 
 		if(!empty($key) && isset($this->_data[$key])) {
@@ -129,10 +131,11 @@ class Category {
 
 	/**
 	 * set the relation to the given link to the loaded category
-	 * @param int $linkid
+	 *
+	 * @param integer $linkid
 	 * @return void
 	 */
-	public function setRelation($linkid) {
+	public function setRelation(int $linkid) {
 		if(!empty($linkid) && !empty($this->_id)) {
 			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_categoryrelation`
 							SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
@@ -143,9 +146,10 @@ class Category {
 
     /**
      * Return an array of any linkid related to the current loaded category
+	 *
      * @return array
      */
-    public function getReleations() {
+    public function getRelations(): array {
         $ret = array();
 
         $queryStr = "SELECT linkid 
@@ -163,9 +167,10 @@ class Category {
 
 	/**
 	 * deletes the current loaded category from db
+	 *
 	 * @return boolean
 	 */
-	public function delete() {
+	public function delete(): bool {
 		$ret = false;
 
 		if(!empty($this->_id)) {
@@ -196,12 +201,13 @@ class Category {
 		return $ret;
 	}
 
-    /**
-     * Rename current loaded cat name
-     * @param $newValue
-     * @return void
-     */
-    public function rename($newValue) {
+	/**
+	 * Rename current loaded cat name
+	 *
+	 * @param string $newValue
+	 * @return void
+	 */
+    public function rename(string $newValue) {
         if(!empty($newValue)) {
             $queryStr = "UPDATE `".DB_PREFIX."_category`
 	                    SET `name` = '".$this->DB->real_escape_string($newValue)."'

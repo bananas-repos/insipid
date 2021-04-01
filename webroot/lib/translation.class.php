@@ -43,6 +43,9 @@ class Translation {
 	 */
 	private $_langData = array();
 
+	/**
+	 * Translation constructor.
+	 */
 	public function __construct() {
 		$_langFile = ABSOLUTE_PATH.'/lib/lang/'.$this->_defaultLangToUse.'.lang.ini';
 		if(defined('FRONTEND_LANGUAGE')) {
@@ -65,10 +68,10 @@ class Translation {
 	/**
 	 * Return text for given key for currently loaded lang
 	 *
-	 * @param $key
+	 * @param string $key
 	 * @return string
 	 */
-	public function t($key) {
+	public function t(string $key): string {
 		$ret = $key;
 		if(isset($this->_langData[$key])) {
 			$ret = $this->_langData[$key];

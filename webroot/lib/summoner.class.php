@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -50,7 +50,7 @@ class Summoner {
 	 *
 	 * @return bool
 	 */
-	static function validate($input,$mode='text',$limit=false) {
+	static function validate($input,$mode='text',$limit=false): bool {
 		// check if we have input
 		$input = trim($input);
 
@@ -131,12 +131,13 @@ class Summoner {
 
 	/**
 	 * execute a curl call to the given $url
+	 *
 	 * @param string $url The request url
 	 * @param bool $port
-	 * @return bool|mixed
+	 * @return string
 	 */
-	static function curlCall($url,$port=false) {
-		$ret = false;
+	static function curlCall(string $url, $port=false): string {
+		$ret = '';
 
 		$ch = curl_init();
 
@@ -171,12 +172,13 @@ class Summoner {
 
 	/**
 	 * Download given url to given file
-	 * @param $url
-	 * @param $whereToStore
+	 *
+	 * @param string $url
+	 * @param string $whereToStore
 	 * @param bool $port
 	 * @return bool
 	 */
-	static function downloadFile($url, $whereToStore, $port=false) {
+	static function downloadFile(string $url, string $whereToStore, $port=false): bool {
 		$fh = fopen($whereToStore, 'w+');
 
 		$ret = false;
@@ -210,21 +212,22 @@ class Summoner {
 	 * this only works with arrays and checking if the key is there and echo/return it.
 	 * http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
 	 *
-	 * @param $array
-	 * @param $key
+	 * @param array $array
+	 * @param string $key
 	 * @return bool
 	 */
-	static function ifset($array,$key) {
+	static function ifset(array $array, string $key): bool {
 		return isset($array[$key]) ? $array[$key] : false;
 	}
 
 	/**
 	 * try to gather meta information from given URL
+	 *
 	 * @param string $url
-	 * @return array|bool
+	 * @return array
 	 */
-	static function gatherInfoFromURL($url) {
-		$ret = false;
+	static function gatherInfoFromURL(string $url): array {
+		$ret = array();
 
 		if(self::validate($url,'url')) {
 			$data = self::curlCall($url);
@@ -239,10 +242,11 @@ class Summoner {
 	/**
 	 * get as much as possible social meta infos from given string
 	 * the string is usually a HTML source
+	 *
 	 * @param string $string
 	 * @return array
 	 */
-	static function socialMetaInfos($string) {
+	static function socialMetaInfos(string $string): array {
 		#http://www.w3bees.com/2013/11/fetch-facebook-og-meta-tags-with-php.html
 		#http://www.9lessons.info/2014/01/social-meta-tags-for-google-twitter-and.html
 		#http://ogp.me/
@@ -335,7 +339,7 @@ class Summoner {
 	 * @param string $string
 	 * @return array
 	 */
-	static function prepareTagOrCategoryStr($string) {
+	static function prepareTagOrCategoryStr(string $string): array {
 		$ret = array();
         $_ret = array();
 
@@ -400,10 +404,11 @@ class Summoner {
 
 	/**
 	 * check if we have a valid auth. Nothing more.
+	 *
 	 * @see Summoner::simpleAuth to trigger the auth
 	 * @return bool
 	 */
-	static function simpleAuthCheck() {
+	static function simpleAuthCheck(): bool {
 		if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])
 			&& $_SERVER['PHP_AUTH_USER'] === FRONTEND_USERNAME && $_SERVER['PHP_AUTH_PW'] === FRONTEND_PASSWORD
 		) {
@@ -415,10 +420,11 @@ class Summoner {
 
 	/**
 	 * Checks if in the given urlstring a scheme is existent. If not add http:// to it
-	 * @param $urlString
+	 *
+	 * @param string $urlString
 	 * @return string
 	 */
-	static function addSchemeToURL($urlString) {
+	static function addSchemeToURL($urlString): string {
 		$ret = $urlString;
 
 		if(empty(parse_url($ret, PHP_URL_SCHEME))) {
@@ -428,12 +434,13 @@ class Summoner {
 		return $ret;
 	}
 
-    /**
-     * retrieve the folder size with its children of given folder path
-     * @param $folder
-     * @return false|int
-     */
-	static function folderSize($folder) {
+	/**
+	 * retrieve the folder size with its children of given folder path
+	 *
+	 * @param string $folder
+	 * @return int
+	 */
+	static function folderSize(string $folder): int {
 		$ret = 0;
 
 		if(file_exists($folder) && is_readable($folder)) {
@@ -445,13 +452,14 @@ class Summoner {
 		return $ret;
 	}
 
-    /**
-     * Calculate the given byte size in more human readable format.
-     * @param $size
-     * @param string $unit
-     * @return string
-     */
-	static function  humanFileSize($size,$unit="") {
+	/**
+	 * Calculate the given byte size in more human readable format.
+	 *
+	 * @param integer $size
+	 * @param string $unit
+	 * @return string
+	 */
+	static function humanFileSize(int $size, $unit=""): string {
         $ret =  number_format($size)." bytes";
 
         if((!$unit && $size >= 1<<30) || $unit == "GB") {
@@ -467,17 +475,17 @@ class Summoner {
         return $ret;
 	}
 
-    /**
-     * delete and/or empty a directory
-     *
-     * $empty = true => empty the directory but do not delete it
-     *
-     * @param string $directory
-     * @param boolean $empty
-     * @param int $fTime If not false remove files older then this value in sec.
-     * @return boolean
-     */
-    static function recursive_remove_directory($directory,$empty=false,$fTime=0) {
+	/**
+	 * delete and/or empty a directory
+	 *
+	 * $empty = true => empty the directory but do not delete it
+	 *
+	 * @param string $directory
+	 * @param boolean $empty
+	 * @param int $fTime If not false remove files older then this value in sec.
+	 * @return boolean
+	 */
+    static function recursive_remove_directory(string $directory, $empty=false, $fTime=0): bool {
         if(substr($directory,-1) == '/') {
             $directory = substr($directory,0,-1);
         }
@@ -524,16 +532,16 @@ class Summoner {
         }
     }
 
-    /**
-     * http_build_query with modify array
-     * modify will add: key AND value not empty
-     * modify will remove: only key with no value
-     *
-     * @param $array
-     * @param bool $modify
-     * @return string
-     */
-    static function createFromParameterLinkQuery($array,$modify=false) {
+	/**
+	 * http_build_query with modify array
+	 * modify will add: key AND value not empty
+	 * modify will remove: only key with no value
+	 *
+	 * @param array $array
+	 * @param bool $modify
+	 * @return string
+	 */
+    static function createFromParameterLinkQuery(array $array, $modify=false): string {
         $ret = '';
 
         if(!empty($modify)) {

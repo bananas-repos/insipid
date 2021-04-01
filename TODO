@@ -1,9 +1,7 @@
 TODO / Feature list
-+ adapt new php 7
-++ http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
 + view table really still needed?
 + stats cleanup. Management functions should be standalone
 + theme support
 + more "secure" user authentication
 ++ multiple user accounts and stuff
-+ combine cat and tag class into one.
++ combine category and tag class into one.
