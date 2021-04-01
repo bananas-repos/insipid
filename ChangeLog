@@ -1,3 +1,7 @@
+version 2.7 - Sacred Grove
+
+	+ Fixed bug #12. Missing translation key
+
 version 2.6 - Hypostyle
 
 	+ Fixed sql problems with Maria DB. Any_value is not supported there
