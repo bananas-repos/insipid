@@ -2,8 +2,10 @@ version 2.7 - Sacred Grove
 
 	+ Fixed bug #12. Missing translation key
 	+ Adapted some new PHP code formatting
+	+ Fixed some translations
+	+ Updated bulma css
 
-version 2.6 - Hypostyle
+version 2.6 - Hypostyle (2021-03-21)
 
 	+ Fixed sql problems with Maria DB. Any_value is not supported there
 	+ Fixed some query and data loading brain fucks..

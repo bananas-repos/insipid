@@ -223,14 +223,13 @@
 
 <script type="text/javascript" src="asset/js/editlink.js"></script>
 
-
 <?php } ?>
 
 <section class="section">
 	<div class="columns">
 		<div class="column">
 			<div class="content">
-				<h4><a href="index.php?p=overview&m=all">Last added</a></h4>
+				<h4><a href="index.php?p=overview&m=all"><?php echo $T->t('home.last.added'); ?></a></h4>
 <?php if(!empty($latestLinks)) { ?>
 				<div class="tags">
 <?php foreach ($latestLinks as $ll) { ?>

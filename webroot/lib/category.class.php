@@ -114,12 +114,12 @@ class Category {
 	}
 
 	/**
-	 * return all or data fpr given key on the current loaded tag
+	 * return all or data for given key on the current loaded category
 	 *
 	 * @param bool $key
-	 * @return array
+	 * @return string
 	 */
-	public function getData($key=false): array {
+	public function getData($key=false): string {
 		$ret = $this->_data;
 
 		if(!empty($key) && isset($this->_data[$key])) {
