@@ -33,19 +33,6 @@ class Management {
 
 	const LINK_QUERY_STATUS = 2;
 
-	const COMBINED_SELECT_VALUES = "`id`,
-				`link`,
-				`created`,
-				`status`,
-				`description`,
-				`title`,
-				`image`,
-				`hash`,
-				`tag`,
-				`category`,
-				`categoryId`,
-				`tagId`";
-
 	/**
 	 * the database object
 	 *
@@ -210,6 +197,63 @@ class Management {
 		$queryStr = "SELECT `title`, `link` FROM `".DB_PREFIX."_link` AS t";
 		$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
 		$queryStr .= " ORDER BY `created` DESC";
+		if(!empty($limit)) {
+			$queryStr .= " LIMIT $limit";
+		}
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			$ret = $query->fetch_all(MYSQLI_ASSOC);
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Return a random entry from link table.
+	 * Slow but does the trick for now. If there is way more entries
+	 * re-think this solution
+	 *
+	 * @param int $limit
+	 * @return array
+	 */
+	public function randomLink($limit=1): array {
+		$ret = array();
+
+		$queryStr = "SELECT `title`, `link`, `hash` FROM `".DB_PREFIX."_link` AS t";
+		$queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
+		$queryStr .= " ORDER BY RAND()";
+		if(!empty($limit)) {
+			$queryStr .= " LIMIT $limit";
+		}
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			$ret = $query->fetch_all(MYSQLI_ASSOC);
+		}
+
+		return $ret;
+	}
+
+	public function randomCategory($limit=1): array {
+		$ret = array();
+
+		$queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_category`";
+		$queryStr .= " ORDER BY RAND()";
+		if(!empty($limit)) {
+			$queryStr .= " LIMIT $limit";
+		}
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			$ret = $query->fetch_all(MYSQLI_ASSOC);
+		}
+
+		return $ret;
+	}
+
+	public function randomTag($limit=1): array {
+		$ret = array();
+
+		$queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_tag`";
+		$queryStr .= " ORDER BY RAND()";
 		if(!empty($limit)) {
 			$queryStr .= " LIMIT $limit";
 		}
