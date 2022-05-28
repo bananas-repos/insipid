@@ -232,7 +232,9 @@ class Link {
 			$search .= ' '.implode(" ", $tagArr);
 			$search .= ' '.implode(" ", $catArr);
 			$search .= ' '.$_t['host'];
-			$search .= ' '.implode(' ',explode('/',$_t['path']));
+			if(isset($_t['path'])) {
+				$search .= ' '.implode(' ',explode('/',$_t['path']));
+			}
             $search = trim($search);
 			$search = strtolower($search);
 

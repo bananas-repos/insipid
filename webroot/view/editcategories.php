@@ -44,7 +44,7 @@
 
 </section>
 
-<section>
+<section class="section">
 <?php if(!empty($categoryCollection)) { ?>
 <div class="columns">
 	<div class="column">
@@ -57,7 +57,9 @@
 				</tr>
 			<?php foreach ($categoryCollection as $k=>$v) { ?>
 				<tr>
-					<td><a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>" target="_blank"><?php echo $v['name']; ?></a></td>
+					<td>
+						<a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>"
+					       target="_blank"><?php echo $v['name']; ?></a> <small>(#<?php echo $v['amount']; ?>)</small></td>
 					<td>
 						<input class="input" type="text" name="category[<?php echo urlencode($k); ?>]">
 					</td>
