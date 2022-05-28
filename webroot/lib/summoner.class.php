@@ -214,10 +214,10 @@ class Summoner {
 	 *
 	 * @param array $array
 	 * @param string $key
-	 * @return bool
+	 * @return mixed
 	 */
-	static function ifset(array $array, string $key): bool {
-		return isset($array[$key]) ? $array[$key] : false;
+	static function ifset(array $array, string $key) {
+		return $array[$key] ?? false;
 	}
 
 	/**
