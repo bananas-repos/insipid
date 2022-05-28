@@ -5,6 +5,7 @@ version 2.7 - Sacred Grove ()
 	+ Fixed some translations
 	+ Updated bulma css
 	+ Added random link page
+	+ New syntax in config file. See update.txt for more details
 
 version 2.6 - Hypostyle (2021-03-21)
 
