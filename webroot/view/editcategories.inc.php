@@ -63,6 +63,10 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
             $catObjAlternative = new Category($DB);
             $do = $catObjAlternative->initbystring($v,true);
             if($do === 1) { # existing
+				if($k == $catObjAlternative->getData('id')) {
+					// Rename to the same. Do nothing
+					continue;
+				}
                 // the target cat should not be removed!
                 $catDoNotDeleteFromUpdate[$catObjAlternative->getData('id')] = $catObjAlternative->getData('id');
                 $catObjOld = new Category($DB);

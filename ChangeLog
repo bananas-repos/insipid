@@ -7,6 +7,8 @@ version 2.7 - Sacred Grove ()
 	+ Added random link page
 	+ New syntax in config file. See update.txt for more details
 	+ Fixed #13
+	+ Fixed #15
+	# Fixed #14
 
 version 2.6 - Hypostyle (2021-03-21)
 
