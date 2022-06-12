@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -26,35 +26,48 @@
  *
  */
 
+/**
+ * Class Tag
+ */
 class Tag {
 	/**
 	 * the database object
+	 *
 	 * @var object
 	 */
 	private $DB;
 
 	/**
 	 * the current loaded tag by DB id
+	 *
 	 * @var int
 	 */
 	private $_id;
 
 	/**
 	 * current loaded tag data
+	 *
 	 * @var array
 	 */
 	private $_data;
 
+	/**
+	 * Tag constructor.
+	 *
+	 * @param Obnject $databaseConnectionObject
+	 */
 	public function __construct($databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
 	}
 
-    /**
-     * by given string load the info from the DB and even create if not existing
-     * @param string $string
-     * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
-     */
-	public function initbystring($string, $doNotCreate=false) {
+	/**
+	 * by given string load the info from the DB and even create if not existing
+	 *
+	 * @param string $string
+	 * @param bool $doNotCreate
+	 * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
+	 */
+	public function initbystring(string $string, $doNotCreate=false): int {
 	    $ret = 0;
 		$this->_id = false;
 		if(!empty($string)) {
@@ -89,11 +102,12 @@ class Tag {
 
 	/**
 	 * by given DB table id load all the info we need
+	 *
 	 * @param int $id
-	 * @return bool|int
+	 * @return int
 	 */
-	public function initbyid($id) {
-		$this->_id = false;
+	public function initbyid(int $id): int {
+		$this->_id = 0;
 
 		if(!empty($id)) {
 			$queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
@@ -111,8 +125,9 @@ class Tag {
 
 	/**
 	 * return all or data fpr given key on the current loaded tag
+	 *
 	 * @param bool $key
-	 * @return array|mixed
+	 * @return array|string
 	 */
 	public function getData($key=false) {
 		$ret = $this->_data;
@@ -124,12 +139,13 @@ class Tag {
 		return $ret;
 	}
 
-    /**
-     * set the relation to the given link to the loaded tag
-     * @param int $linkid
-     * @return void
-     */
-	public function setRelation($linkid) {
+	/**
+	 * set the relation to the given link to the loaded tag
+	 *
+	 * @param int $linkid
+	 * @return void
+	 */
+	public function setRelation(int $linkid) {
 		if(!empty($linkid) && !empty($this->_id)) {
 			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
 							SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
@@ -140,9 +156,10 @@ class Tag {
 
     /**
      * Return an array of any linkid related to the current loaded tag
+	 *
      * @return array
      */
-	public function getReleations() {
+	public function getReleations(): array {
 	    $ret = array();
 
 	    $queryStr = "SELECT linkid 
@@ -160,9 +177,10 @@ class Tag {
 
 	/**
 	 * deletes the current loaded tag from db
+	 *
 	 * @return boolean
 	 */
-	public function delete() {
+	public function delete(): bool {
 		$ret = false;
 
 		if(!empty($this->_id)) {
@@ -193,12 +211,13 @@ class Tag {
 		return $ret;
 	}
 
-    /**
-     * Rename current loaded tag name
-     * @param $newValue
-     * @return void
-     */
-	public function rename($newValue) {
+	/**
+	 * Rename current loaded tag name
+	 *
+	 * @param string $newValue
+	 * @return void
+	 */
+	public function rename(string $newValue) {
 	    if(!empty($newValue)) {
 	        $queryStr = "UPDATE `".DB_PREFIX."_tag`
 	                    SET `name` = '".$this->DB->real_escape_string($newValue)."'

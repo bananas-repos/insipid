@@ -63,6 +63,10 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
             $tagObjAlternative = new Tag($DB);
             $do = $tagObjAlternative->initbystring($v,true);
             if($do === 1) { # existing
+				if($k == $tagObjAlternative->getData('id')) {
+					// Rename to the same. Do nothing
+					continue;
+				}
                 // the target tag should not be removed!
                 $tagDoNotDeleteFromUpdate[$tagObjAlternative->getData('id')] = $tagObjAlternative->getData('id');
                 $tagObjOld = new Tag($DB);

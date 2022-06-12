@@ -1,4 +1,17 @@
-version 2.6 - Hypostyle
+version 2.7 - Sacred Grove (2022-06-12)
+
+	+ Fixed bug #12. Missing translation key
+	+ Adapted some new PHP code formatting
+	+ Fixed some translations
+	+ Updated bulma css
+	+ Added random link page
+	+ New syntax in config file. See update.txt for more details
+	+ Fixed #13
+	+ Fixed #15
+	+ Fixed #14
+	+ Fixed some small email importer notices and warnings
+
+version 2.6 - Hypostyle (2021-03-21)
 
 	+ Fixed sql problems with Maria DB. Any_value is not supported there
 	+ Fixed some query and data loading brain fucks..

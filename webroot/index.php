@@ -111,10 +111,16 @@ if(file_exists('view/'.$ViewScript)) {
 
 if(!empty($TemplateData['refresh'])) {
     header("Location: ".$TemplateData['refresh']);
+	exit();
 }
 
 # header information
 header('Content-type: text/html; charset=UTF-8');
+if($Summoner::simpleAuthCheck() === true) {
+	header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+	header("Cache-Control: post-check=0, pre-check=0", false);
+	header("Pragma: no-cache");
+}
 
 require 'view/_head.php';
 require 'view/'.$View;

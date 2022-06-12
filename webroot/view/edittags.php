@@ -44,7 +44,7 @@
 
 </section>
 
-<section>
+<section class="section">
 <?php if(!empty($tagCollection)) { ?>
 <div class="columns">
 	<div class="column">
@@ -59,7 +59,7 @@
 				<tr>
 					<td>
 						<a href="index.php?p=overview&m=tag&id=<?php echo urlencode($k); ?>"
-						target="_blank"><?php echo $v['name']; ?></a></td>
+						target="_blank"><?php echo $v['name']; ?></a> <small>(#<?php echo $v['amount']; ?>)</small></td>
 					<td>
 						<input class="input" type="text" name="tag[<?php echo urlencode($k); ?>]">
 					</td>

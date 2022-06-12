@@ -64,7 +64,7 @@
 					<div class="control">
 						<div class="tags has-addons">
 							<a class="tag is-dark" href="<?php echo $sr['link']; ?>" target="_blank" ><?php echo $sr['title']; ?></a>
-							<a class="tag is-info" title="<?php echo $T->t('view.more.info'); ?>" href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-md-information-circle-outline"></i></a>
+							<a class="tag is-info" title="<?php echo $T->t('view.more.details'); ?>" href="index.php?p=linkinfo&id=<?php echo $sr['hash']; ?>" ><i class="ion-md-information-circle-outline"></i></a>
 						</div>
 					</div>
 <?php } ?>
@@ -223,14 +223,13 @@
 
 <script type="text/javascript" src="asset/js/editlink.js"></script>
 
-
 <?php } ?>
 
 <section class="section">
 	<div class="columns">
 		<div class="column">
 			<div class="content">
-				<h4><a href="index.php?p=overview&m=all">Last added</a></h4>
+				<h4><a href="index.php?p=overview&m=all"><?php echo $T->t('home.last.added'); ?></a></h4>
 <?php if(!empty($latestLinks)) { ?>
 				<div class="tags">
 <?php foreach ($latestLinks as $ll) { ?>

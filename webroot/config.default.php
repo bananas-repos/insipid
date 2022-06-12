@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -27,55 +27,55 @@
  */
 
 # database config
-define('DB_HOST','127.0.0.1'); # Address of the database server
-define('DB_USERNAME','user'); # Username to access the database server and database itself
-define('DB_PASSWORD','test'); # Password for username
-define('DB_NAME','insipid'); # Database name on your database server
-define('DB_PREFIX','insipid'); # a _ is added automatically as separation
+const DB_HOST = '127.0.0.1'; # Address of the database server
+const DB_USERNAME = 'user'; # Username to access the database server and database itself
+const DB_PASSWORD = 'test'; # Password for username
+const DB_NAME = 'insipid'; # Database name on your database server
+const DB_PREFIX = 'insipid'; # a _ is added automatically as separation
 
 # user config
-define('FRONTEND_USERNAME','luke');
-define('FRONTEND_PASSWORD','father');
+const FRONTEND_USERNAME = 'luke';
+const FRONTEND_PASSWORD = 'father';
 
 # absolute path of webroot
-define('ABSOLUTE_PATH', '/path/to/insipid/webroot');
+const ABSOLUTE_PATH = '/path/to/insipid/webroot';
 # relative to absolute path the name of the storage folder
-define('LOCAL_STORAGE', 'localdata');
+const LOCAL_STORAGE = 'localdata';
 
 # complete restricted access not only the private links or the edit functions
 # username and password see above
-define("USE_PAGE_AUTH",false);
+const USE_PAGE_AUTH = false;
 
 # results per page
-define("RESULTS_PER_PAGE",12);
+const RESULTS_PER_PAGE = 12;
 
 # language setting
 # default is eng
 # valid values to match the files are: https://de.wikipedia.org/wiki/ISO_639#ISO_639-3
-define('FRONTEND_LANGUAGE','eng');
+const FRONTEND_LANGUAGE = 'eng';
 
 # if the location of email-import.php needs to be in a web accessible folder
 # you can protect it by setting EMAIL_JOB_PROTECT to true
 # and EMAIL_JOB_PROTECT_SECRET to a special secret string
 # AND remove the default provided .htaccess file in the job folder
-define('EMAIL_JOB_PROTECT', false); # Default false
-define('EMAIL_JOB_PROTECT_SECRET', 'YOUR_SOME_SECRET_STRING'); # Your own secret string
+const EMAIL_JOB_PROTECT = false; # Default false
+const EMAIL_JOB_PROTECT_SECRET = 'YOUR_SOME_SECRET_STRING'; # Your own secret string
 # settings for importing from e-mail
 # SSL/TLS only
 # IMAP (reading), SMTP (sending)
-define('EMAIL_SERVER','');
-define('EMAIL_SERVER_USER','');
-define('EMAIL_SERVER_PASS','');
-define('EMAIL_SERVER_PORT_IMAP',993);
-define('EMAIL_SERVER_PORT_SMTP',465);
-define('EMAIL_SERVER_MAILBOX','INBOX'); # default INBOX
-define('EMAIL_MARKER','to-insipid- ');
-define('EMAIL_ARCHIVE_FOLDER','archive');
-define('EMAIL_REPORT_BACK',false);
-define('EMAIL_REPLY_BACK_VALID','');
-define('EMAIL_REPLY_BACK_ADDRESS','');
-define('EMAIL_REPLY_BACK_SUBJECT','Insipid email import response');
+const EMAIL_SERVER = '';
+const EMAIL_SERVER_USER = '';
+const EMAIL_SERVER_PASS = '';
+const EMAIL_SERVER_PORT_IMAP = 993;
+const EMAIL_SERVER_PORT_SMTP = 465;
+const EMAIL_SERVER_MAILBOX = 'INBOX'; # default INBOX
+const EMAIL_MARKER = 'to-insipid- ';
+const EMAIL_ARCHIVE_FOLDER = 'archive';
+const EMAIL_REPORT_BACK = false;
+const EMAIL_REPLY_BACK_VALID = '';
+const EMAIL_REPLY_BACK_ADDRESS = '';
+const EMAIL_REPLY_BACK_SUBJECT = 'Insipid email import response';
 
 # Use wkhtmltopdf to create a whole page screenshot of a given link
-define('WKHTMLTOPDF_USE',false);
-define('WKHTMLTOPDF_COMMAND','/absolute/path/to/wkhtmltoimage');
+const WKHTMLTOPDF_USE = false;
+const WKHTMLTOPDF_COMMAND = '/absolute/path/to/wkhtmltoimage';

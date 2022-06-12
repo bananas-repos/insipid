@@ -25,20 +25,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
  *
  */
-?>
-<div class="column">
-	<p class="has-text-right">
-		<a href="index.php?p=overview&m=tag" title="<?php echo $T->t('view.nav.all.tags'); ?>" class="button">
-			<span class="icon"><i class="ion-md-pricetags"></i></span>
-		</a>
-		<a href="index.php?p=overview&m=category" title="<?php echo $T->t('view.nav.all.categories'); ?>" class="button">
-			<span class="icon"><i class="ion-md-filing"></i></span>
-		</a>
-		<a href="index.php" title="<?php echo $T->t('view.nav.back.home'); ?>" class="button">
-			<span class="icon"><i class="ion-md-home"></i></span>
-		</a>
-		<a href="index.php?p=random" title="<?php echo $T->t('view.nav.random'); ?>" class="button">
-			<span class="icon"><i class="ion-md-shuffle"></i><span>
-		</a>
-	</p>
-</div>
+
+$randomLink = $Management->randomLink(10);
+$randomCategory = $Management->randomCategory(10);
+$randomTag = $Management->randomTag(10);

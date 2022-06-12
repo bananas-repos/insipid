@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -63,11 +63,15 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
             $catObjAlternative = new Category($DB);
             $do = $catObjAlternative->initbystring($v,true);
             if($do === 1) { # existing
+				if($k == $catObjAlternative->getData('id')) {
+					// Rename to the same. Do nothing
+					continue;
+				}
                 // the target cat should not be removed!
                 $catDoNotDeleteFromUpdate[$catObjAlternative->getData('id')] = $catObjAlternative->getData('id');
                 $catObjOld = new Category($DB);
                 if(!empty($catObjOld->initbyid($k))) {
-                    $linksToUpdate = $catObjOld->getReleations();
+                    $linksToUpdate = $catObjOld->getRelations();
                     if(!empty($linksToUpdate)) {
                         foreach($linksToUpdate as $linkId) {
                             $catObjAlternative->setRelation($linkId);
@@ -100,7 +104,7 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
             if($v == "delete" && !isset($catDoNotDeleteFromUpdate[$k])) {
 				$catObj = new Category($DB);
 				$load = $catObj->initbyid($k);
-				if($load !== false) {
+				if(!empty($load)) {
 					$catObj->delete();
 				}
 				else {

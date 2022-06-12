@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -32,7 +32,7 @@ ini_set('error_reporting',-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
-define('DEBUG',false);
+const DEBUG = false;
 
 ## set the error reporting
 ini_set('log_errors',true);
@@ -146,7 +146,7 @@ if(!empty($emails)) {
     foreach($emails as $emailId=>$emailData) {
         $links = EmailImportHelper::extractEmailLinks($emailData['body']);
 		if(!empty($links)) {
-			if(DEBUG === true) var_dump($links);
+			if(DEBUG === true) var_dump("Links in email:",$links);
 
 			foreach($links as $linkstring) {
 				# defaults
@@ -174,7 +174,7 @@ if(!empty($emails)) {
 
 				if (!filter_var($newdata['link'], FILTER_VALIDATE_URL)) {
 					error_log("ERROR Invalid URL: ".var_export($newdata['link'],true));
-					if(DEBUG === true) var_dump($newdata['link']);
+					if(DEBUG === true) var_dump("Invalid URL:", $newdata['link']);
 					continue;
 				}
 
@@ -198,7 +198,7 @@ if(!empty($emails)) {
 					continue;
 				}
 
-				if(DEBUG === true) var_dump($newdata);
+				if(DEBUG === true) var_dump("New data", $newdata);
 
                 $linkObj = new Link($DB);
                 $linkID = false;
@@ -270,7 +270,6 @@ if(!empty($emails)) {
 				}
 			}
 		}
-
     }
 }
 

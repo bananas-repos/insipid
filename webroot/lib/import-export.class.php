@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2020 Johannes Keßler
+ * Copyright 2016-2021 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -33,7 +33,7 @@
 class ImportExport {
 
 	/**
-	 * @var String The current memory xmlwriter
+	 * @var XMLWriter The current memory xmlwriter
 	 */
 	private $_currentXW;
 
@@ -51,10 +51,11 @@ class ImportExport {
 	/**
 	 * create a xml file for a given single link
 	 * expects the array from Link->load
+	 *
 	 * @param array $data
 	 * @return string XML string from xmlwriter
 	 */
-	public function createSingleLinkExportXML($data) {
+	public function createSingleLinkExportXML(array $data): string {
 
 		$this->_currentXW = xmlwriter_open_memory();
 		xmlwriter_set_indent($this->_currentXW, 1);
@@ -148,11 +149,13 @@ class ImportExport {
 	}
 
 	/**
-	 * @param $file array $_FILES array. Just check if everything is there
-	 * and put it into _uploadedData
+	 * Just check if everything is there  and put it into _uploadedData
+	 *
+	 * @param  array $file $_FILES array.
 	 * @throws Exception
+	 * @return void
 	 */
-	public function loadImportFile($file) {
+	public function loadImportFile(array $file) {
 
 		if(!isset($file['name'])
 			|| !isset($file['type'])
@@ -193,10 +196,11 @@ class ImportExport {
 
 	/**
 	 * parse the data from _uploadedData and create an array we can use
+	 *
 	 * @return array
 	 * @throws Exception
 	 */
-	public function parseImportFile() {
+	public function parseImportFile(): array {
 		$ret = array();
 
 		if(!empty($this->_uploadedData)) {
@@ -241,11 +245,13 @@ class ImportExport {
 
 	/**
 	 * Create a single xml element for the current loaded xmlwriter
+	 *
 	 * @param String $name
 	 * @param String $key
 	 * @param String $value
+	 * @return void
 	 */
-	private function _elementFromKeyValue($name, $key, $value) {
+	private function _elementFromKeyValue(string $name, string $key, string $value) {
 
 		if(!empty($key) && !empty($value) && !empty($name)) {
 			xmlwriter_start_element($this->_currentXW, $name);
@@ -265,6 +271,7 @@ class ImportExport {
 	/**
 	 * validate an import of a export xml with the
 	 * saved xsd file _xmlImportXSD
+	 *
 	 * @return bool|string
 	 */
 	private function _validateXMLImport() {
@@ -291,9 +298,10 @@ class ImportExport {
 	/**
 	 * Reads libxml_get_errors and creates a simple string with all
 	 * the info we need.
+	 *
 	 * @return string
 	 */
-	private function _xmlErrors() {
+	private function _xmlErrors(): string {
 		$errors = libxml_get_errors();
 		$result = array();
 		foreach ($errors as $error) {
