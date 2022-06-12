@@ -42,6 +42,9 @@ or active the "protection" with a secret given by URL / cli param.
 If you activate EMAIL_JOB_PROTECT you NEED to set an individual string in EMAIL_JOB_PROTECT_SECRET
 AND remove the provided .htaccess file in the job folder.
 
+cli: php email-import.php ----hiddenSouce=EMAIL_JOB_PROTECT_SECRET
+webaccess: email-import.php?hiddenSouce=EMAIL_JOB_PROTECT_SECRET
+
 Use the following settings in the config file:
 define('EMAIL_JOB_PROTECT', false); => Set to true if you want this kind of "protection"
 define('EMAIL_JOB_PROTECT_SECRET', 'YOUR_SOME_SECRET_STRING'); => Change to your liking

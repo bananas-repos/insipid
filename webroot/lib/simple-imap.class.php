@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -50,14 +50,14 @@ class SimpleImap {
 	 */
 	function __construct() {
 	    # create the mailboxstring
-	    $this->_connectionstring = '{'.$this->_server.':'.$this->_port.'/imap/ssl}';
+	    $this->_connectionstring = '{'.$this->_server.':'.$this->_port.'/imap/ssl/novalidate-cert}';
 	}
 
 	/**
 	 *
 	 */
 	function __destruct() {
-	    imap_close($this->_connection);
+	    //imap_close($this->_connection);
 	}
 
 	/**
@@ -270,7 +270,8 @@ class SimpleImap {
             break;
 
             case ENC7BIT: # 0 7BIT
-                $ret = imap_qprint($body);
+				// imap_qprint($body); does throws notices
+                $ret = quoted_printable_decode($body);
             break;
 
             case ENCOTHER: # 5 OTHER

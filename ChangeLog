@@ -1,4 +1,4 @@
-version 2.7 - Sacred Grove ()
+version 2.7 - Sacred Grove (2022-06-12)
 
 	+ Fixed bug #12. Missing translation key
 	+ Adapted some new PHP code formatting
@@ -8,7 +8,8 @@ version 2.7 - Sacred Grove ()
 	+ New syntax in config file. See update.txt for more details
 	+ Fixed #13
 	+ Fixed #15
-	# Fixed #14
+	+ Fixed #14
+	+ Fixed some small email importer notices and warnings
 
 version 2.6 - Hypostyle (2021-03-21)
 
