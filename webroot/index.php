@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -32,10 +32,10 @@ ini_set('error_reporting',-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
-define('DEBUG',false);
+define('DEBUG',true);
 
 ## check request
-$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW);
+$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
 if(!empty($_urlToParse)) {
     # see http://de2.php.net/manual/en/regexp.reference.unicode.php
     if(preg_match('/[\p{C}\p{M}\p{Sc}\p{Sk}\p{So}\p{Zl}\p{Zp}]/u',$_urlToParse) === 1) {
@@ -116,7 +116,7 @@ if(!empty($TemplateData['refresh'])) {
 
 # header information
 header('Content-type: text/html; charset=UTF-8');
-if($Summoner::simpleAuthCheck() === true) {
+if($Summoner::simpleAuthCheck() === true || !empty($TemplateData['nocacheHeader'])) {
 	header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 	header("Cache-Control: post-check=0, pre-check=0", false);
 	header("Pragma: no-cache");

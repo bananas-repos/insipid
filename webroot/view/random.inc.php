@@ -29,3 +29,5 @@
 $randomLink = $Management->randomLink(10);
 $randomCategory = $Management->randomCategory(10);
 $randomTag = $Management->randomTag(10);
+
+$TemplateData['nocacheHeader'] = true;
