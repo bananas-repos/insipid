@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -88,7 +88,7 @@
 			</div>
 			<div class="column">
 				<p>
-					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.image.provided'); ?>">
+					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.image.noimage'); ?>">
 				</p>
 				<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" /><br />
 				<br />

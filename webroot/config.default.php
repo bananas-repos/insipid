@@ -34,8 +34,8 @@ const DB_NAME = 'insipid'; # Database name on your database server
 const DB_PREFIX = 'insipid'; # a _ is added automatically as separation
 
 # user config
-const FRONTEND_USERNAME = 'luke';
-const FRONTEND_PASSWORD = 'father';
+const FRONTEND_USERNAME = 'han';
+const FRONTEND_PASSWORD = 'solo';
 
 # absolute path of webroot
 const ABSOLUTE_PATH = '/path/to/insipid/webroot';

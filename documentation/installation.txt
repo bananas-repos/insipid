@@ -18,13 +18,13 @@ Create your config file.
 Copy webroot/config.default.php to webroot/config.php
 
 Modify at least the following settings in this file:
-- define('DB_HOST','127.0.0.1'); <= The database server hostname you are using
-- define('DB_USERNAME','user'); <= The database username you are using
-- define('DB_PASSWORD','test'); <= The database password you are using
-- define('DB_NAME','insipid'); <= Database name on your database server
-- define('FRONTEND_USERNAME','luke'); <= The frontend username. Please change the default
-- define('FRONTEND_PASSWORD','father'); <= The frontend password. Please change the default
-- define('ABSOLUTE_PATH', '/path/to/insipid/on/your/webserver'); <= Absolute path where insipid is located in your webserver
+- const DB_HOST = '127.0.0.1; <= The database server hostname you are using
+- const DB_USERNAME = 'user' <= The database username you are using
+- const DB_PASSWORD = 'test; <= The database password you are using
+- const DB_NAME = 'insipid' <= Database name on your database server
+- const FRONTEND_USERNAME = 'han'; <= The frontend username. Please change the default
+- const FRONTEND_PASSWORD = 'solo'; <= The frontend password. Please change the default
+- const ABSOLUTE_PATH = '/path/to/insipid/on/your/webserver'; <= Absolute path where insipid is located in your webserver
 
 5. Prepare SQL file
 Copy and modify documentation/insipid-edit-me.sql and replace the placeholder.

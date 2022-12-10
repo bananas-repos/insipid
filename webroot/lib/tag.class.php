@@ -33,7 +33,7 @@ class Tag {
 	/**
 	 * the database object
 	 *
-	 * @var object
+	 * @var mysqli
 	 */
 	private $DB;
 
@@ -54,7 +54,7 @@ class Tag {
 	/**
 	 * Tag constructor.
 	 *
-	 * @param Obnject $databaseConnectionObject
+	 * @param mysqli $databaseConnectionObject
 	 */
 	public function __construct($databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;

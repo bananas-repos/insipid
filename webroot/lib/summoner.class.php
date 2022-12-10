@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -39,7 +39,7 @@ class Summoner {
 	 *
 	 * @param string $input The string to check
 	 * @param string $mode How the string should be checked
-	 * @param mixed $limit If int given the string is checked for length
+	 * @param int $limit If int given the string is checked for length
 	 *
 	 * @see http://de.php.net/manual/en/regexp.reference.unicode.php
 	 * http://www.sql-und-xml.de/unicode-database/#pc
@@ -50,7 +50,7 @@ class Summoner {
 	 *
 	 * @return bool
 	 */
-	static function validate($input,$mode='text',$limit=false): bool {
+	static function validate(string $input, string $mode='text', int $limit=0): bool {
 		// check if we have input
 		$input = trim($input);
 

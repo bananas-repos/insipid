@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -28,12 +28,12 @@
 
 $searchValue = false;
 $isUrl = false;
-$submitFeedback = false;
+$submitFeedback = array();
 $queryStr = false;
 $searchResult = false;
 $showAddForm = false;
-$formData = false;
 $honeypotCheck = false;
+$formData = array();
 
 $_requestMode = false;
 if(isset($_GET['m']) && !empty($_GET['m'])) {
@@ -87,6 +87,8 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch
 		# show the add form
 		$showAddForm = true;
 		$formData['url'] = $searchValue;
+		$formData['categories'] = array();
+		$formData['tags'] = array();
 	}
 	elseif(!empty($searchResult)) {
 		# something has been found
@@ -116,14 +118,18 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 	$formData['category'] = trim($fData['category']);
 	$formData['tag'] = trim($fData['tag']);
 
+	# categories and tag stuff
+	$catArr = Summoner::prepareTagOrCategoryStr($formData['category']);
+	$tagArr = Summoner::prepareTagOrCategoryStr($formData['tag']);
+	$formData['categories'] = $catArr;
+	$formData['tags'] = $tagArr;
+
 	$isUrl = Summoner::validate($formData['url'],'url');
 
 	if($isUrl === true && !empty($formData['title'])) {
 		$hash = md5($formData['url']);
 
-		# categories and tag stuff
-		$catArr = Summoner::prepareTagOrCategoryStr($formData['category']);
-		$tagArr = Summoner::prepareTagOrCategoryStr($formData['tag']);
+
 
 		$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 

@@ -36,7 +36,7 @@ class Management {
 	/**
 	 * the database object
 	 *
-	 * @var object
+	 * @var mysqli
 	 */
 	private $DB;
 
@@ -51,10 +51,10 @@ class Management {
 	/**
 	 * Management constructor.
 	 *
-	 * @param Object $databaseConnectionObject
+	 * @param mysqli $databaseConnectionObject
 	 * @return void
 	 */
-	public function __construct($databaseConnectionObject) {
+	public function __construct(mysqli $databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
 	}
 
