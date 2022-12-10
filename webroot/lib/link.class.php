@@ -34,7 +34,7 @@ class Link {
 	/**
 	 * the database object
 	 *
-	 * @var Object
+	 * @var mysqli
 	 */
 	private $DB;
 
@@ -48,10 +48,10 @@ class Link {
 	/**
 	 * Link constructor.
 	 *
-	 * @param Object $databaseConnectionObject
+	 * @param mysqli $databaseConnectionObject
 	 * @return void
 	 */
-	public function __construct($databaseConnectionObject) {
+	public function __construct(mysqli $databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
 	}
 

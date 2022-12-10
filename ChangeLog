@@ -1,6 +1,8 @@
-version 2.8 - Wastelands ()
+version 2.8 - Wastelands (2022-12-10)
 
 	+ Fixed documentation
+	+ Fixed some PHP 8 defaults
+	+ Fixed #17
 
 version 2.7 - Sacred Grove (2022-06-12)
 

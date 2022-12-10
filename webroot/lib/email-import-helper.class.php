@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -108,7 +108,6 @@ class EmailImportHelper {
 			|| isset($headers['x-mailing-list'])
 			|| isset($headers['list-unsubscribe'])
 			|| isset($headers['list-owner'])
-			|| isset($headers['auto-submitted'])
 			|| isset($headers['x-autoreply-from'])
 			|| isset($headers['x-mail-autoreply'])
 			|| isset($headers['x-mc-system'])

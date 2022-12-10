@@ -29,7 +29,7 @@
 class Category {
 	/**
 	 * the database object
-	 * @var object
+	 * @var mysqli
 	 */
 	private $DB;
 
@@ -56,7 +56,7 @@ class Category {
 	 * @param bool $doNotCreate
 	 * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
 	 */
-    public function initbystring(string $string, $doNotCreate=false): int {
+    public function initbystring(string $string, bool $doNotCreate=false): int {
         $ret = 0;
 		$this->_id = false;
         if(!empty($string)) {
@@ -119,7 +119,7 @@ class Category {
 	 * @param bool $key
 	 * @return string
 	 */
-	public function getData($key=false): string {
+	public function getData(bool $key=false): string {
 		$ret = $this->_data;
 
 		if(!empty($key) && isset($this->_data[$key])) {
