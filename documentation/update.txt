@@ -1,6 +1,10 @@
 If you are updating from a previous version make sure every update info from
 the version your are updating from is done.
 
+## version 2.9
++ Added debug setting into config. See config.default.php for DEBUG constant.
+  Add it to your local config.php
+
 ## version 2.8 Wastelands
 + Nothing.
 

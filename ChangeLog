@@ -1,4 +1,8 @@
 version 2.x - Deathwind Chapel ()
+
+	+ Moved debug setting into config
+	+ Updated shellcommand class and added the link to the github repo
+
 version 2.8 - Wastelands (2022-12-10)
 
 	+ Fixed documentation

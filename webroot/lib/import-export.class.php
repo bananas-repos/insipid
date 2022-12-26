@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -35,15 +35,17 @@ class ImportExport {
 	/**
 	 * @var XMLWriter The current memory xmlwriter
 	 */
-	private $_currentXW;
-
-	private $_xmlImportXSD = 'lib/xmlimport.xsd';
-
+	private XMLWriter $_currentXW;
 
 	/**
-	 * @var
+	 * @var string
 	 */
-	private $_uploadedData;
+	private string $_xmlImportXSD = 'lib/xmlimport.xsd';
+
+	/**
+	 * @var string
+	 */
+	private string $_uploadedData;
 
 	public function __construct() {
 	}
@@ -155,7 +157,7 @@ class ImportExport {
 	 * @throws Exception
 	 * @return void
 	 */
-	public function loadImportFile(array $file) {
+	public function loadImportFile(array $file): void {
 
 		if(!isset($file['name'])
 			|| !isset($file['type'])
@@ -183,7 +185,7 @@ class ImportExport {
 
 		if(!empty($this->_uploadedData)) {
 			$_valid = $this->_validateXMLImport();
-			if($_valid !== true) {
+			if(!empty($_valid)) {
 				$this->_uploadedData = '';
 				throw new Exception('Invalid xml format: '.$_valid);
 			}
@@ -251,7 +253,7 @@ class ImportExport {
 	 * @param String $value
 	 * @return void
 	 */
-	private function _elementFromKeyValue(string $name, string $key, string $value) {
+	private function _elementFromKeyValue(string $name, string $key, string $value): void {
 
 		if(!empty($key) && !empty($value) && !empty($name)) {
 			xmlwriter_start_element($this->_currentXW, $name);
@@ -272,10 +274,10 @@ class ImportExport {
 	 * validate an import of a export xml with the
 	 * saved xsd file _xmlImportXSD
 	 *
-	 * @return bool|string
+	 * @return string
 	 */
-	private function _validateXMLImport() {
-		$ret = false;
+	private function _validateXMLImport(): string {
+		$ret = '';
 		$xmlReader = new XMLReader();
 		$xmlReader->XML($this->_uploadedData);
 		if(!empty($xmlReader)) {
@@ -286,7 +288,6 @@ class ImportExport {
 					$ret = $this->_xmlErrors();
 					break;
 				} else {
-					$ret = true;
 					break;
 				}
 			}

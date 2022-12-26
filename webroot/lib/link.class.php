@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -36,20 +36,19 @@ class Link {
 	 *
 	 * @var mysqli
 	 */
-	private $DB;
+	private mysqli $DB;
 
 	/**
 	 * the current loaded link data
 	 *
 	 * @var array
 	 */
-	private $_data;
+	private array $_data;
 
 	/**
 	 * Link constructor.
 	 *
 	 * @param mysqli $databaseConnectionObject
-	 * @return void
 	 */
 	public function __construct(mysqli $databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
@@ -143,10 +142,10 @@ class Link {
 	/**
 	 * return all or data for given key on the current loaded link
 	 *
-	 * @param bool $key
-	 * @return array|mixed
+	 * @param string $key
+	 * @return string|array
 	 */
-	public function getData($key = false): array {
+	public function getData(string $key = ''): string|array {
 		$ret = $this->_data;
 
 		if (!empty($key) && isset($this->_data[$key])) {
@@ -161,7 +160,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	public function reload() {
+	public function reload(): void {
 		$this->load($this->_data['hash']);
 	}
 
@@ -170,10 +169,10 @@ class Link {
 	 *
 	 * @param array $data
 	 * @param bool $returnId
-	 * @return int
+	 * @return string
 	 */
-	public function create(array $data, $returnId = false): int {
-		$ret = 0;
+	public function create(array $data, bool $returnId = false): string {
+		$ret = '';
 
 		if (!isset($data['link']) || empty($data['link'])) return $ret;
 		if (!isset($data['hash']) || empty($data['hash'])) return $ret;
@@ -217,7 +216,6 @@ class Link {
 	 * @return boolean
 	 */
 	public function update(array $data): bool {
-
 		$ret = false;
 
 		if (isset($data['title']) && !empty($data['title']) && !empty($this->_data)) {
@@ -259,8 +257,8 @@ class Link {
 				$catObj = new Category($this->DB);
 				$tagObj = new Tag($this->DB);
 				// clean the relations first
-				$this->_removeTagRelation(false);
-				$this->_removeCategoryRelation(false);
+				$this->_removeTagRelation();
+				$this->_removeCategoryRelation();
 
 				if (!empty($catArr)) {
 					foreach ($catArr as $c) {
@@ -329,7 +327,6 @@ class Link {
 					}
 				}
 
-
 				$ret = true;
 			} else {
 				$this->DB->rollback();
@@ -347,9 +344,9 @@ class Link {
 	 *
 	 * @return void
 	 */
-	public function deleteRelations() {
-		$this->_removeTagRelation(false);
-		$this->_removeCategoryRelation(false);
+	public function deleteRelations(): void {
+		$this->_removeTagRelation();
+		$this->_removeCategoryRelation();
 		$this->_deleteImage();
 		$this->_deleteSnapshot();
 		$this->_deletePageScreenshot();
@@ -361,7 +358,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _tags() {
+	private function _tags(): void {
 		$ret = array();
 
 		if (!empty($this->_data['hash'])) {
@@ -389,7 +386,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _categories() {
+	private function _categories(): void {
 		$ret = array();
 
 		if (!empty($this->_data['hash'])) {
@@ -413,21 +410,22 @@ class Link {
 	/**
 	 * remove all or given tag relation to the current loaded link
 	 *
-	 * @param boolean|integer $tagid
+	 * @param string $tagid
 	 * @return void
 	 */
-	private function _removeTagRelation($tagid) {
+	private function _removeTagRelation(string $tagid = ''): void {
 		if (!empty($this->_data['id'])) {
-			$queryStr = false;
-			if ($tagid === false) {
-				$queryStr = "DELETE
-					FROM `" . DB_PREFIX . "_tagrelation`
-					WHERE `linkid` = '" . $this->DB->real_escape_string($this->_data['id']) . "'";
-			} elseif (is_numeric($tagid)) {
+			$queryStr = '';
+			if (is_numeric($tagid)) {
 				$queryStr = "DELETE
 					FROM `" . DB_PREFIX . "_tagrelation`
 					WHERE `linkid` = '" . $this->DB->real_escape_string($this->_data['id']) . "'
 					AND `tagid` = '" . $this->DB->real_escape_string($tagid) . "'";
+
+			} else {
+				$queryStr = "DELETE
+					FROM `" . DB_PREFIX . "_tagrelation`
+					WHERE `linkid` = '" . $this->DB->real_escape_string($this->_data['id']) . "'";
 			}
 			if (!empty($queryStr)) {
 				$this->DB->query($queryStr);
@@ -438,21 +436,21 @@ class Link {
 	/**
 	 * remove all or given category relation to the current loaded link
 	 *
-	 * @param boolean|integer $categoryid
+	 * @param string $categoryid
 	 * @return void
 	 */
-	private function _removeCategoryRelation($categoryid) {
+	private function _removeCategoryRelation(string $categoryid=''): void {
 		if (!empty($this->_data['id'])) {
-			$queryStr = false;
-			if ($categoryid === false) {
-				$queryStr = "DELETE
-					FROM `" . DB_PREFIX . "_categoryrelation`
-					WHERE `linkid` = '" . $this->DB->real_escape_string($this->_data['id']) . "'";
-			} elseif (is_numeric($categoryid)) {
+			$queryStr = '';
+			if (is_numeric($categoryid)) {
 				$queryStr = "DELETE
 					FROM `" . DB_PREFIX . "_categoryrelation`
 					WHERE `linkid` = '" . $this->DB->real_escape_string($this->_data['id']) . "'
 					AND `categoryid` = '" . $this->DB->real_escape_string($categoryid) . "'";
+			} else {
+				$queryStr = "DELETE
+					FROM `" . DB_PREFIX . "_categoryrelation`
+					WHERE `linkid` = '" . $this->DB->real_escape_string($this->_data['id']) . "'";
 			}
 			if (!empty($queryStr)) {
 				$this->DB->query($queryStr);
@@ -466,7 +464,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _image() {
+	private function _image(): void {
 		if (!empty($this->_data['hash'])) {
 			$this->_data['imageToShow'] = $this->_data['image'];
 			$image = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/thumbnail-'.$this->_data['hash'].'.jpg';
@@ -483,7 +481,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _snapshot() {
+	private function _snapshot(): void {
 		if (!empty($this->_data['hash'])) {
 			$snapshot = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.jpg';
 			if (file_exists($snapshot)) {
@@ -499,7 +497,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _pageScreenshot() {
+	private function _pageScreenshot(): void {
 		if (!empty($this->_data['hash'])) {
 			$pagescreenshot = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/pagescreenshot-'.$this->_data['hash'].'.jpg';
 			if (file_exists($pagescreenshot)) {
@@ -514,7 +512,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _deleteImage() {
+	private function _deleteImage(): void {
 		if (!empty($this->_data['hash']) && !empty($this->_data['imageToShow'])) {
 			$image = ABSOLUTE_PATH.'/'.$this->_data['imageToShow'];
 			if (file_exists($image)) {
@@ -528,7 +526,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _deleteSnapshot() {
+	private function _deleteSnapshot(): void {
 		if (!empty($this->_data['hash']) && !empty($this->_data['snapshotLink'])) {
 			$snapshot = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.jpg';
 			if (file_exists($snapshot)) {
@@ -542,7 +540,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _deletePageScreenshot() {
+	private function _deletePageScreenshot(): void {
 		if (!empty($this->_data['hash']) && !empty($this->_data['pagescreenshotLink'])) {
 			$pagescreenshot = LOCAL_STORAGE.'/pagescreenshot-'.$this->_data['hash'].'.jpg';
 			if (file_exists($pagescreenshot)) {
@@ -556,7 +554,7 @@ class Link {
 	 *
 	 * @return void
 	 */
-	private function _private() {
+	private function _private(): void {
 		if (!empty($this->_data['status']) && $this->_data['status'] == "1") {
 			$this->_data['private'] = "1";
 		}

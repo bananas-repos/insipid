@@ -1,4 +1,7 @@
 TODO / Feature list
++ mysql dump to be replaced with https://github.com/druidfi/mysqldump-php
+++ update readme too
++ update google pagespeed endpoint
 + view table really still needed?
 + stats cleanup. Management functions should be standalone
 + theme support

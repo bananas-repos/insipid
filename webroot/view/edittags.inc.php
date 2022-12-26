@@ -131,5 +131,5 @@ if(isset($_POST['tag']) && !empty($_POST['tag']) && isset($_POST['updateTags']))
 }
 
 # show all the tags we have
-$tagCollection = $Management->tags(false, true);
+$tagCollection = $Management->tags(0, true);
 $subHeadline = $T->t('view.tags').' <i class="ion-md-pricetags"></i>';

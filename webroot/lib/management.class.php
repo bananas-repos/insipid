@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -31,6 +31,9 @@
  */
 class Management {
 
+	/**
+	 * Default value
+	 */
 	const LINK_QUERY_STATUS = 2;
 
 	/**
@@ -38,14 +41,14 @@ class Management {
 	 *
 	 * @var mysqli
 	 */
-	private $DB;
+	private mysqli $DB;
 
 	/**
 	 * Type of links based on status to show
 	 *
-	 * @var bool
+	 * @var int
 	 */
-	private $_queryStatus = self::LINK_QUERY_STATUS;
+	private int $_queryStatus = self::LINK_QUERY_STATUS;
 
 
 	/**
@@ -64,7 +67,7 @@ class Management {
 	 * @param boolean $bool
 	 * @return void
 	 */
-	public function setShowPrivate(bool $bool) {
+	public function setShowPrivate(bool $bool): void {
 		$this->_queryStatus = self::LINK_QUERY_STATUS;
 		if($bool === true) {
 			$this->_queryStatus = 1;
@@ -77,7 +80,7 @@ class Management {
 	 * @param boolean $bool
 	 * @return void
 	 */
-	public function setShowAwm(bool $bool) {
+	public function setShowAwm(bool $bool): void {
 		$this->_queryStatus = self::LINK_QUERY_STATUS;
 		if($bool === true) {
 			$this->_queryStatus = 3;
@@ -89,11 +92,11 @@ class Management {
 	 * optional limit
 	 * optional stats
 	 *
-	 * @param bool|int $limit
+	 * @param int $limit
 	 * @param bool $stats
 	 * @return array
 	 */
-	public function categories($limit=false, $stats=false): array {
+	public function categories(int $limit=0, bool $stats=false): array {
 		$ret = array();
 		$statsInfo = array();
 
@@ -140,11 +143,11 @@ class Management {
 	 * optional limit
 	 * optional stats
 	 *
-	 * @param bool|int $limit
+	 * @param int $limit
 	 * @param bool $stats
 	 * @return array
 	 */
-	public function tags($limit=false, $stats=false): array {
+	public function tags(int $limit=0, bool $stats=false): array {
 		$ret = array();
 		$statsInfo = array();
 
@@ -191,7 +194,7 @@ class Management {
 	 * @param int $limit
 	 * @return array
 	 */
-	public function latestLinks($limit=5): array {
+	public function latestLinks(int $limit=5): array {
 		$ret = array();
 
 		$queryStr = "SELECT `title`, `link` FROM `".DB_PREFIX."_link` AS t";
@@ -216,7 +219,7 @@ class Management {
 	 * @param int $limit
 	 * @return array
 	 */
-	public function randomLink($limit=1): array {
+	public function randomLink(int $limit=1): array {
 		$ret = array();
 
 		$queryStr = "SELECT `title`, `link`, `hash` FROM `".DB_PREFIX."_link` AS t";
@@ -233,7 +236,13 @@ class Management {
 		return $ret;
 	}
 
-	public function randomCategory($limit=1): array {
+	/**
+	 * Get a random category
+	 *
+	 * @param int $limit
+	 * @return array
+	 */
+	public function randomCategory(int $limit=1): array {
 		$ret = array();
 
 		$queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_category`";
@@ -249,7 +258,13 @@ class Management {
 		return $ret;
 	}
 
-	public function randomTag($limit=1): array {
+	/**
+	 * Get a random tag
+	 *
+	 * @param int $limit
+	 * @return array
+	 */
+	public function randomTag(int $limit=1): array {
 		$ret = array();
 
 		$queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_tag`";
@@ -277,7 +292,7 @@ class Management {
 		foreach($categories as $k=>$v) {
 			$latestLink = $this->latestLinkForCategory($k);
 			if(!empty($latestLink)) {
-				array_push($ret, array('created' => $latestLink[0]['created'], 'id' => $k, 'name' => $v['name']));
+				$ret[] = array('created' => $latestLink[0]['created'], 'id' => $k, 'name' => $v['name']);
 			}
 		}
 
@@ -291,11 +306,11 @@ class Management {
 	 * find all links by given category string or id.
 	 * Return array sorted by creation date DESC
 	 *
-	 * @param int $id Category ID
+	 * @param string $id Category ID
 	 * @param array $options Array with limit|offset|sort|sortDirection
 	 * @return array
 	 */
-	public function linksByCategory(int $id, $options=array()): array {
+	public function linksByCategory(string $id, array $options=array()): array {
 		$ret = array();
 
 		if(!isset($options['limit'])) $options['limit'] = 5;
@@ -358,11 +373,11 @@ class Management {
 	 * find all links by given tag string or id.
 	 * Return array sorted by creation date DESC
 	 *
-	 * @param int $id Tag id
+	 * @param string $id Tag id
 	 * @param array $options Array with limit|offset|sort|sortDirection
 	 * @return array
 	 */
-	public function linksByTag(int $id, $options=array()): array {
+	public function linksByTag(string $id, array $options=array()): array {
 		$ret = array();
 
         if(!isset($options['limit'])) $options['limit'] = 5;
@@ -424,11 +439,11 @@ class Management {
 	/**
 	 * return all links and Info we have from the combined view
 	 *
-	 * @param bool|int $limit
+	 * @param int $limit
 	 * @param bool $offset
 	 * @return array
 	 */
-	public function links($limit=10,$offset=false): array {
+	public function links(int $limit=10, bool $offset=false): array {
 		$ret = array();
 
 		$querySelect = "SELECT `hash`";
@@ -461,10 +476,10 @@ class Management {
 	/**
 	 * return the latest added link for given category id
 	 *
-	 * @param int $categoryid
+	 * @param string $categoryid
 	 * @return array
 	 */
-	public function latestLinkForCategory(int $categoryid): array {
+	public function latestLinkForCategory(string $categoryid): array {
 		$ret = array();
 
 		if(!empty($categoryid) && is_numeric($categoryid)) {
@@ -655,7 +670,7 @@ class Management {
 	 * @param bool $withObject An array with data and the link obj itself
 	 * @return array
 	 */
-	public function loadLink(string $hash, $fullInfo=true, $withObject=false): array {
+	public function loadLink(string $hash, bool $fullInfo=true, bool $withObject=false): array {
 		$ret = array();
 
 		if (!empty($hash)) {
@@ -717,10 +732,10 @@ class Management {
 	 * Export given link for download as a xml file
 	 *
 	 * @param string $hash
-	 * @param bool|Link $linkObj Use already existing link obj
+	 * @param Link|null $linkObj Use already existing link obj
 	 * @return bool
 	 */
-	public function exportLinkData(string $hash, $linkObj=false): bool {
+	public function exportLinkData(string $hash, Link $linkObj=null): bool {
 		$ret = false;
 
 		if (!empty($hash)) {
@@ -793,11 +808,11 @@ class Management {
 	 * process the given xml file. Based on the export file
 	 * options are overwrite => true|false
 	 *
-	 * @param string $file
+	 * @param array $file
 	 * @param array $options
 	 * @return array
 	 */
-	public function processImportFile(string $file, array $options): array {
+	public function processImportFile(array $file, array $options): array {
 		$ret = array(
 			'status' => 'error',
 			'message' => 'Processing error'
@@ -901,27 +916,20 @@ class Management {
 	 * @return string
 	 */
 	private function _decideLinkTypeForQuery(): string {
-		switch ($this->_queryStatus) {
-			case 1:
-				$ret = "t.status IN (2,1)";
-				break;
-			case 3:
-				$ret = "t.status = 3";
-				break;
-
-			default:
-				$ret = "t.status = 2";
-		}
-		return $ret;
+		return match ($this->_queryStatus) {
+			1 => "t.status IN (2,1)",
+			3 => "t.status = 3",
+			default => "t.status = 2",
+		};
 	}
 
 	/**
 	 * Check if given id (not hash) exists in link database
 	 *
-	 * @param integer $id
+	 * @param string $id
 	 * @return bool
 	 */
-	private function _linkExistsById($id): bool {
+	private function _linkExistsById(string $id): bool {
 		$ret = false;
 
 		if(!empty($id)) {

@@ -131,5 +131,5 @@ if(isset($_POST['category']) && !empty($_POST['category']) && isset($_POST['upda
 }
 
 # show all the categories we have
-$categoryCollection = $Management->categories(false, true);
+$categoryCollection = $Management->categories(0, true);
 $subHeadline = $T->t('view.categories').' <i class="ion-md-filing"></i>';
