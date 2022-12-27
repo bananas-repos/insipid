@@ -150,7 +150,7 @@ class Summoner {
 		curl_setopt($ch, CURLOPT_USERAGENT,self::BROWSER_AGENT_STRING);
 
 		// curl_setopt($ch, CURLOPT_VERBOSE, true);
-		//curl_setopt($ch, CURLOPT_HEADER, true);
+		// curl_setopt($ch, CURLOPT_HEADER, true);
 
 		if(!empty($port)) {
 		  curl_setopt($ch, CURLOPT_PORT, $port);

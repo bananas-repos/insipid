@@ -58,19 +58,31 @@ class Snapshot {
 	public function doSnapshot(string $url, string $filename): bool {
 		$ret = false;
 
-		// new path in jason
-		// lighthouseResult audits full-page-screenshot details screenshot data (base64 encoded)
-
 		if(!empty($url) && is_writable(dirname($filename))) {
+			if(DEBUG) {
+				error_log("DEBUG try to save to $filename with $this->_googlePageSpeed for $url");
+			}
 			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
 			if(!empty($theCall)) {
 				$jsonData = json_decode($theCall,true);
-				if(!empty($jsonData) && isset($jsonData['screenshot']['data'])) {
-					$imageData = $jsonData['screenshot']['data'];
-					$imageData = str_replace(['_', '-'], ['/', '+'], $imageData);
-					$imageData = base64_decode($imageData);
-					$ret = file_put_contents($filename, $imageData);
+				if(DEBUG) {
+					error_log("DEBUG Call result data: ".var_export($jsonData, true));
 				}
+				if(!empty($jsonData) && isset($jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'])) {
+					$imageData = $jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'];
+
+					$source = fopen($imageData, 'r');
+					$destination = fopen($filename, 'w');
+					if(stream_copy_to_stream($source, $destination)) {
+						$ret = $filename;
+					}
+					fclose($source);
+					fclose($destination);
+				} elseif(DEBUG) {
+					error_log("DEBUG invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".var_export($jsonData, true));
+				}
+			} elseif(DEBUG) {
+				error_log("DEBUG curl call failed");
 			}
 		}
 

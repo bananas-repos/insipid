@@ -278,11 +278,23 @@ class Link {
 				# decide to store or remove the image
 				if (isset($data['localImage'])) {
 					$image = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/thumbnail-' . $this->_data['hash'].'.jpg';
+					if(DEBUG) {
+						error_log("DEBUG Try to save local image to: $image");
+					}
 					if ($data['localImage'] === true) {
+						if(DEBUG) {
+							error_log("DEBUG want to save local image to: $image");
+						}
 						if (!file_exists($image) || $_imageUrlChanged === true) {
+							if(DEBUG) {
+								error_log("DEBUG Image new or not there yet: $image");
+							}
 							Summoner::downloadFile($data['image'], $image);
 						}
 					} elseif ($data['localImage'] === false) {
+						if(DEBUG) {
+							error_log("DEBUG Image to be removed: $image");
+						}
 						if (file_exists($image)) {
 							unlink($image);
 						}
