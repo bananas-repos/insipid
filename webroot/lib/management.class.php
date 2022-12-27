@@ -733,15 +733,21 @@ class Management {
 	 *
 	 * @param string $hash
 	 * @param Link|null $linkObj Use already existing link obj
-	 * @return bool
+	 * @return string
 	 */
-	public function exportLinkData(string $hash, Link $linkObj=null): bool {
-		$ret = false;
+	public function exportLinkData(string $hash, Link $linkObj=null): string {
+		$ret = '';
+
+		if(DEBUG) {
+			error_log("DEBUG Start to export link with hash $hash");
+		}
 
 		if (!empty($hash)) {
 			$linkData = $this->loadLink($hash, true, true);
 			if (!empty($linkData)) {
 				$data = $linkData;
+			} elseif(DEBUG) {
+				error_log("ERROR Could not load link with $hash");
 			}
 		}
 		elseif(!empty($linkObj) && is_a($linkObj,'Link')) {
@@ -749,9 +755,14 @@ class Management {
 		}
 
 		if(!empty($data) && isset($data['link'])) {
+			if(DEBUG) {
+				error_log("DEBUG Using data: ".var_export($data, true));
+			}
 			require_once 'lib/import-export.class.php';
 			$ImEx = new ImportExport();
 			$ret = $ImEx->createSingleLinkExportXML($data);
+		} elseif(DEBUG) {
+			error_log("ERROR Missing link data for hash $hash");
 		}
 
 		return $ret;
@@ -935,8 +946,8 @@ class Management {
 		$ret = false;
 
 		if(!empty($id)) {
-			$queryStr = "SELECT `id` 
-							FROM `" . DB_PREFIX . "_link` 
+			$queryStr = "SELECT `id`
+							FROM `" . DB_PREFIX . "_link`
 							WHERE `id` = '" . $this->DB->real_escape_string($id) . "'";
 			$query = $this->DB->query($queryStr);
 			if(!empty($query) && $query->num_rows > 0) {

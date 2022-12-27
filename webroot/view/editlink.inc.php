@@ -65,7 +65,7 @@ if($_isAwm === true) {
 	$submitFeedback['status'] = 'success';
 }
 
-if($_requestMode && $_requestMode == "export") {
+if($_requestMode == "export") {
 	$linkObj->load($_id);
 
 	$_i = $linkObj->getData('id');
@@ -90,7 +90,6 @@ if($_requestMode && $_requestMode == "export") {
 		$submitFeedback['message'] = $T->t('edit.link.export.data.fail');
 		$submitFeedback['status'] = 'error';
 	}
-
 }
 
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink'])) {
