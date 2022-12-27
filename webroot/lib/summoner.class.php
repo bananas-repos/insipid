@@ -133,10 +133,10 @@ class Summoner {
 	 * execute a curl call to the given $url
 	 *
 	 * @param string $url The request url
-	 * @param bool $port
+	 * @param int $port
 	 * @return string
 	 */
-	static function curlCall(string $url, $port=false): string {
+	static function curlCall(string $url, int $port=0): string {
 		$ret = '';
 
 		$ch = curl_init();
@@ -175,10 +175,10 @@ class Summoner {
 	 *
 	 * @param string $url
 	 * @param string $whereToStore
-	 * @param bool $port
+	 * @param int $port
 	 * @return bool
 	 */
-	static function downloadFile(string $url, string $whereToStore, $port=false): bool {
+	static function downloadFile(string $url, string $whereToStore, int $port=0): bool {
 		$fh = fopen($whereToStore, 'w+');
 
 		$ret = false;
@@ -216,7 +216,7 @@ class Summoner {
 	 * @param string $key
 	 * @return mixed
 	 */
-	static function ifset(array $array, string $key) {
+	static function ifset(array $array, string $key): mixed {
 		return $array[$key] ?? false;
 	}
 
@@ -424,7 +424,7 @@ class Summoner {
 	 * @param string $urlString
 	 * @return string
 	 */
-	static function addSchemeToURL($urlString): string {
+	static function addSchemeToURL(string $urlString): string {
 		$ret = $urlString;
 
 		if(empty(parse_url($ret, PHP_URL_SCHEME))) {
@@ -459,7 +459,7 @@ class Summoner {
 	 * @param string $unit
 	 * @return string
 	 */
-	static function humanFileSize(int $size, $unit=""): string {
+	static function humanFileSize(int $size, string $unit=""): string {
         $ret =  number_format($size)." bytes";
 
         if((!$unit && $size >= 1<<30) || $unit == "GB") {
@@ -485,7 +485,7 @@ class Summoner {
 	 * @param int $fTime If not false remove files older then this value in sec.
 	 * @return boolean
 	 */
-    static function recursive_remove_directory(string $directory, $empty=false, $fTime=0): bool {
+    static function recursive_remove_directory(string $directory, bool $empty=false, int $fTime=0): bool {
         if(substr($directory,-1) == '/') {
             $directory = substr($directory,0,-1);
         }
@@ -508,7 +508,7 @@ class Summoner {
                         recursive_remove_directory($path);
                     }
                     else {
-                        if($fTime !== false && is_int($fTime)) {
+                        if(!empty($fTime) && is_int($fTime)) {
                             $ft = filemtime($path);
                             $offset = time()-$fTime;
                             if($ft <= $offset) {
@@ -538,10 +538,10 @@ class Summoner {
 	 * modify will remove: only key with no value
 	 *
 	 * @param array $array
-	 * @param bool $modify
+	 * @param array $modify
 	 * @return string
 	 */
-    static function createFromParameterLinkQuery(array $array, $modify=false): string {
+    static function createFromParameterLinkQuery(array $array, array $modify=array()): string {
         $ret = '';
 
         if(!empty($modify)) {

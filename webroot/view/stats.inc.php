@@ -32,7 +32,6 @@ if(Summoner::simpleAuthCheck() === true) {
 }
 
 if(isset($_POST['statsDeleteLocalStorage'])) {
-
     if($Management->clearLocalStorage() === true) {
         $TemplateData['refresh'] = 'index.php?p=stats';
     }

@@ -27,16 +27,16 @@
  */
 $currentGetParameters['p'] = 'overview';
 
-$_requestMode = false;
+$_requestMode = '';
 if(isset($_GET['m']) && !empty($_GET['m'])) {
 	$_requestMode = trim($_GET['m']);
-	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : false;
+	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : '';
 }
 
-$_id = false;
+$_id = '';
 if(isset($_GET['id']) && !empty($_GET['id'])) {
 	$_id = trim($_GET['id']);
-	$_id = Summoner::validate($_id,'digit') ? $_id : false;
+	$_id = Summoner::validate($_id,'digit') ? $_id : '';
 }
 
 $_curPage = 1;
@@ -45,16 +45,16 @@ if(isset($_GET['page']) && !empty($_GET['page'])) {
 	$_curPage = Summoner::validate($_curPage,'digit') ? $_curPage : 1;
 }
 
-$_sort = false;
+$_sort = '';
 if(isset($_GET['s']) && !empty($_GET['s'])) {
     $_sort = trim($_GET['s']);
-    $_sort = Summoner::validate($_sort,'nospace') ? $_sort : false;
+    $_sort = Summoner::validate($_sort,'nospace') ? $_sort : '';
 }
 
-$_sortDirection = false;
+$_sortDirection = '';
 if(isset($_GET['sd']) && !empty($_GET['sd'])) {
     $_sortDirection = trim($_GET['sd']);
-    $_sortDirection = Summoner::validate($_sortDirection,'nospace') ? $_sortDirection : false;
+    $_sortDirection = Summoner::validate($_sortDirection,'nospace') ? $_sortDirection : '';
 }
 
 $linkCollection = array();

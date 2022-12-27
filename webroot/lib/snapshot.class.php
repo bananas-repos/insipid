@@ -35,17 +35,17 @@ class Snapshot {
 	/**
 	 * @var string
 	 */
-	private $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=';
+	private string $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=';
 
 	/**
 	 * @var string
 	 */
-	private $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
+	private string $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
 
 	/**
 	 * Snapshot constructor
 	 */
-	public function __constructor() {}
+	public function __constructor(): void {}
 
 	/**
 	 * call given url with google PageSpeed API
@@ -57,6 +57,9 @@ class Snapshot {
 	 */
 	public function doSnapshot(string $url, string $filename): bool {
 		$ret = false;
+
+		// new path in jason
+		// lighthouseResult audits full-page-screenshot details screenshot data (base64 encoded)
 
 		if(!empty($url) && is_writable(dirname($filename))) {
 			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
@@ -82,7 +85,7 @@ class Snapshot {
 	 * @param string $filename
 	 * @return boolean
 	 */
-	public function wholePageSnpashot(string $url, string $filename): bool {
+	public function wholePageSnapshot(string $url, string $filename): bool {
 		$ret = false;
 
 		require_once 'lib/shellcommand.class.php';

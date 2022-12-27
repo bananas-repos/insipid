@@ -62,8 +62,6 @@ require('lib/translation.class.php');
 
 ## main vars
 $Summoner = new Summoner();
-# database object
-$DB = false;
 # the template data as an array
 $TemplateData = array();
 # translation

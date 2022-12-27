@@ -308,14 +308,14 @@ class Link {
 					}
 				}
 
-				# decide if we want to make a local full page scrrenshot
+				# decide if we want to make a local full page screenshot
 				if(isset($data['pagescreenshot'])) {
 					$pagescreenshot = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/pagescreenshot-' . $this->_data['hash'].'.jpg';
 					if ($data['pagescreenshot'] === true) {
 						if (!file_exists($pagescreenshot) || $_imageUrlChanged === true) {
 							require_once 'lib/snapshot.class.php';
 							$snap = new Snapshot();
-							$do = $snap->wholePageSnpashot($this->_data['link'], $pagescreenshot);
+							$do = $snap->wholePageSnapshot($this->_data['link'], $pagescreenshot);
 							if(!empty($do)) {
 								error_log('ERROR Failed to create snapshot: '.var_export($data,true));
 							}
