@@ -439,24 +439,45 @@ class Management {
 	/**
 	 * return all links and Info we have from the combined view
 	 *
-	 * @param int $limit
-	 * @param bool $offset
+	 * @param array $options
 	 * @return array
 	 */
-	public function links(int $limit=10, bool $offset=false): array {
+	public function links(array $options=array()): array {
 		$ret = array();
+
+		if(!isset($options['limit'])) $options['limit'] = 5;
+		if(!isset($options['offset'])) $options['offset'] = false;
+		if(!isset($options['sort'])) $options['sort'] = false;
+		if(!isset($options['sortDirection'])) $options['sortDirection'] = false;
 
 		$querySelect = "SELECT `hash`";
 		$queryFrom = " FROM `".DB_PREFIX."_link` AS t";
 		$queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
-		$queryOrder = " ORDER BY `created` DESC";
-		$queryLimit = "";
-		if(!empty($limit)) {
-			$queryLimit = " LIMIT $limit";
-			if($offset !== false) {
-				$queryLimit .= " OFFSET $offset";
+
+		$queryOrder = " ORDER BY";
+		if(!empty($options['sort'])) {
+			$queryOrder .= ' t.'.$options['sort'];
+		}
+		else {
+			$queryOrder .= " t.created";
+		}
+		if(!empty($options['sortDirection'])) {
+			$queryOrder .= ' '.$options['sortDirection'];
+		}
+		else {
+			$queryOrder .= " DESC";
+		}
+
+		$queryLimit = '';
+		# this allows the set the limit to false
+		if(!empty($options['limit'])) {
+			$queryLimit .= " LIMIT ".$options['limit'];
+			# offset can be 0
+			if($options['offset'] !== false) {
+				$queryLimit .= " OFFSET ".$options['offset'];
 			}
 		}
+
 		$query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
 		if(!empty($query) && $query->num_rows > 0) {
 			while($result = $query->fetch_assoc()) {

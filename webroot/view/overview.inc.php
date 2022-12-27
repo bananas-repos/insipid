@@ -133,12 +133,12 @@ switch($_requestMode) {
 		$subHeadline = 'Awaiting moderation';
 		$Management->setShowAwm(true);
 
-		$linkCollection = $Management->links(RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+		$linkCollection = $Management->links($_LinkColllectionQueryOptions);
 	break;
 	case 'all':
 	default:
 		# show all
-		$linkCollection = $Management->links(RESULTS_PER_PAGE, (RESULTS_PER_PAGE * ($_curPage-1)));
+		$linkCollection = $Management->links($_LinkColllectionQueryOptions);
 }
 
 if(!empty($linkCollection['amount'])) {
