@@ -90,8 +90,10 @@ class Snapshot {
 	}
 
 	/**
-	 * use configured WKHTMLTOPDF_COMMAND to create a whole page screenshot
+	 * use configured COMPLETE_PAGE_SCREENSHOT_COMMAND to create a whole page screenshot
 	 * of the given link and store it locally
+	 *
+	 * @TODO: TBD
 	 *
 	 * @param String $url URL to take the screenshot from
 	 * @param string $filename
@@ -103,7 +105,7 @@ class Snapshot {
 		require_once 'lib/shellcommand.class.php';
 
 		if(!empty($url) && is_writable(dirname($filename))) {
-			$cmd = WKHTMLTOPDF_COMMAND;
+			$cmd = COMPLETE_PAGE_SCREENSHOT_COMMAND;
 			$params = $this->_wkhtmltoimageOptions." ".$url." ".$filename;
 			$command = new ShellCommand($cmd." ".$params);
 			if ($command->execute()) {

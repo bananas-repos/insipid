@@ -32,7 +32,7 @@ ini_set('error_reporting',-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
-const DEBUG = false;
+require('../config.php');
 
 ## set the error reporting
 ini_set('log_errors',true);
@@ -43,8 +43,6 @@ if(DEBUG === true) {
 else {
     ini_set('display_errors',false);
 }
-
-require('../config.php');
 
 // if the file needs to be in a web accessible folder
 // you can either use the provided htaccess file

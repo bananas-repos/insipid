@@ -1,5 +1,6 @@
-version 2.x - Deathwind Chapel ()
+version 2.8.1 - Deathwind Chapel ()
 
+	+ Bugfix release
 	+ Moved debug setting into config
 	+ Updated shellcommand class and added the link to the github repo
 	+ Fixed/Updated the creation of the webpage thumbnail using google pagespeed insights api
@@ -8,7 +9,8 @@ version 2.x - Deathwind Chapel ()
 	+ Fixed xml ex- and import
 	+ Fixed pagination and sort options in all links view
 	+ Mysql dump replaced with https://github.com/druidfi/mysqldump-php
-	* Updated PHPMailer
+	+ Updated PHPMailer
+	+ Removed WKHTMLTOPDF_USE and WKHTMLTOPDF_COMMAND from config. No support for a whole page screenshot yet.
 
 version 2.8 - Wastelands (2022-12-10)
 
