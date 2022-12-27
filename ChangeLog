@@ -7,6 +7,8 @@ version 2.x - Deathwind Chapel ()
 	+ Fixed missing lang property
 	+ Fixed xml ex- and import
 	+ Fixed pagination and sort options in all links view
+	+ Mysql dump replaced with https://github.com/druidfi/mysqldump-php
+	* Updated PHPMailer
 
 version 2.8 - Wastelands (2022-12-10)
 

@@ -78,8 +78,10 @@ require('../lib/email-import-helper.class.php');
 
 # load only if needed
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 if(EMAIL_REPORT_BACK === true) {
+	require('../lib/phpmailer/Exception.php');
 	require('../lib/phpmailer/PHPMailer.php');
 	require('../lib/phpmailer/SMTP.php');
 
@@ -106,8 +108,6 @@ if(EMAIL_REPORT_BACK === true) {
         ],
     );
 }
-
-$DB = false;
 
 ## DB connection
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
