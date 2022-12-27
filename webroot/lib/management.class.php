@@ -784,7 +784,9 @@ class Management {
 				$searchStr .= ' '.implode(' ',$l['tags']);
                 $searchStr .= ' '.implode(' ',$l['categories']);
 				$searchStr .= ' '.$_t['host'];
-				$searchStr .= ' '.implode(' ',explode('/',$_t['path']));
+				if(isset($_t['path'])) {
+					$searchStr .= ' '.implode(' ',explode('/',$_t['path']));
+				}
                 $searchStr = trim($searchStr);
                 $searchStr = strtolower($searchStr);
 
@@ -795,7 +797,7 @@ class Management {
 
 				$this->DB->query($queryStr);
 
-				unset($LinkObj,$l,$searchStr,$t,$c,$queryStr);
+				unset($LinkObj,$l,$searchStr,$_t,$queryStr);
 			}
 
 			$ret = true;

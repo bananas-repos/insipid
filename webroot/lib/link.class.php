@@ -75,7 +75,7 @@ class Link {
 				`title`,
 				`image`,
 				`hash`
-				FROM `" . DB_PREFIX . "_link`
+				FROM `".DB_PREFIX."_link`
 				WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 			$query = $this->DB->query($queryStr);
 			if (!empty($query) && $query->num_rows == 1) {
@@ -106,7 +106,7 @@ class Link {
 
 		if (!empty($hash)) {
 			$queryStr = "SELECT `id`,`link`,`description`,`title`,`image`,`hash`, `created`
-				FROM `" . DB_PREFIX . "_link`
+				FROM `".DB_PREFIX."_link`
 				WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 
 			$query = $this->DB->query($queryStr);
