@@ -35,15 +35,15 @@
  */
 class SimpleImap {
 
-	private $_connection;
+	private IMAP\Connection $_connection;
 
-	private $_server = EMAIL_SERVER;
-	private $_user = EMAIL_SERVER_USER;
-	private $_pass = EMAIL_SERVER_PASS;
-	private $_port = EMAIL_SERVER_PORT_IMAP;
-	private $_mailbox = EMAIL_SERVER_MAILBOX;
+	private string $_server = EMAIL_SERVER;
+	private string $_user = EMAIL_SERVER_USER;
+	private string $_pass = EMAIL_SERVER_PASS;
+	private int $_port = EMAIL_SERVER_PORT_IMAP;
+	private string $_mailbox = EMAIL_SERVER_MAILBOX;
 
-	private $_connectionstring = '';
+	private string $_connectionstring = '';
 
 	/**
 	 * SimpleImap constructor.
@@ -67,7 +67,7 @@ class SimpleImap {
 	 * @see http://ca.php.net/manual/en/function.imap-open.php
 	 * @throws Exception
 	 */
-	public function connect() {
+	public function connect(): void {
 
 	    if(empty($this->_server)) {
 	        throw new Exception('Missing EMAIL_SERVER');
@@ -134,12 +134,12 @@ class SimpleImap {
 	}
 
 	/**
-	 * the the current stats about the mail connection and INBOX
+	 * the current status about the mail connection and INBOX
 	 * kinda debug only
 	 *
 	 * @see http://ca.php.net/manual/en/function.imap-status.php
 	 */
-	public function mailboxStatus() {
+	public function mailboxStatus(): void {
 	    if($this->_connection !== false) {
 	        $status = imap_status($this->_connection, $this->_connectionstring.$this->_mailbox, SA_ALL);
 
@@ -181,7 +181,7 @@ class SimpleImap {
 	 * @param integer $messagenum
 	 * @return object
 	 */
-	public function emailHeaders_rfc822(int $messagenum) {
+	public function emailHeaders_rfc822(int $messagenum): object {
 		return imap_rfc822_parse_headers($this->emailHeaders($messagenum));
 	}
 
@@ -202,7 +202,7 @@ class SimpleImap {
 	 * @param integer $messageUid This is the message Uid as an int
 	 * @param string $folder This is the target folder. Default is EMAIL_ARCHIVE_FOLDER
 	 */
-	public function moveMessage(int $messageUid, $folder=EMAIL_ARCHIVE_FOLDER) {
+	public function moveMessage(int $messageUid, string $folder=EMAIL_ARCHIVE_FOLDER): void {
 	    if(!empty($messageUid) && !empty($folder)) {
 	        $messageUid = (string)$messageUid;
 	        imap_setflag_full($this->_connection,$messageUid,"\SEEN", ST_UID);
@@ -286,7 +286,7 @@ class SimpleImap {
 	/**
 	 * close the imap connection
 	 */
-	function close() {
+	function close(): void {
 	    imap_close($this->_connection);
 	}
 }

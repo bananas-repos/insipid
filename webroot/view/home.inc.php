@@ -35,7 +35,7 @@ $showAddForm = false;
 $honeypotCheck = false;
 $formData = array();
 
-$_requestMode = false;
+$_requestMode = '';
 if(isset($_GET['m']) && !empty($_GET['m'])) {
 	$_requestMode = trim($_GET['m']);
 	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : "all";

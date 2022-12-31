@@ -26,10 +26,10 @@
  *
  */
 
-$_id = false;
+$_id = '';
 if(isset($_GET['id']) && !empty($_GET['id'])) {
     $_id = trim($_GET['id']);
-    $_id = Summoner::validate($_id,'nospace') ? $_id : false;
+    $_id = Summoner::validate($_id,'nospace') ? $_id : '';
 }
 
 $linkData = $Management->loadLink($_id);

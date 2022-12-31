@@ -33,10 +33,10 @@ $formData = array();
 # can/should be extended in the future.
 Summoner::simpleAuth();
 
-$_id = false;
+$_id = '';
 if(isset($_GET['id']) && !empty($_GET['id'])) {
 	$_id = trim($_GET['id']);
-	$_id = Summoner::validate($_id,'nospace') ? $_id : false;
+	$_id = Summoner::validate($_id,'nospace') ? $_id : '';
 }
 
 $_isAwm = false;
@@ -46,10 +46,10 @@ if(isset($_GET['awm']) && !empty($_GET['awm'])) {
 	$Management->setShowAwm($_isAwm);
 }
 
-$_requestMode = false;
+$_requestMode = '';
 if(isset($_GET['m']) && !empty($_GET['m'])) {
 	$_requestMode = trim($_GET['m']);
-	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : false;
+	$_requestMode = Summoner::validate($_requestMode,'nospace') ? $_requestMode : '';
 }
 
 $linkData = $Management->loadLink($_id);
@@ -65,7 +65,7 @@ if($_isAwm === true) {
 	$submitFeedback['status'] = 'success';
 }
 
-if($_requestMode && $_requestMode == "export") {
+if($_requestMode == "export") {
 	$linkObj->load($_id);
 
 	$_i = $linkObj->getData('id');
@@ -90,7 +90,6 @@ if($_requestMode && $_requestMode == "export") {
 		$submitFeedback['message'] = $T->t('edit.link.export.data.fail');
 		$submitFeedback['status'] = 'error';
 	}
-
 }
 
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink'])) {

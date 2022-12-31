@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -35,17 +35,17 @@ class Snapshot {
 	/**
 	 * @var string
 	 */
-	private $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=';
+	private string $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=';
 
 	/**
 	 * @var string
 	 */
-	private $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
+	private string $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
 
 	/**
 	 * Snapshot constructor
 	 */
-	public function __constructor() {}
+	public function __constructor(): void {}
 
 	/**
 	 * call given url with google PageSpeed API
@@ -59,15 +59,30 @@ class Snapshot {
 		$ret = false;
 
 		if(!empty($url) && is_writable(dirname($filename))) {
+			if(DEBUG) {
+				error_log("DEBUG try to save to $filename with $this->_googlePageSpeed for $url");
+			}
 			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
 			if(!empty($theCall)) {
 				$jsonData = json_decode($theCall,true);
-				if(!empty($jsonData) && isset($jsonData['screenshot']['data'])) {
-					$imageData = $jsonData['screenshot']['data'];
-					$imageData = str_replace(['_', '-'], ['/', '+'], $imageData);
-					$imageData = base64_decode($imageData);
-					$ret = file_put_contents($filename, $imageData);
+				if(DEBUG) {
+					error_log("DEBUG Call result data: ".var_export($jsonData, true));
 				}
+				if(!empty($jsonData) && isset($jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'])) {
+					$imageData = $jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'];
+
+					$source = fopen($imageData, 'r');
+					$destination = fopen($filename, 'w');
+					if(stream_copy_to_stream($source, $destination)) {
+						$ret = $filename;
+					}
+					fclose($source);
+					fclose($destination);
+				} elseif(DEBUG) {
+					error_log("DEBUG invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".var_export($jsonData, true));
+				}
+			} elseif(DEBUG) {
+				error_log("DEBUG curl call failed");
 			}
 		}
 
@@ -75,20 +90,22 @@ class Snapshot {
 	}
 
 	/**
-	 * use configured WKHTMLTOPDF_COMMAND to create a whole page screenshot
+	 * use configured COMPLETE_PAGE_SCREENSHOT_COMMAND to create a whole page screenshot
 	 * of the given link and store it locally
+	 *
+	 * @TODO: TBD
 	 *
 	 * @param String $url URL to take the screenshot from
 	 * @param string $filename
 	 * @return boolean
 	 */
-	public function wholePageSnpashot(string $url, string $filename): bool {
+	public function wholePageSnapshot(string $url, string $filename): bool {
 		$ret = false;
 
 		require_once 'lib/shellcommand.class.php';
 
 		if(!empty($url) && is_writable(dirname($filename))) {
-			$cmd = WKHTMLTOPDF_COMMAND;
+			$cmd = COMPLETE_PAGE_SCREENSHOT_COMMAND;
 			$params = $this->_wkhtmltoimageOptions." ".$url." ".$filename;
 			$command = new ShellCommand($cmd." ".$params);
 			if ($command->execute()) {

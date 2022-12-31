@@ -1,22 +1,3 @@
 Whole page screenshot of a website
 
-# Requirements
-wkhtmlimage from https://wkhtmltopdf.org (tested with wkhtmltoimage 0.12.5)
-
-# Setup
-Change WKHTMLTOPDF_USE to true and alter the path WKHTMLTOPDF_COMMAND to your wkhtmltoimage install
-
-# Why wkhtmltoimage and not something newer or better?
-puppeteer is kinda overkill and the whole npm is, well, moren then that...
-https://developers.google.com/web/tools/puppeteer
-
-chromdriver and chrome was also some overkill and there was no simple
-php implementation.
-
-It will be created if the option is actived. To remove uncheck the option.
-To refresh uncheck the option. Save. This will delete the data.
-Check the option again and the page screnshot will be created again.
-
-Any error in this process will be visible in the error log file
-and not visible in the client. This way the link will be saved
-and no data will be lost.
+TBD

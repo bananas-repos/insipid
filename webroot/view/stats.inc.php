@@ -32,7 +32,6 @@ if(Summoner::simpleAuthCheck() === true) {
 }
 
 if(isset($_POST['statsDeleteLocalStorage'])) {
-
     if($Management->clearLocalStorage() === true) {
         $TemplateData['refresh'] = 'index.php?p=stats';
     }
@@ -43,6 +42,33 @@ if(isset($_POST['statsDeleteLocalStorage'])) {
 }
 
 if(isset($_POST['statsCreateDBBackup'])) {
+
+	require_once 'lib/Mysqldump/Mysqldump.php';
+
+	$dumpSettings = array(
+		'include-tables' => array(
+			DB_PREFIX.'_category',
+			DB_PREFIX.'_categoryrelation',
+			DB_PREFIX.'_link',
+			DB_PREFIX.'_tag',
+			DB_PREFIX.'_tagrelation'
+		),
+		'include-views' => array(
+			DB_PREFIX.'_combined'
+		),
+		'default-character-set' => 'utf8mb4'
+	);
+
+
+	$backupTmpFile = tempnam(sys_get_temp_dir(),'inspid');
+	try {
+		$dump = new Mysqldump('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USERNAME, DB_PASSWORD, $dumpSettings);
+		$dump->start($backupTmpFile);
+	} catch (Exception $e) {
+		echo 'mysqldump-php error: ' . $e->getMessage();
+	}
+
+	/*
     require_once 'lib/Mysqldump.php';
     $backupTmpFile = tempnam(sys_get_temp_dir(),'inspid');
 
@@ -68,8 +94,8 @@ if(isset($_POST['statsCreateDBBackup'])) {
         $dumpSettings
     );
 
-
     $dump->start($backupTmpFile);
+	*/
 
     header('Content-Type: application/octet-stream');
     header("Content-Transfer-Encoding: Binary");

@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2022 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -31,21 +31,24 @@ class Category {
 	 * the database object
 	 * @var mysqli
 	 */
-	private $DB;
+	private mysqli $DB;
 
 	/**
 	 * the current loaded category by DB id
-	 * @var int
+	 * @var string
 	 */
-	private $_id;
+	private string $_id;
 
 	/**
 	 * current loaded tag data
 	 * @var array
 	 */
-	private $_data;
+	private array $_data;
 
-	public function __construct($databaseConnectionObject) {
+	/**
+	 * @param mysqli $databaseConnectionObject
+	 */
+	public function __construct(mysqli $databaseConnectionObject) {
 		$this->DB = $databaseConnectionObject;
 	}
 
@@ -82,7 +85,7 @@ class Category {
                     }
                 }
                 else {
-                    $ret=3;
+                    $ret = 3;
                 }
             }
         }
@@ -92,10 +95,10 @@ class Category {
 	/**
 	 * by given DB table id load all the info we need
 	 *
-	 * @param int $id
-	 * @return integer
+	 * @param string $id
+	 * @return string
 	 */
-	public function initbyid(int $id): int {
+	public function initbyid(string $id): string {
 		$this->_id = 0;
 
 		if(!empty($id)) {
@@ -116,10 +119,10 @@ class Category {
 	/**
 	 * return all or data for given key on the current loaded category
 	 *
-	 * @param bool $key
-	 * @return string
+	 * @param string $key
+	 * @return string|array
 	 */
-	public function getData(bool $key=false): string {
+	public function getData(string $key=''): string|array {
 		$ret = $this->_data;
 
 		if(!empty($key) && isset($this->_data[$key])) {
@@ -132,10 +135,10 @@ class Category {
 	/**
 	 * set the relation to the given link to the loaded category
 	 *
-	 * @param integer $linkid
+	 * @param string $linkid
 	 * @return void
 	 */
-	public function setRelation(int $linkid) {
+	public function setRelation(string $linkid): void {
 		if(!empty($linkid) && !empty($this->_id)) {
 			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_categoryrelation`
 							SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
@@ -188,6 +191,7 @@ class Category {
 				$this->DB->query($queryStr);
 
 				$this->DB->commit();
+				$ret = true;
 			} catch (Exception $e) {
 				if(DEBUG) {
 					var_dump($e->getMessage());
@@ -207,7 +211,7 @@ class Category {
 	 * @param string $newValue
 	 * @return void
 	 */
-    public function rename(string $newValue) {
+    public function rename(string $newValue): void {
         if(!empty($newValue)) {
             $queryStr = "UPDATE `".DB_PREFIX."_category`
 	                    SET `name` = '".$this->DB->real_escape_string($newValue)."'

@@ -32,7 +32,7 @@ ini_set('error_reporting',-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
-const DEBUG = false;
+require('../config.php');
 
 ## set the error reporting
 ini_set('log_errors',true);
@@ -43,8 +43,6 @@ if(DEBUG === true) {
 else {
     ini_set('display_errors',false);
 }
-
-require('../config.php');
 
 // if the file needs to be in a web accessible folder
 // you can either use the provided htaccess file
@@ -78,8 +76,10 @@ require('../lib/email-import-helper.class.php');
 
 # load only if needed
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 if(EMAIL_REPORT_BACK === true) {
+	require('../lib/phpmailer/Exception.php');
 	require('../lib/phpmailer/PHPMailer.php');
 	require('../lib/phpmailer/SMTP.php');
 
@@ -106,8 +106,6 @@ if(EMAIL_REPORT_BACK === true) {
         ],
     );
 }
-
-$DB = false;
 
 ## DB connection
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);

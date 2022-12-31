@@ -32,7 +32,7 @@ ini_set('error_reporting',-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
-define('DEBUG',false);
+require('config.php');
 
 ## check request
 $_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
@@ -53,7 +53,6 @@ else {
     ini_set('display_errors',false);
 }
 
-require('config.php');
 require('lib/summoner.class.php');
 require('lib/management.class.php');
 require('lib/tag.class.php');
@@ -63,8 +62,6 @@ require('lib/translation.class.php');
 
 ## main vars
 $Summoner = new Summoner();
-# database object
-$DB = false;
 # the template data as an array
 $TemplateData = array();
 # translation

@@ -114,7 +114,7 @@
 				</label>
 			</div>
 		</div>
-		<?php if(defined('WKHTMLTOPDF_USE') && WKHTMLTOPDF_USE === true) { ?>
+		<?php if(defined('COMPLETE_PAGE_SCREENSHOT') && COMPLETE_PAGE_SCREENSHOT === true) { ?>
 		<div class="columns">
 			<div class="column is-one-quarter">
 				<p>

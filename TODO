@@ -1,7 +1,5 @@
 TODO / Feature list
++ Whole Page snapshot
 + view table really still needed?
-+ stats cleanup. Management functions should be standalone
 + theme support
-+ more "secure" user authentication
-++ multiple user accounts and stuff
 + combine category and tag class into one.

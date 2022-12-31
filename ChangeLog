@@ -1,3 +1,17 @@
+version 2.8.1 - Deathwind Chapel (20221231)
+
+	+ Bugfix release
+	+ Moved debug setting into config
+	+ Updated shellcommand class and added the link to the github repo
+	+ Fixed/Updated the creation of the webpage thumbnail using google pagespeed insights api
+	+ Fixed search index update
+	+ Fixed missing lang property
+	+ Fixed xml ex- and import
+	+ Fixed pagination and sort options in all links view
+	+ Mysql dump replaced with https://github.com/druidfi/mysqldump-php
+	+ Updated PHPMailer
+	+ Removed WKHTMLTOPDF_USE and WKHTMLTOPDF_COMMAND from config. No support for a whole page screenshot yet.
+
 version 2.8 - Wastelands (2022-12-10)
 
 	+ Fixed documentation
@@ -29,23 +43,23 @@ version 2.6 - Hypostyle (2021-03-21)
 
 version 2.5.2 - Darkmere (2020-09-12)
 
-    + Fixed bug #8 It is possible to add empty tags and categories.
-        Special chars check done on server side. JS has problems with unicode.
-    + Fixed bug #7 Edit categories/tags. Rename and move
-    + Fixed feature #3 Reduce whitespace in frontend
+	+ Fixed bug #8 It is possible to add empty tags and categories.
+		Special chars check done on server side. JS has problems with unicode.
+	+ Fixed bug #7 Edit categories/tags. Rename and move
+	+ Fixed feature #3 Reduce whitespace in frontend
 
 version 2.5.1 - Caves of Circe (2020-03-22)
 
-    + Bugfix release
+	+ Bugfix release
 
 version 2.5 - Winnowing Hall (2020-03-21)
 
-    + Added a thumbnail by talking to Google page speed API
-      Planned was a full page snapshot, but only got the thumbnail.
-      Needs some more work with headless chrome.
-    + Instead you can now decide to make a full page screenshot
-      using wkhtmltoimage. See documentation about it.
-    + Improved documentation
+	+ Added a thumbnail by talking to Google page speed API
+		Planned was a full page snapshot, but only got the thumbnail.
+		Needs some more work with headless chrome.
+	+ Instead you can now decide to make a full page screenshot
+		using wkhtmltoimage. See documentation about it.
+	+ Improved documentation
 
 version 2.4 - Seven Portals (2020-02-16)
 

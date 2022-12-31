@@ -76,6 +76,9 @@ const EMAIL_REPLY_BACK_VALID = '';
 const EMAIL_REPLY_BACK_ADDRESS = '';
 const EMAIL_REPLY_BACK_SUBJECT = 'Insipid email import response';
 
-# Use wkhtmltopdf to create a whole page screenshot of a given link
-const WKHTMLTOPDF_USE = false;
-const WKHTMLTOPDF_COMMAND = '/absolute/path/to/wkhtmltoimage';
+# Use ... to create a whole page screenshot of a given link
+const COMPLETE_PAGE_SCREENSHOT = false;
+const COMPLETE_PAGE_SCREENSHOT_COMMAND = '/absolute/path/to/command';
+
+# debug
+const DEBUG = false;
