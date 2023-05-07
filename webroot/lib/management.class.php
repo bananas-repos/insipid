@@ -945,6 +945,101 @@ class Management {
 	}
 
 	/**
+	 * Top 5 combinations of either tag or category
+	 *
+	 * array(
+	 *    array(
+	 *        amount => number
+	 *        rel => array(rel, name)
+	 *    )
+	 * )
+	 *
+	 * @param string $type
+	 * @return array
+	 */
+	public function linkRelationStats(string $type='tag'): array {
+		$ret = array();
+
+		// build the digit string which describes the tag/cat combination
+		$_relCombination = array();
+		if($type == 'category') {
+			$queryStr = "SELECT `linkid`, `categoryid` AS rel
+						FROM `".DB_PREFIX."_categoryrelation`
+						ORDER BY `linkid`, rel ASC";
+		} else {
+			$queryStr = "SELECT `linkid`, `tagid` AS rel
+						FROM `".DB_PREFIX."_tagrelation`
+						ORDER BY `linkid`, rel ASC";
+		}
+		$query = $this->DB->query($queryStr);
+		if(!empty($query) && $query->num_rows > 0) {
+			while($result = $query->fetch_assoc()) {
+				if(isset($_relCombination[$result['linkid']])) {
+					$_relCombination[$result['linkid']] .= ",".$result['rel'];
+				} else {
+					// https://www.php.net/manual/en/language.types.array.php "Strings containing valid decimal ints ... will be cast to the int type
+					// if not not done the arsort results are messed up
+					$_relCombination[$result['linkid']] = "0".$result['rel'];
+				}
+			}
+		}
+
+		// now count the unique digit strings
+		$_relCombination_amount = array();
+		if(!empty($_relCombination)) {
+			foreach($_relCombination as $k=>$v) {
+				if(isset($_relCombination_amount[$v])) {
+					$_relCombination_amount[$v]++;
+				} else {
+					$_relCombination_amount[$v] = 1;
+				}
+			}
+		}
+
+		// now sort and return top 5 combinations
+		// also resolve tag/cat name
+		if(!empty($_relCombination_amount)) {
+			arsort($_relCombination_amount);
+			$_top5 = array_splice($_relCombination_amount,0,5);
+
+			foreach($_top5 as $k=>$v) {
+				$_t = array();
+				if($k[0] === "0") {
+					$k = substr($k,1);
+				}
+
+				$_t['amount'] = $v;
+				$_rel = explode(",",$k);
+
+				$_existingRelInfo = array(); // avoid duplicate queries
+				foreach($_rel as $t) {
+					if(!isset($_existingRelInfo[$t])) {
+						if($type == 'category') {
+							$queryStr = "SELECT `name` FROM `".DB_PREFIX."_category`
+									WHERE `id` = '".$this->DB->real_escape_string($t)."'";
+						} else {
+							$queryStr = "SELECT `name` FROM `".DB_PREFIX."_tag`
+									WHERE `id` = '".$this->DB->real_escape_string($t)."'";
+						}
+						$query = $this->DB->query($queryStr);
+						if(!empty($query) && $query->num_rows > 0) {
+							$relinfo = $query->fetch_assoc();
+							$_existingRelInfo[$t] = $relinfo['name'];
+							$_t['rel'][$t] = $relinfo['name'];
+						}
+					} else {
+						$_t['rel'][$t] = $_existingRelInfo[$t];
+					}
+				}
+				$ret[] = $_t;
+			}
+
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * Return the query string for the correct status type
 	 *
 	 * @return string

@@ -68,35 +68,6 @@ if(isset($_POST['statsCreateDBBackup'])) {
 		echo 'mysqldump-php error: ' . $e->getMessage();
 	}
 
-	/*
-    require_once 'lib/Mysqldump.php';
-    $backupTmpFile = tempnam(sys_get_temp_dir(),'inspid');
-
-    // mysqldump was modifed to make this work
-    // include-views was not working while using include-tables
-    $dumpSettings = array(
-        'include-tables' => array(
-            DB_PREFIX.'_category',
-            DB_PREFIX.'_categoryrelation',
-            DB_PREFIX.'_link',
-            DB_PREFIX.'_tag',
-            DB_PREFIX.'_tagrelation'
-        ),
-        'include-views' => array(
-            DB_PREFIX.'_combined'
-        ),
-        'default-character-set' => \Ifsnop\Mysqldump\Mysqldump::UTF8MB4
-    );
-    $dump = new Ifsnop\Mysqldump\Mysqldump(
-        'mysql:host='.DB_HOST.';dbname='.DB_NAME,
-        DB_USERNAME,
-        DB_PASSWORD,
-        $dumpSettings
-    );
-
-    $dump->start($backupTmpFile);
-	*/
-
     header('Content-Type: application/octet-stream');
     header("Content-Transfer-Encoding: Binary");
     header("Content-disposition: attachment; filename=inspid-db-backup-full.sql");
@@ -131,7 +102,6 @@ if(isset($_POST['statsImportXML'])) {
 }
 
 if(isset($_POST['statsUpdateSearchIndex'])) {
-
     if($Management->updateSearchIndex() === true) {
         $TemplateData['refresh'] = 'index.php?p=stats';
     }
