@@ -39,10 +39,11 @@ const FRONTEND_PASSWORD = 'solo';
 
 # absolute path of webroot
 const ABSOLUTE_PATH = '/path/to/insipid/webroot';
+const LOGFILE = ABSOLUTE_PATH.'/insipid.log';
 # relative to absolute path the name of the storage folder
 const LOCAL_STORAGE = 'localdata';
 
-# complete restricted access not only the private links or the edit functions
+# complete restricted access, not only the private links or the edit functions
 # username and password see above
 const USE_PAGE_AUTH = false;
 
@@ -82,3 +83,4 @@ const COMPLETE_PAGE_SCREENSHOT_COMMAND = '/absolute/path/to/command';
 
 # debug
 const DEBUG = false;
+const QUERY_DEBUG = false;
