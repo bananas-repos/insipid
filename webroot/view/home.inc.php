@@ -129,8 +129,6 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 	if($isUrl === true && !empty($formData['title'])) {
 		$hash = md5($formData['url']);
 
-
-
 		$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
 		$linkObj = new Link($DB);
@@ -186,7 +184,9 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 	}
 }
 
-$existingCategories = $Management->categories();
-$existingTags = $Management->tags();
+if($showAddForm === true) {
+    $existingCategories = $Management->categories();
+    $existingTags = $Management->tags();
+}
 $latestLinks = $Management->latestLinks(20);
 $orderedCategories = $Management->categoriesByDateAdded();

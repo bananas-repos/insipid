@@ -50,6 +50,10 @@ class Management {
      */
     private int $_queryStatus = self::LINK_QUERY_STATUS;
 
+    /**
+     * @var array Store already loaded categories to avoid unneeded queries
+     */
+    private array $_categories;
 
     /**
      * Management constructor.
@@ -92,19 +96,22 @@ class Management {
      * optional limit
      * optional stats
      *
-     * @param int $limit
+     * @param string $limit
      * @param bool $stats
      * @return array
      */
-    public function categories(int $limit=0, bool $stats=false): array {
+    public function categories(string $limit="0", bool $stats=false): array {
         $ret = array();
         $statsInfo = array();
+
+        if(!empty($this->_categories)) return $this->_categories;
 
         if($stats === true) {
             $queryStr = "SELECT
                 COUNT(*) AS amount,
                 cr.categoryid AS categoryId
-                FROM `".DB_PREFIX."_categoryrelation` AS cr, `".DB_PREFIX."_link` AS t
+                FROM `".DB_PREFIX."_categoryrelation` AS cr, 
+                    `".DB_PREFIX."_link` AS t
                 WHERE cr.linkid = t.id";
             $queryStr .= " AND ".$this->_decideLinkTypeForQuery();
             $queryStr .= " GROUP BY categoryid";
@@ -148,6 +155,7 @@ class Management {
             Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
+        $this->_categories = $ret;
         return $ret;
     }
 
@@ -156,11 +164,11 @@ class Management {
      * optional limit
      * optional stats
      *
-     * @param int $limit
+     * @param string $limit
      * @param bool $stats
      * @return array
      */
-    public function tags(int $limit=0, bool $stats=false): array {
+    public function tags(string $limit="0", bool $stats=false): array {
         $ret = array();
         $statsInfo = array();
 
@@ -217,10 +225,10 @@ class Management {
     /**
      * return the latest added links
      *
-     * @param int $limit
+     * @param string $limit
      * @return array
      */
-    public function latestLinks(int $limit=5): array {
+    public function latestLinks(string $limit="5"): array {
         $ret = array();
 
         $queryStr = "SELECT `title`, `link` FROM `".DB_PREFIX."_link` AS t";
@@ -249,18 +257,18 @@ class Management {
      * Slow but does the trick for now. If there is way more entries
      * re-think this solution
      *
-     * @param int $limit
+     * @param String $limit
      * @return array
      */
-    public function randomLink(int $limit=1): array {
+    public function randomLink(string $limit="1"): array {
         $ret = array();
+
+        $amount = $this->linkAmount();
+        $offset = rand(0, $amount-1);
 
         $queryStr = "SELECT `title`, `link`, `hash` FROM `".DB_PREFIX."_link` AS t";
         $queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
-        $queryStr .= " ORDER BY RAND()";
-        if(!empty($limit)) {
-            $queryStr .= " LIMIT $limit";
-        }
+        $queryStr .= " LIMIT $offset, $limit";
 
         if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
@@ -279,17 +287,17 @@ class Management {
     /**
      * Get a random category
      *
-     * @param int $limit
+     * @param string $limit
      * @return array
      */
-    public function randomCategory(int $limit=1): array {
+    public function randomCategory(string $limit="1"): array {
         $ret = array();
 
+        $amount = $this->categoryAmount();
+        $offset = rand(0, $amount-1);
+
         $queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_category`";
-        $queryStr .= " ORDER BY RAND()";
-        if(!empty($limit)) {
-            $queryStr .= " LIMIT $limit";
-        }
+        $queryStr .= " LIMIT $offset, $limit";
 
         if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
@@ -308,17 +316,17 @@ class Management {
     /**
      * Get a random tag
      *
-     * @param int $limit
+     * @param string $limit
      * @return array
      */
-    public function randomTag(int $limit=1): array {
+    public function randomTag(string $limit="1"): array {
         $ret = array();
 
+        $amount = $this->tagAmount();
+        $offset = rand(0, $amount-1);
+
         $queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_tag`";
-        $queryStr .= " ORDER BY RAND()";
-        if(!empty($limit)) {
-            $queryStr .= " LIMIT $limit";
-        }
+        $queryStr .= " LIMIT $offset, $limit";
 
         if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
@@ -585,8 +593,8 @@ class Management {
                         FROM `".DB_PREFIX."_combined` AS t";
             $queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
             $queryStr .= " AND t.categoryId = '" . $this->DB->real_escape_string($categoryid) . "'
-            ORDER BY t.created DESC
-            LIMIT 1";
+                            ORDER BY t.created DESC
+                            LIMIT 1";
 
             if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
@@ -612,7 +620,8 @@ class Management {
         $ret = array();
 
         if(!empty($url)) {
-            $queryStr = "SELECT * FROM `".DB_PREFIX."_link` AS t";
+            $queryStr = "SELECT `id`, `link`, `title`, `hash` 
+                            FROM `".DB_PREFIX."_link` AS t";
             $queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
             $queryStr .= " AND t.link = '".$this->DB->real_escape_string($url)."'";
 
@@ -641,7 +650,7 @@ class Management {
         $ret = array();
 
         if(!empty($searchStr)) {
-            $queryStr = "SELECT *,
+            $queryStr = "SELECT `id`, `link`, `title`, `hash`,
                 MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE) AS score
                 FROM `".DB_PREFIX."_link` AS t
                 WHERE MATCH (`search`) AGAINST ('".$this->DB->real_escape_string($searchStr)."' IN BOOLEAN MODE)";
@@ -666,9 +675,9 @@ class Management {
     /**
      * amount of links in the DB. Status 1 and 2 only
      *
-     * @return int
+     * @return string
      */
-    public function linkAmount(): int {
+    public function linkAmount(): string {
         $ret = 0;
 
         $queryStr = "SELECT COUNT(*) AS amount 
@@ -694,9 +703,9 @@ class Management {
     /**
      * amount of tags
      *
-     * @return int
+     * @return string
      */
-    public function tagAmount(): int {
+    public function tagAmount(): string {
         $ret = 0;
 
         $queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_tag`";
@@ -719,9 +728,9 @@ class Management {
     /**
      * amount of categories
      *
-     * @return int
+     * @return string
      */
-    public function categoryAmount(): int {
+    public function categoryAmount(): string {
         $ret = 0;
 
         $queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_category`";
@@ -744,9 +753,9 @@ class Management {
     /**
      * Amount of links need moderation
      *
-     * @return int
+     * @return string
      */
-    public function moderationAmount(): int {
+    public function moderationAmount(): string {
         $ret = 0;
 
         $queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_link`";

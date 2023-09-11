@@ -67,7 +67,7 @@ class Tag {
      * @param bool $doNotCreate
      * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
      */
-    public function initbystring(string $string, $doNotCreate=false): int {
+    public function initbystring(string $string, bool $doNotCreate=false): int {
         $ret = 0;
         $this->_id = false;
         if(!empty($string)) {
@@ -100,7 +100,7 @@ class Tag {
                         }
                     }
                     else {
-                        $ret=3;
+                        $ret = 3;
                     }
                 }
             } catch (Exception $e) {
@@ -113,10 +113,10 @@ class Tag {
     /**
      * by given DB table id load all the info we need
      *
-     * @param int $id
-     * @return int
+     * @param string $id
+     * @return string
      */
-    public function initbyid(int $id): int {
+    public function initbyid(string $id): string {
         $this->_id = 0;
 
         if(!empty($id)) {
@@ -159,10 +159,10 @@ class Tag {
     /**
      * set the relation to the given link to the loaded tag
      *
-     * @param int $linkid
+     * @param string $linkid
      * @return void
      */
-    public function setRelation(int $linkid): void {
+    public function setRelation(string $linkid): void {
         if(!empty($linkid) && !empty($this->_id)) {
             $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
                             SET `linkid` = '".$this->DB->real_escape_string($linkid)."',

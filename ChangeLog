@@ -1,6 +1,7 @@
 version 2.x - Dragon Chapel ()
 
 	+ Added LOGFILE and QUERY_DEBUG const to config.php. See update.txt for more details
+	+ Improved DB queries.
 	+ Add top 5 tag or category relation stats in the tag and category overview
 	+ Update license to GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 	+ Updated error logging and try/catch for mysql

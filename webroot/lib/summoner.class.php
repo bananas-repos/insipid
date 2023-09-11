@@ -568,7 +568,7 @@ class Summoner {
      * @param string $input The string to be made more safe
      * @return string
      */
-    static function cleanForLog($input): string {
+    static function cleanForLog(string $input): string {
         $input = var_export($input, true);
         $input = preg_replace( "/[\t\n\r]/", " ", $input);
         return addcslashes($input, "\000..\037\177..\377\\");
