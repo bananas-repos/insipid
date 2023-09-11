@@ -126,8 +126,8 @@ class SimpleImap {
 	    }
 
 	    # log messages processed to all messages
-	    error_log("INFO Read ".$messagecount." messages");
-	    error_log("INFO Processed ".$processedmessagescount." messages");
+        Summoner::sysLog("INFO Read ".$messagecount." messages");
+        Summoner::sysLog("INFO Processed ".$processedmessagescount." messages");
 
 	    return $ret;
 
@@ -160,7 +160,7 @@ class SimpleImap {
 	                echo $val->attributes . "<br />\n";
 	            }
 	        } else {
-	            error_log("ERROR imap_getmailboxes failed: ".var_export(imap_last_error()));
+                Summoner::sysLog("ERROR imap_getmailboxes failed: ".var_export(imap_last_error()));
 	        }
 	    }
 	}
