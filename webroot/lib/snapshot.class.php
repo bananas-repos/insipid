@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2022 Johannes Keßler
+ * Copyright 2016-2023 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -60,13 +60,13 @@ class Snapshot {
 
 		if(!empty($url) && is_writable(dirname($filename))) {
 			if(DEBUG) {
-				error_log("DEBUG try to save to $filename with $this->_googlePageSpeed for $url");
+                Summoner::sysLog("[DEBUG] try to save to $filename with $this->_googlePageSpeed for $url");
 			}
 			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
 			if(!empty($theCall)) {
 				$jsonData = json_decode($theCall,true);
 				if(DEBUG) {
-					error_log("DEBUG Call result data: ".var_export($jsonData, true));
+                    Summoner::sysLog("[DEBUG] Call result data: ".var_export($jsonData, true));
 				}
 				if(!empty($jsonData) && isset($jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'])) {
 					$imageData = $jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'];
@@ -79,10 +79,10 @@ class Snapshot {
 					fclose($source);
 					fclose($destination);
 				} elseif(DEBUG) {
-					error_log("DEBUG invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".var_export($jsonData, true));
+                    Summoner::sysLog("[DEBUG] invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".var_export($jsonData, true));
 				}
 			} elseif(DEBUG) {
-				error_log("DEBUG curl call failed");
+                Summoner::sysLog("[DEBUG] curl call failed");
 			}
 		}
 

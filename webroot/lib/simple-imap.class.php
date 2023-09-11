@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2022 Johannes Keßler
+ * Copyright 2016-2023 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -144,11 +144,11 @@ class SimpleImap {
 	        $status = imap_status($this->_connection, $this->_connectionstring.$this->_mailbox, SA_ALL);
 
 	        if(DEBUG === true) {
-                var_dump("messages " . $status->messages);
-                var_dump("recent " . $status->recent);
-                var_dump("unseen " . $status->unseen);
-                var_dump("uidnext " . $status->uidnext);
-                var_dump("uidvalidity " . $status->uidvalidity);
+                Summoner::sysLog("messages " . $status->messages);
+                Summoner::sysLog("recent " . $status->recent);
+                Summoner::sysLog("unseen " . $status->unseen);
+                Summoner::sysLog("uidnext " . $status->uidnext);
+                Summoner::sysLog("uidvalidity " . $status->uidvalidity);
             }
 
 	        $list = imap_getmailboxes($this->_connection, $this->_connectionstring, "*");
