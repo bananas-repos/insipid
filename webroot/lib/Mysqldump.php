@@ -13,11 +13,14 @@
  *
  */
 
+// modified to run like a normal class...
+/*
 namespace Ifsnop\Mysqldump;
 
 use Exception;
 use PDO;
 use PDOException;
+*/
 
 /**
  * Class Mysqldump.

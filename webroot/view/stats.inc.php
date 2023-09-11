@@ -43,7 +43,7 @@ if(isset($_POST['statsDeleteLocalStorage'])) {
 
 if(isset($_POST['statsCreateDBBackup'])) {
 
-	require_once 'lib/Mysqldump/Mysqldump.php';
+	require 'lib/Mysqldump.php';
 
 	$dumpSettings = array(
 		'include-tables' => array(
@@ -70,7 +70,7 @@ if(isset($_POST['statsCreateDBBackup'])) {
 
     header('Content-Type: application/octet-stream');
     header("Content-Transfer-Encoding: Binary");
-    header("Content-disposition: attachment; filename=inspid-db-backup-full.sql");
+    header("Content-disposition: attachment; filename=insipid-db-backup-full.sql");
     readfile($backupTmpFile);
     exit();
 }
