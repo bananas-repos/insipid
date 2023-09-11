@@ -32,90 +32,90 @@
  * right now it uses google pagespeedonline.
  */
 class Snapshot {
-	/**
-	 * @var string
-	 */
-	private string $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=';
+    /**
+     * @var string
+     */
+    private string $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=';
 
-	/**
-	 * @var string
-	 */
-	private string $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
+    /**
+     * @var string
+     */
+    private string $_wkhtmltoimageOptions = '--load-error-handling ignore --quality 80 --quiet --width 1900';
 
-	/**
-	 * Snapshot constructor
-	 */
-	public function __constructor(): void {}
+    /**
+     * Snapshot constructor
+     */
+    public function __constructor(): void {}
 
-	/**
-	 * call given url with google PageSpeed API
-	 * to receive image data
-	 *
-	 * @param String $url URL to take a thumbnail from
-	 * @param string $filename
-	 * @return boolean
-	 */
-	public function doSnapshot(string $url, string $filename): bool {
-		$ret = false;
+    /**
+     * call given url with google PageSpeed API
+     * to receive image data
+     *
+     * @param String $url URL to take a thumbnail from
+     * @param string $filename
+     * @return boolean
+     */
+    public function doSnapshot(string $url, string $filename): bool {
+        $ret = false;
 
-		if(!empty($url) && is_writable(dirname($filename))) {
-			if(DEBUG) {
+        if(!empty($url) && is_writable(dirname($filename))) {
+            if(DEBUG) {
                 Summoner::sysLog("[DEBUG] try to save to $filename with $this->_googlePageSpeed for $url");
-			}
-			$theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
-			if(!empty($theCall)) {
-				$jsonData = json_decode($theCall,true);
-				if(DEBUG) {
+            }
+            $theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
+            if(!empty($theCall)) {
+                $jsonData = json_decode($theCall,true);
+                if(DEBUG) {
                     Summoner::sysLog("[DEBUG] Call result data: ".var_export($jsonData, true));
-				}
-				if(!empty($jsonData) && isset($jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'])) {
-					$imageData = $jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'];
+                }
+                if(!empty($jsonData) && isset($jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'])) {
+                    $imageData = $jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'];
 
-					$source = fopen($imageData, 'r');
-					$destination = fopen($filename, 'w');
-					if(stream_copy_to_stream($source, $destination)) {
-						$ret = $filename;
-					}
-					fclose($source);
-					fclose($destination);
-				} elseif(DEBUG) {
+                    $source = fopen($imageData, 'r');
+                    $destination = fopen($filename, 'w');
+                    if(stream_copy_to_stream($source, $destination)) {
+                        $ret = $filename;
+                    }
+                    fclose($source);
+                    fclose($destination);
+                } elseif(DEBUG) {
                     Summoner::sysLog("[DEBUG] invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".var_export($jsonData, true));
-				}
-			} elseif(DEBUG) {
+                }
+            } elseif(DEBUG) {
                 Summoner::sysLog("[DEBUG] curl call failed");
-			}
-		}
+            }
+        }
 
-		return $ret;
-	}
+        return $ret;
+    }
 
-	/**
-	 * use configured COMPLETE_PAGE_SCREENSHOT_COMMAND to create a whole page screenshot
-	 * of the given link and store it locally
-	 *
-	 * @TODO: TBD
-	 *
-	 * @param String $url URL to take the screenshot from
-	 * @param string $filename
-	 * @return boolean
-	 */
-	public function wholePageSnapshot(string $url, string $filename): bool {
-		$ret = false;
+    /**
+     * use configured COMPLETE_PAGE_SCREENSHOT_COMMAND to create a whole page screenshot
+     * of the given link and store it locally
+     *
+     * @TODO: TBD
+     *
+     * @param String $url URL to take the screenshot from
+     * @param string $filename
+     * @return boolean
+     */
+    public function wholePageSnapshot(string $url, string $filename): bool {
+        $ret = false;
 
-		require_once 'lib/shellcommand.class.php';
+        require_once 'lib/shellcommand.class.php';
 
-		if(!empty($url) && is_writable(dirname($filename))) {
-			$cmd = COMPLETE_PAGE_SCREENSHOT_COMMAND;
-			$params = $this->_wkhtmltoimageOptions." ".$url." ".$filename;
-			$command = new ShellCommand($cmd." ".$params);
-			if ($command->execute()) {
-			    $ret = $command->getOutput();
-			} else {
-				error_log($command->getError());
-				$ret = $command->getExitCode();
-			}
-		}
+        if(!empty($url) && is_writable(dirname($filename))) {
+            $cmd = COMPLETE_PAGE_SCREENSHOT_COMMAND;
+            $params = $this->_wkhtmltoimageOptions." ".$url." ".$filename;
+            $command = new ShellCommand($cmd." ".$params);
+            if ($command->execute()) {
+                $ret = $command->getOutput();
+            } else {
+                error_log($command->getError());
+                $ret = $command->getExitCode();
+            }
+        }
 
-		return $ret;
-	}
+        return $ret;
+    }
 }
