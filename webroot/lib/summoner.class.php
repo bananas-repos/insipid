@@ -162,7 +162,7 @@ class Summoner {
             $ret = $do;
         }
         else {
-            error_log('ERROR '.var_export(curl_error($ch),true));
+            self::sysLog('ERROR '.var_export(curl_error($ch),true));
         }
 
         curl_close($ch);

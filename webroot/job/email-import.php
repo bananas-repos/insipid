@@ -28,15 +28,14 @@
 
 mb_http_output('UTF-8');
 mb_internal_encoding('UTF-8');
-ini_set('error_reporting',-1); // E_ALL & E_STRICT
+error_reporting(-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
 require('../config.php');
 
 ## set the error reporting
-ini_set('log_errors',true);
-ini_set('error_log','import.log');
+ini_set('log_errors',true);;
 if(DEBUG === true) {
     ini_set('display_errors',true);
 }
@@ -123,7 +122,7 @@ try {
     if(DEBUG === true) $EmailReader->mailboxStatus();
 }
 catch (Exception $e) {
-    error_log('ERROR Email server connection failed: '.var_export($e->getMessage(),true));
+    Summoner::sysLog('[ERROR] Email server connection failed: '.var_export($e->getMessage(),true));
     exit();
 }
 
@@ -133,7 +132,7 @@ try {
     $emails = $EmailReader->messageWithValidSubject(EMAIL_MARKER);
 }
 catch (Exception $e) {
-    error_log('ERROR Can not process email messages: '.var_export($e->getMessage(),true));
+    Summoner::sysLog('[ERROR] Can not process email messages: '.var_export($e->getMessage(),true));
     exit();
 }
 
@@ -208,7 +207,7 @@ if(!empty($emails)) {
 
                 if(!empty($existing) && isset($existing['id'])) {
                     $linkID = $existing['id'];
-                    error_log('INFO Updating existing link with tag or category '.$newdata['link']);
+                    Summoner::sysLog('[INFO] Updating existing link with tag or category '.$newdata['link']);
                 }
                 else {
                     $linkObj = new Link($DB);
@@ -225,7 +224,7 @@ if(!empty($emails)) {
                         ), true);
                     } catch (Exception $e) {
                         $_m = "WARN Can not create new link into DB." . $e->getMessage();
-                        error_log($_m);
+                        Summoner::sysLog($_m);
                         $emailData['importmessage'] = $_m;
                         array_push($invalidProcessedEmails, $emailData);
                         if (DEBUG === true) var_dump($_m);
@@ -257,12 +256,12 @@ if(!empty($emails)) {
 
 					$DB->commit();
 
-					error_log("INFO Link successfully added/updated: ".$newdata['link']);
+                    Summoner::sysLog("[INFO] Link successfully added/updated: ".$newdata['link']);
 					array_push($validProcessedEmails,$emailData);
 				}
 				else {
 					$DB->rollback();
-					error_log("ERROR Link could not be added. SQL problem? ".$newdata['link']);
+                    Summoner::sysLog("[ERROR] Link could not be added. SQL problem? ".$newdata['link']);
 					$emailData['importmessage'] = "Link could not be added";
 					array_push($invalidProcessedEmails,$emailData);
 				}
@@ -274,7 +273,7 @@ if(!empty($emails)) {
 # if we have invalid import mails, ignore them, just log em
 # if EMAIL_REPORT_BACK is true then report back with errors if EMAIL_REPLY_BACK_VALID
 if(!empty($invalidProcessedEmails)) {
-	error_log("INFO We have invalid import messages.");
+    Summoner::sysLog("[INFO] We have invalid import messages.");
 	foreach ($invalidProcessedEmails as $invalidMail) {
 		if(EmailImportHelper::canSendReplyTo($invalidMail['header_rfc822']->reply_toaddress)
 			&& !EmailImportHelper::isAutoReplyMessage($invalidMail['header_array'])) {
@@ -283,20 +282,20 @@ if(!empty($invalidProcessedEmails)) {
 			$phpmailer->Body .= $invalidMail['body'];
 			$phpmailer->addAddress($_address[0]['address']);
 			$phpmailer->send();
-			error_log("INFO Report back email to: ".$_address[0]['address']);
+            Summoner::sysLog("[INFO] Report back email to: ".$_address[0]['address']);
 		}
 		else {
-			error_log("WARN Invalid message: ".$invalidMail['header_rfc822']->subject);
+            Summoner::sysLog("[WARN] Invalid message: ".$invalidMail['header_rfc822']->subject);
 		}
 	}
 }
 
 # move them to the processed / archive folder
 if(!empty($validProcessedEmails)) {
-	error_log("INFO We have valid import messages.");
+    Summoner::sysLog("[INFO] We have valid import messages.");
 	foreach ($validProcessedEmails as $validMail) {
 	    $EmailReader->moveMessage($validMail['uid']);
-        error_log("INFO Mail moved to archive ".$validMail['header_rfc822']->subject);
+        Summoner::sysLog("[INFO] Mail moved to archive ".$validMail['header_rfc822']->subject);
 	}
 }
 

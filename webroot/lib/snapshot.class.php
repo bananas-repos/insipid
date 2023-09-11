@@ -111,7 +111,7 @@ class Snapshot {
             if ($command->execute()) {
                 $ret = $command->getOutput();
             } else {
-                error_log($command->getError());
+                Summoner::sysLog($command->getError());
                 $ret = $command->getExitCode();
             }
         }
