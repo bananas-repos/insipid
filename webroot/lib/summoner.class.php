@@ -86,7 +86,7 @@ class Summoner {
 				// text without any whitespace and special chars
 				// but with Punctuation other
 				# http://www.sql-und-xml.de/unicode-database/po.html
-				$pattern = '/[\p{L}\p{N}\p{Po}\-]/u';
+				$pattern = '/[\p{L}\p{N}\p{Po}\-_]/u';
 			break;
 
 			case 'digit':
@@ -98,7 +98,7 @@ class Summoner {
 			case 'pageTitle':
 				// text with whitespace and without special chars
 				// but with Punctuation
-				$pattern = '/[\p{L}\p{N}\p{Po}\p{Z}\s-]/u';
+				$pattern = '/[\p{L}\p{N}\p{Po}\p{Z}\s\-_]/u';
 			break;
 
 			# strange. the \p{M} is needed.. don't know why..
@@ -391,7 +391,7 @@ class Summoner {
 	/**
 	 * a very simple HTTP_AUTH authentication.
 	 */
-	static function simpleAuth() {
+	static function simpleAuth(): void {
 		if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])
 			|| $_SERVER['PHP_AUTH_USER'] !== FRONTEND_USERNAME || $_SERVER['PHP_AUTH_PW'] !== FRONTEND_PASSWORD
 			) {
