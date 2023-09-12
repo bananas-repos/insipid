@@ -54,15 +54,13 @@ if((isset($_POST['password']) && !empty($_POST['password'])) || (isset($_POST['u
 # search or new one.
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch']) && $honeypotCheck === false) {
 	$searchValue = trim($_POST['data']['searchfield']);
-	$searchValue = strtolower($searchValue);
 	$isUrl = Summoner::validate($searchValue,'url');
 	if($isUrl === true) {
 		# search for URL
-		$searchValue = trim($searchValue, "/");
 		$searchResult = $Management->searchForLinkByURL($searchValue);
 	}
 	elseif(Summoner::validate($searchValue,'text')) {
-		$searchResult = $Management->searchForLinkBySearchData($searchValue);
+		$searchResult = $Management->searchForLinkBySearchData(strtolower($searchValue));
 	}
 	else {
 		$submitFeedback['message'] = $T->t('home.input.invalid');
