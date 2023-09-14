@@ -21,8 +21,8 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `#REPLACE_ME#_category`;
 CREATE TABLE `#REPLACE_ME#_category` (
                                     `id` int NOT NULL,
-                                    `name` varchar(128) COLLATE utf8mb4_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
+                                    `name` varchar(128) COLLATE utf8mb4_unicode_520_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS `#REPLACE_ME#_categoryrelation`;
 CREATE TABLE `#REPLACE_ME#_categoryrelation` (
                                             `linkid` int NOT NULL,
                                             `categoryid` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -67,16 +67,16 @@ CREATE TABLE `#REPLACE_ME#_combined` (
 DROP TABLE IF EXISTS `#REPLACE_ME#_link`;
 CREATE TABLE `#REPLACE_ME#_link` (
                                 `id` int NOT NULL,
-                                `link` mediumtext COLLATE utf8mb4_bin NOT NULL,
+                                `link` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
                                 `created` datetime NOT NULL,
                                 `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                 `status` int NOT NULL,
-                                `description` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-                                `title` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-                                `image` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-                                `hash` char(32) COLLATE utf8mb4_bin NOT NULL,
-                                `search` text COLLATE utf8mb4_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
+                                `description` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+                                `title` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+                                `image` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+                                `hash` char(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+                                `search` text COLLATE utf8mb4_unicode_520_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -87,8 +87,8 @@ CREATE TABLE `#REPLACE_ME#_link` (
 DROP TABLE IF EXISTS `#REPLACE_ME#_tag`;
 CREATE TABLE `#REPLACE_ME#_tag` (
                                `id` int NOT NULL,
-                               `name` varchar(64) COLLATE utf8mb4_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
+                               `name` varchar(64) COLLATE utf8mb4_unicode_520_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -100,7 +100,7 @@ DROP TABLE IF EXISTS `#REPLACE_ME#_tagrelation`;
 CREATE TABLE `#REPLACE_ME#_tagrelation` (
                                        `linkid` int NOT NULL,
                                        `tagid` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
