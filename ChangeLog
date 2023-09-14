@@ -1,8 +1,10 @@
+version 2.x.x - Griffin Chapel ()
+
 version 2.8.2 - Dragon Chapel (2023-09-14)
 
 	+ Added LOGFILE and QUERY_DEBUG const to config.php. See update.txt for more details
 	+ Updated DB table charsets. Needs manual DB updates. See update.txt file.
-    + Fixed URL handling at creation
+	+ Fixed URL handling at creation
 	+ Improved DB queries.
 	+ Add top 5 tag or category relation stats in the tag and category overview
 	+ Updated license to GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
