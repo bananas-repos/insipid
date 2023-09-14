@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2022 Johannes Keßler
+ * Copyright 2016-2023 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -54,15 +54,13 @@ if((isset($_POST['password']) && !empty($_POST['password'])) || (isset($_POST['u
 # search or new one.
 if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['submitsearch']) && $honeypotCheck === false) {
 	$searchValue = trim($_POST['data']['searchfield']);
-	$searchValue = strtolower($searchValue);
 	$isUrl = Summoner::validate($searchValue,'url');
 	if($isUrl === true) {
 		# search for URL
-		$searchValue = trim($searchValue, "/");
 		$searchResult = $Management->searchForLinkByURL($searchValue);
 	}
 	elseif(Summoner::validate($searchValue,'text')) {
-		$searchResult = $Management->searchForLinkBySearchData($searchValue);
+		$searchResult = $Management->searchForLinkBySearchData(strtolower($searchValue));
 	}
 	else {
 		$submitFeedback['message'] = $T->t('home.input.invalid');
@@ -129,8 +127,6 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 	if($isUrl === true && !empty($formData['title'])) {
 		$hash = md5($formData['url']);
 
-
-
 		$DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
 		$linkObj = new Link($DB);
@@ -186,7 +182,9 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['addnewone'])
 	}
 }
 
-$existingCategories = $Management->categories();
-$existingTags = $Management->tags();
+if($showAddForm === true) {
+    $existingCategories = $Management->categories();
+    $existingTags = $Management->tags();
+}
 $latestLinks = $Management->latestLinks(20);
 $orderedCategories = $Management->categoriesByDateAdded();

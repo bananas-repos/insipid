@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2022 Johannes Keßler
+ * Copyright 2016-2023 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -28,7 +28,7 @@
 
 mb_http_output('UTF-8');
 mb_internal_encoding('UTF-8');
-ini_set('error_reporting',-1); // E_ALL & E_STRICT
+error_reporting(-1); // E_ALL & E_STRICT
 # time settings
 date_default_timezone_set('Europe/Berlin');
 
@@ -45,7 +45,6 @@ if(!empty($_urlToParse)) {
 
 ## set the error reporting
 ini_set('log_errors',true);
-ini_set('error_log','error.log');
 if(DEBUG === true) {
     ini_set('display_errors',true);
 }

@@ -132,57 +132,103 @@
 </div>
 <?php } if(!empty($tagCollection)) { ?>
 <div class="columns">
-	<div class="column">
-		<table class="table">
-			<tr>
-				<th><?php echo $T->t('view.name'); ?></th>
-				<th><?php echo $T->t('view.num.links'); ?></th>
-			</tr>
-		<?php foreach ($tagCollection as $k=>$v) { ?>
-			<tr>
-				<td><a href="index.php?p=overview&m=tag&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
-				<td><?php echo $v['amount']; ?></td>
-			</tr>
+	<div class="column is-half">
+		<?php if($displayEditButton === true) { ?>
+			<div class="column">
+				<div class="content">
+					<a href="index.php?p=edittags" class="button is-small is-danger">
+						<span class="icon"><i class="ion-md-create"></i></span>
+						<span><?php echo $T->t('view.edit.tags'); ?></span>
+					</a>
+				</div>
+			</div>
 		<?php } ?>
-		</table>
-	</div>
-	<?php if($displayEditButton === true) { ?>
-	<div class="column">
-		<div class="content">
-			<a href="index.php?p=edittags" class="button is-small is-danger">
-				<span class="icon"><i class="ion-md-create"></i></span>
-				<span><?php echo $T->t('view.edit.tags'); ?></span>
-			</a>
+		<div class="column">
+			<table class="table">
+				<tr>
+					<th><?php echo $T->t('view.name'); ?></th>
+					<th><?php echo $T->t('view.num.links'); ?></th>
+				</tr>
+			<?php foreach ($tagCollection as $k=>$v) { ?>
+				<tr>
+					<td><a href="index.php?p=overview&m=tag&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
+					<td><?php echo $v['amount']; ?></td>
+				</tr>
+			<?php } ?>
+			</table>
 		</div>
 	</div>
-	<?php } ?>
+	<div class="column is-half">
+		<?php if(!empty($colInfo)) { ?>
+		<?php echo $T->t('view.tag.topcombination'); ?>
+		<table class="table">
+			<tr>
+				<th>#</th>
+				<th><?php echo $T->t('view.tags'); ?></th>
+			</tr>
+			<?php foreach ($colInfo as $k=>$v) { ?>
+				<tr>
+					<td><?php echo $v['amount']; ?></td>
+					<td>
+						<?php foreach ($v['rel'] as $tid=>$tname) { ?>
+							<a href="index.php?p=overview&m=tag&id=<?php echo urlencode($tid); ?>"><?php echo $tname; ?></a>
+						<?php } ?>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+		<?php } ?>
+	</div>
 </div>
 <?php } if(!empty($categoryCollection)) { ?>
 <div class="columns">
-	<div class="column">
-		<table class="table">
-			<tr>
-				<th><?php echo $T->t('view.name'); ?></th>
-				<th><?php echo $T->t('view.num.links'); ?></th>
-			</tr>
-		<?php foreach ($categoryCollection as $k=>$v) { ?>
-			<tr>
-				<td><a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
-				<td><?php echo $v['amount']; ?></td>
-			</tr>
+	<div class="column is-half">
+		<?php if($displayEditButton === true) { ?>
+			<div class="column">
+				<div class="content">
+					<a href="index.php?p=editcategories" class="button is-small is-danger">
+						<span class="icon"><i class="ion-md-create"></i></span>
+						<span><?php echo $T->t('view.edit.categories'); ?></span>
+					</a>
+				</div>
+			</div>
 		<?php } ?>
-		</table>
-	</div>
-	<?php if($displayEditButton === true) { ?>
-	<div class="column">
-		<div class="content">
-			<a href="index.php?p=editcategories" class="button is-small is-danger">
-				<span class="icon"><i class="ion-md-create"></i></span>
-				<span><?php echo $T->t('view.edit.categories'); ?></span>
-			</a>
+		<div class="column">
+			<table class="table">
+				<tr>
+					<th><?php echo $T->t('view.name'); ?></th>
+					<th><?php echo $T->t('view.num.links'); ?></th>
+				</tr>
+			<?php foreach ($categoryCollection as $k=>$v) { ?>
+				<tr>
+					<td><a href="index.php?p=overview&m=category&id=<?php echo urlencode($k); ?>"><?php echo $v['name']; ?></a></td>
+					<td><?php echo $v['amount']; ?></td>
+				</tr>
+			<?php } ?>
+			</table>
 		</div>
 	</div>
-	<?php } ?>
+	<div class="column is-half">
+		<?php if(!empty($colInfo)) { ?>
+			<?php echo $T->t('view.category.topcombination'); ?>
+			<table class="table">
+				<tr>
+					<th>#</th>
+					<th><?php echo $T->t('view.categories'); ?></th>
+				</tr>
+				<?php foreach ($colInfo as $k=>$v) { ?>
+					<tr>
+						<td><?php echo $v['amount']; ?></td>
+						<td>
+							<?php foreach ($v['rel'] as $cid=>$cname) { ?>
+								<a href="index.php?p=overview&m=category&id=<?php echo urlencode($cid); ?>"><?php echo $cname; ?></a>
+							<?php } ?>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+		<?php } ?>
+	</div>
 </div>
 <?php } ?>
 </section>

@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2022 Johannes Keßler
+ * Copyright 2016-2023 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -30,199 +30,235 @@
  * Class Tag
  */
 class Tag {
-	/**
-	 * the database object
-	 *
-	 * @var mysqli
-	 */
-	private $DB;
+    /**
+     * the database object
+     *
+     * @var mysqli
+     */
+    private mysqli $DB;
 
-	/**
-	 * the current loaded tag by DB id
-	 *
-	 * @var int
-	 */
-	private $_id;
+    /**
+     * the current loaded tag by DB id
+     *
+     * @var string
+     */
+    private string $_id;
 
-	/**
-	 * current loaded tag data
-	 *
-	 * @var array
-	 */
-	private $_data;
+    /**
+     * current loaded tag data
+     *
+     * @var array
+     */
+    private array $_data;
 
-	/**
-	 * Tag constructor.
-	 *
-	 * @param mysqli $databaseConnectionObject
-	 */
-	public function __construct($databaseConnectionObject) {
-		$this->DB = $databaseConnectionObject;
-	}
+    /**
+     * Tag constructor.
+     *
+     * @param mysqli $databaseConnectionObject
+     */
+    public function __construct(mysqli $databaseConnectionObject) {
+        $this->DB = $databaseConnectionObject;
+    }
 
-	/**
-	 * by given string load the info from the DB and even create if not existing
-	 *
-	 * @param string $string
-	 * @param bool $doNotCreate
-	 * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
-	 */
-	public function initbystring(string $string, $doNotCreate=false): int {
-	    $ret = 0;
-		$this->_id = false;
-		if(!empty($string)) {
-			$queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
-							WHERE `name` = '".$this->DB->real_escape_string($string)."'";
-			$query = $this->DB->query($queryStr);
-			if(!empty($query) && $query->num_rows > 0) {
-				$result = $query->fetch_assoc();
-				$this->_id = $result['id'];
-				$this->_data = $result;
-				$ret = 1;
-			}
-			else {
-			    if(!$doNotCreate) {
-                    $queryStr = "INSERT INTO `" . DB_PREFIX . "_tag`
-                                    SET `name` = '" . $this->DB->real_escape_string($string) . "'";
-                    $this->DB->query($queryStr);
-                    if (!empty($this->DB->insert_id)) {
-                        $this->_id = $this->DB->insert_id;
-                        $this->_data['id'] = $this->_id;
-                        $this->_data['name'] = $string;
-                        $ret = 2;
+    /**
+     * by given string load the info from the DB and even create if not existing
+     *
+     * @param string $string
+     * @param bool $doNotCreate
+     * @return int 0=fail, 1=existing, 2=new, 3=newNotCreated
+     */
+    public function initbystring(string $string, bool $doNotCreate=false): int {
+        $ret = 0;
+        $this->_id = false;
+        if(!empty($string)) {
+            $queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
+                            WHERE `name` = '".$this->DB->real_escape_string($string)."'";
+
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+
+            try {
+                $query = $this->DB->query($queryStr);
+                if(!empty($query) && $query->num_rows > 0) {
+                    $result = $query->fetch_assoc();
+                    $this->_id = $result['id'];
+                    $this->_data = $result;
+                    $ret = 1;
+                }
+                else {
+                    if(!$doNotCreate) {
+                        $queryStr = "INSERT INTO `" . DB_PREFIX . "_tag`
+                                        SET `name` = '" . $this->DB->real_escape_string($string) . "'";
+
+                        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+
+                        $this->DB->query($queryStr);
+                        if (!empty($this->DB->insert_id)) {
+                            $this->_id = $this->DB->insert_id;
+                            $this->_data['id'] = $this->_id;
+                            $this->_data['name'] = $string;
+                            $ret = 2;
+                        }
+                    }
+                    else {
+                        $ret = 3;
                     }
                 }
-			    else {
-			        $ret=3;
+            } catch (Exception $e) {
+                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * by given DB table id load all the info we need
+     *
+     * @param string $id
+     * @return string
+     */
+    public function initbyid(string $id): string {
+        $this->_id = 0;
+
+        if(!empty($id)) {
+            $queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
+                            WHERE `id` = '".$this->DB->real_escape_string($id)."'";
+
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+
+            try {
+                $query = $this->DB->query($queryStr);
+                if(!empty($query) && $query->num_rows > 0) {
+                    $result = $query->fetch_assoc();
+                    $this->_id = $result['id'];
+                    $this->_data = $result;
                 }
-			}
-		}
-		return $ret;
-	}
+            } catch (Exception $e) {
+                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            }
+        }
 
-	/**
-	 * by given DB table id load all the info we need
-	 *
-	 * @param int $id
-	 * @return int
-	 */
-	public function initbyid(int $id): int {
-		$this->_id = 0;
+        return $this->_id;
+    }
 
-		if(!empty($id)) {
-			$queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
-							WHERE `id` = '".$this->DB->real_escape_string($id)."'";
-			$query = $this->DB->query($queryStr);
-			if(!empty($query) && $query->num_rows > 0) {
-				$result = $query->fetch_assoc();
-				$this->_id = $result['id'];
-				$this->_data = $result;
-			}
-		}
+    /**
+     * return all or data fpr given key on the current loaded tag
+     *
+     * @param bool $key
+     * @return array|string
+     */
+    public function getData($key=false) {
+        $ret = $this->_data;
 
-		return $this->_id;
-	}
+        if(!empty($key) && isset($this->_data[$key])) {
+            $ret = $this->_data[$key];
+        }
 
-	/**
-	 * return all or data fpr given key on the current loaded tag
-	 *
-	 * @param bool $key
-	 * @return array|string
-	 */
-	public function getData($key=false) {
-		$ret = $this->_data;
+        return $ret;
+    }
 
-		if(!empty($key) && isset($this->_data[$key])) {
-			$ret = $this->_data[$key];
-		}
+    /**
+     * set the relation to the given link to the loaded tag
+     *
+     * @param string $linkid
+     * @return void
+     */
+    public function setRelation(string $linkid): void {
+        if(!empty($linkid) && !empty($this->_id)) {
+            $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
+                            SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
+                                `tagid` = '".$this->DB->real_escape_string($this->_id)."'";
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
-		return $ret;
-	}
-
-	/**
-	 * set the relation to the given link to the loaded tag
-	 *
-	 * @param int $linkid
-	 * @return void
-	 */
-	public function setRelation(int $linkid) {
-		if(!empty($linkid) && !empty($this->_id)) {
-			$queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
-							SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
-								`tagid` = '".$this->DB->real_escape_string($this->_id)."'";
-			$this->DB->query($queryStr);
-		}
-	}
+            try {
+                $this->DB->query($queryStr);
+            } catch (Exception $e) {
+                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            }
+        }
+    }
 
     /**
      * Return an array of any linkid related to the current loaded tag
-	 *
+     *
      * @return array
      */
-	public function getReleations(): array {
-	    $ret = array();
+    public function getReleations(): array {
+        $ret = array();
 
-	    $queryStr = "SELECT linkid 
-	                FROM `".DB_PREFIX."_tagrelation` 
-	                WHERE tagid = '".$this->DB->real_escape_string($this->_id)."'";
-	    $query = $this->DB->query($queryStr);
-        if(!empty($query) && $query->num_rows > 0) {
-            while($result = $query->fetch_assoc()) {
-                $ret[] = $result['linkid'];
+        $queryStr = "SELECT linkid 
+                    FROM `".DB_PREFIX."_tagrelation` 
+                    WHERE tagid = '".$this->DB->real_escape_string($this->_id)."'";
+
+        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+
+        try {
+            $query = $this->DB->query($queryStr);
+            if(!empty($query) && $query->num_rows > 0) {
+                while($result = $query->fetch_assoc()) {
+                    $ret[] = $result['linkid'];
+                }
+            }
+        } catch (Exception $e) {
+            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+        }
+
+        return $ret;
+    }
+
+    /**
+     * deletes the current loaded tag from db
+     *
+     * @return boolean
+     */
+    public function delete(): bool {
+        $ret = false;
+
+        if(!empty($this->_id)) {
+            $this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+            try {
+                $queryStr = "DELETE
+                    FROM `".DB_PREFIX."_tagrelation`
+                    WHERE `tagid` = '".$this->DB->real_escape_string($this->_id)."'";
+                $this->DB->query($queryStr);
+
+                $queryStr = "DELETE
+                    FROM `".DB_PREFIX."_tag`
+                    WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
+
+                if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+
+                $this->DB->query($queryStr);
+                $this->DB->commit();
+            } catch (Exception $e) {
+                Summoner::sysLog('[ERROR] Failed to remove tag: '.var_export($e->getMessage(),true));
+
+                $this->DB->rollback();
             }
         }
 
         return $ret;
     }
 
-	/**
-	 * deletes the current loaded tag from db
-	 *
-	 * @return boolean
-	 */
-	public function delete(): bool {
-		$ret = false;
+    /**
+     * Rename current loaded tag name
+     *
+     * @param string $newValue
+     * @return void
+     */
+    public function rename(string $newValue): void {
+        if(!empty($newValue)) {
+            $queryStr = "UPDATE `".DB_PREFIX."_tag`
+                        SET `name` = '".$this->DB->real_escape_string($newValue)."'
+                        WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
 
-		if(!empty($this->_id)) {
-			$this->DB->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
-			try {
-				$queryStr = "DELETE
-					FROM `".DB_PREFIX."_tagrelation`
-					WHERE `tagid` = '".$this->DB->real_escape_string($this->_id)."'";
-				$this->DB->query($queryStr);
-
-				$queryStr = "DELETE
-					FROM `".DB_PREFIX."_tag`
-					WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
-				$this->DB->query($queryStr);
-
-				$this->DB->commit();
-			} catch (Exception $e) {
-				if(DEBUG) {
-					var_dump($e->getMessage());
-				}
-				error_log('ERROR Failed to remove tag: '.var_export($e->getMessage(),true));
-
-				$this->DB->rollback();
-			}
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * Rename current loaded tag name
-	 *
-	 * @param string $newValue
-	 * @return void
-	 */
-	public function rename(string $newValue) {
-	    if(!empty($newValue)) {
-	        $queryStr = "UPDATE `".DB_PREFIX."_tag`
-	                    SET `name` = '".$this->DB->real_escape_string($newValue)."'
-	                    WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
-	        $this->DB->query($queryStr);
+            try {
+                $this->DB->query($queryStr);
+            } catch (Exception $e) {
+                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            }
             $this->_data['name'] = $newValue;
         }
     }

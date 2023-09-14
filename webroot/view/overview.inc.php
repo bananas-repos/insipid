@@ -65,6 +65,7 @@ $pagination = array('pages' => 0);
 $displayEditButton = false;
 $isAwm = false;
 $sortLink = array();
+$colInfo = array();
 
 if(Summoner::simpleAuthCheck() === true) {
 	$displayEditButton = true;
@@ -106,6 +107,7 @@ switch($_requestMode) {
 			# show all the tags we have
 			$tagCollection = $Management->tags(0, true);
 			$subHeadline = $T->t('view.tags').' <i class="ion-md-pricetags"></i>';
+			$colInfo = $Management->linkRelationStats();
 		}
 	break;
 	case 'category':
@@ -124,6 +126,7 @@ switch($_requestMode) {
 			# show all the categories we have
 			$categoryCollection = $Management->categories(0, true);
 			$subHeadline = $T->t('view.categories').' <i class="ion-md-filing"></i>';
+			$colInfo = $Management->linkRelationStats('category');
 		}
 	break;
 	case 'awm':
