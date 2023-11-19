@@ -63,10 +63,10 @@ class Snapshot {
                 Summoner::sysLog("[DEBUG] try to save to $filename with $this->_googlePageSpeed for $url");
             }
             $theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
-            if(!empty($theCall)) {
-                $jsonData = json_decode($theCall,true);
+            if(!empty($theCall['status'])) {
+                $jsonData = json_decode($theCall['message'],true);
                 if(DEBUG) {
-                    Summoner::sysLog("[DEBUG] Call result data: ".var_export($jsonData, true));
+                    Summoner::sysLog("[DEBUG] Call result data: ".Summoner::cleanForLog($jsonData));
                 }
                 if(!empty($jsonData) && isset($jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'])) {
                     $imageData = $jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'];
@@ -79,10 +79,10 @@ class Snapshot {
                     fclose($source);
                     fclose($destination);
                 } elseif(DEBUG) {
-                    Summoner::sysLog("[DEBUG] invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".var_export($jsonData, true));
+                    Summoner::sysLog("[DEBUG] invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".Summoner::cleanForLog($jsonData));
                 }
             } elseif(DEBUG) {
-                Summoner::sysLog("[DEBUG] curl call failed");
+                Summoner::sysLog("[DEBUG] curl call failed ".Summoner::cleanForLog($theCall));
             }
         }
 

@@ -226,7 +226,7 @@ class Category {
                 $this->DB->commit();
                 $ret = true;
             } catch (Exception $e) {
-                Summoner::sysLog('ERROR Failed to remove category: '.var_export($e->getMessage(),true));
+                Summoner::sysLog('ERROR Failed to remove category: '.$e->getMessage());
                 $this->DB->rollback();
             }
         }

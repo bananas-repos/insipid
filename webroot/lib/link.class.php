@@ -219,7 +219,7 @@ class Link {
                 $ret = $this->DB->insert_id;
             }
             else {
-                Summoner::sysLog('ERROR Failed to create link: '.var_export($data,true));
+                Summoner::sysLog('ERROR Failed to create link: '.Summoner::cleanForLog($data));
             }
         } catch (Exception $e) {
             Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
@@ -333,7 +333,7 @@ class Link {
                             $snap = new Snapshot();
                             $do = $snap->doSnapshot($this->_data['link'], $snapshot);
                             if(empty($do)) {
-                                Summoner::sysLog('ERROR Failed to create snapshot: '.var_export($data,true));
+                                Summoner::sysLog('ERROR Failed to create snapshot: '.Summoner::cleanForLog($data));
                             }
                         }
                     } elseif ($data['snapshot'] === false) {
@@ -352,7 +352,7 @@ class Link {
                             $snap = new Snapshot();
                             $do = $snap->wholePageSnapshot($this->_data['link'], $pagescreenshot);
                             if(!empty($do)) {
-                                Summoner::sysLog('ERROR Failed to create snapshot: '.var_export($data,true));
+                                Summoner::sysLog('ERROR Failed to create snapshot: '.Summoner::cleanForLog($data));
                             }
                         }
                     } elseif ($data['pagescreenshot'] === false) {
@@ -365,7 +365,7 @@ class Link {
                 $ret = true;
             } else {
                 $this->DB->rollback();
-                Summoner::sysLog('ERROR Failed to update link: '.var_export($data,true));
+                Summoner::sysLog('ERROR Failed to update link: '.Summoner::cleanForLog($data));
             }
 
         }

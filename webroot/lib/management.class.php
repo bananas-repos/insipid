@@ -918,7 +918,7 @@ class Management {
 
         if(!empty($data) && isset($data['link'])) {
             if(DEBUG) {
-                Summoner::sysLog("DEBUG Using data: ".var_export($data, true));
+                Summoner::sysLog("DEBUG Using data: ".Summoner::cleanForLog($data));
             }
             require_once 'lib/import-export.class.php';
             $ImEx = new ImportExport();

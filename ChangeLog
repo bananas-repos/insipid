@@ -1,80 +1,81 @@
 version 2.x.x - Griffin Chapel ()
+    + Better logging
 
 version 2.8.2 - Dragon Chapel (2023-09-14)
 
-	+ Added LOGFILE and QUERY_DEBUG const to config.php. See update.txt for more details
-	+ Updated DB table charsets. Needs manual DB updates. See update.txt file.
-	+ Fixed URL handling at creation
-	+ Improved DB queries.
-	+ Add top 5 tag or category relation stats in the tag and category overview
-	+ Updated license to GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
-	+ Updated error logging and try/catch for mysql
-	+ Updated from https://github.com/druidfi/mysqldump-php to https://github.com/ifsnop/mysqldump-php since develop
-	  resumed. Version mysqldump-php v2.11
-	+ Updated https://github.com/mikehaertl/php-shellcommand to 1.7.0
+    + Added LOGFILE and QUERY_DEBUG const to config.php. See update.txt for more details
+    + Updated DB table charsets. Needs manual DB updates. See update.txt file.
+    + Fixed URL handling at creation
+    + Improved DB queries.
+    + Add top 5 tag or category relation stats in the tag and category overview
+    + Updated license to GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+    + Updated error logging and try/catch for mysql
+    + Updated from https://github.com/druidfi/mysqldump-php to https://github.com/ifsnop/mysqldump-php since develop
+      resumed. Version mysqldump-php v2.11
+    + Updated https://github.com/mikehaertl/php-shellcommand to 1.7.0
 
 version 2.8.1 - Deathwind Chapel (2022-12-31)
 
-	+ Bugfix release
-	+ Moved debug setting into config
-	+ Updated shellcommand class and added the link to the github repo
-	+ Fixed/Updated the creation of the webpage thumbnail using google pagespeed insights api
-	+ Fixed search index update
-	+ Fixed missing lang property
-	+ Fixed xml ex- and import
-	+ Fixed pagination and sort options in all links view
-	+ Mysql dump replaced with https://github.com/druidfi/mysqldump-php
-	+ Updated PHPMailer
-	+ Removed WKHTMLTOPDF_USE and WKHTMLTOPDF_COMMAND from config. No support for a whole page screenshot yet.
+    + Bugfix release
+    + Moved debug setting into config
+    + Updated shellcommand class and added the link to the github repo
+    + Fixed/Updated the creation of the webpage thumbnail using google pagespeed insights api
+    + Fixed search index update
+    + Fixed missing lang property
+    + Fixed xml ex- and import
+    + Fixed pagination and sort options in all links view
+    + Mysql dump replaced with https://github.com/druidfi/mysqldump-php
+    + Updated PHPMailer
+    + Removed WKHTMLTOPDF_USE and WKHTMLTOPDF_COMMAND from config. No support for a whole page screenshot yet.
 
 version 2.8 - Wastelands (2022-12-10)
 
-	+ Fixed documentation
-	+ Fixed some PHP 8 defaults
-	+ Fixed #17
+    + Fixed documentation
+    + Fixed some PHP 8 defaults
+    + Fixed #17
 
 version 2.7 - Sacred Grove (2022-06-12)
 
-	+ Fixed bug #12. Missing translation key
-	+ Adapted some new PHP code formatting
-	+ Fixed some translations
-	+ Updated bulma css
-	+ Added random link page
-	+ New syntax in config file. See update.txt for more details
-	+ Fixed #13
-	+ Fixed #15
-	+ Fixed #14
-	+ Fixed some small email importer notices and warnings
+    + Fixed bug #12. Missing translation key
+    + Adapted some new PHP code formatting
+    + Fixed some translations
+    + Updated bulma css
+    + Added random link page
+    + New syntax in config file. See update.txt for more details
+    + Fixed #13
+    + Fixed #15
+    + Fixed #14
+    + Fixed some small email importer notices and warnings
 
 version 2.6 - Hypostyle (2021-03-21)
 
-	+ Fixed sql problems with Maria DB. Any_value is not supported there
-	+ Fixed some query and data loading brain fucks..
-	+ Fixed #10. URL is now considered when building search information.
-		Update search index from stats view to update all the exiting information
-	+ Updated third party information in readme
-	+ Fixed xml import xsd
-	+ Added translation support. More information in translation.txt
+    + Fixed sql problems with Maria DB. Any_value is not supported there
+    + Fixed some query and data loading brain fucks..
+    + Fixed #10. URL is now considered when building search information.
+        Update search index from stats view to update all the exiting information
+    + Updated third party information in readme
+    + Fixed xml import xsd
+    + Added translation support. More information in translation.txt
 
 version 2.5.2 - Darkmere (2020-09-12)
 
-	+ Fixed bug #8 It is possible to add empty tags and categories.
-		Special chars check done on server side. JS has problems with unicode.
-	+ Fixed bug #7 Edit categories/tags. Rename and move
-	+ Fixed feature #3 Reduce whitespace in frontend
+    + Fixed bug #8 It is possible to add empty tags and categories.
+        Special chars check done on server side. JS has problems with unicode.
+    + Fixed bug #7 Edit categories/tags. Rename and move
+    + Fixed feature #3 Reduce whitespace in frontend
 
 version 2.5.1 - Caves of Circe (2020-03-22)
 
-	+ Bugfix release
+    + Bugfix release
 
 version 2.5 - Winnowing Hall (2020-03-21)
 
-	+ Added a thumbnail by talking to Google page speed API
-		Planned was a full page snapshot, but only got the thumbnail.
-		Needs some more work with headless chrome.
-	+ Instead you can now decide to make a full page screenshot
-		using wkhtmltoimage. See documentation about it.
-	+ Improved documentation
+    + Added a thumbnail by talking to Google page speed API
+        Planned was a full page snapshot, but only got the thumbnail.
+        Needs some more work with headless chrome.
+    + Instead you can now decide to make a full page screenshot
+        using wkhtmltoimage. See documentation about it.
+    + Improved documentation
 
 version 2.4 - Seven Portals (2020-02-16)
 

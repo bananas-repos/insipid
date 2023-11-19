@@ -231,7 +231,7 @@ class Tag {
                 $this->DB->query($queryStr);
                 $this->DB->commit();
             } catch (Exception $e) {
-                Summoner::sysLog('[ERROR] Failed to remove tag: '.var_export($e->getMessage(),true));
+                Summoner::sysLog('[ERROR] Failed to remove tag: '.$e->getMessage());
 
                 $this->DB->rollback();
             }
