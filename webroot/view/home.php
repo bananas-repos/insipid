@@ -231,38 +231,24 @@
 			<div class="content">
 				<h4><a href="index.php?p=overview&m=all"><?php echo $T->t('home.last.added'); ?></a></h4>
 <?php if(!empty($latestLinks)) { ?>
-				<div class="tags">
+				<dl>
 <?php foreach ($latestLinks as $ll) { ?>
-					<a class="tag is-link" href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
+					<dt>
+                        <a href="<?php echo $ll['link']; ?>" target="_blank"><?php echo $ll['title']; ?></a>
+                        <a href="index.php?p=linkinfo&id=<?php echo $ll['hash']; ?>"><i class="ion-md-information-circle-outline"></i></a>
+                    </dt>
+                    <dd class="tags ddTags">
+                    <?php foreach ($ll['tags'] as $tid=>$tname) {
+                        echo '<a href="index.php?p=overview&m=tag&id='.$tid.'" class="tag is-white" title="'.$T->t('view.tag').'">'.$tname.'</a>';
+                    } ?>
+                    <?php foreach ($ll['categories'] as $cid=>$cname) {
+                        echo '<a href="index.php?p=overview&m=category&id='.$cid.'" class="tag is-white" title="'.$T->t('view.category').'">'.$cname.'</a>';
+                    } ?>
+                    </dd>
 <?php } ?>
-				</div>
+				</dl>
 <?php } ?>
 			</div>
 		</div>
-	</div>
-</section>
-
-
-<section class="section">
-	<div class="columns is-multiline">
-<?php
-	if(!empty($orderedCategories)) {
-		foreach ($orderedCategories as $k=>$v) {
-			$links = $Management->linksByCategory($v['id']);
-?>
-		<div class="column is-one-quarter">
-			<div class="content">
-				<h4><a href="?p=overview&m=category&id=<?php echo urlencode($v['id']); ?>"><?php echo $v['name']; ?></a></h4>
-				<ul>
-<?php foreach ($links['results'] as $link) { ?>
-					<li><a class="" href="<?php echo $link['link']; ?>" target="_blank"><?php echo $link['title']; ?></a></li>
-<?php } ?>
-				</ul>
-			</div>
-		</div>
-<?php
-		}
-	}
-?>
 	</div>
 </section>

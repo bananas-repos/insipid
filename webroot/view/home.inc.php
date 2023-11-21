@@ -186,5 +186,4 @@ if($showAddForm === true) {
     $existingCategories = $Management->categories();
     $existingTags = $Management->tags();
 }
-$latestLinks = $Management->latestLinks(20);
-$orderedCategories = $Management->categoriesByDateAdded();
+$latestLinks = $Management->latestLinks(50);

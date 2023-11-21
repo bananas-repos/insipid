@@ -231,7 +231,7 @@ class Management {
     public function latestLinks(string $limit="5"): array {
         $ret = array();
 
-        $queryStr = "SELECT `title`, `link` FROM `".DB_PREFIX."_link` AS t";
+        $queryStr = "SELECT `hash` FROM `".DB_PREFIX."_link` AS t";
         $queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
         $queryStr .= " ORDER BY `created` DESC";
         if(!empty($limit)) {
@@ -243,7 +243,11 @@ class Management {
         try {
             $query = $this->DB->query($queryStr);
             if(!empty($query) && $query->num_rows > 0) {
-                $ret = $query->fetch_all(MYSQLI_ASSOC);
+                while($result = $query->fetch_assoc()) {
+                    $linkObj = new Link($this->DB);
+                    $ret[] = $linkObj->loadShortInfo($result['hash']);
+
+                }
             }
         } catch (Exception $e) {
             Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
@@ -698,7 +702,6 @@ class Management {
 
         return $ret;
     }
-
 
     /**
      * amount of tags

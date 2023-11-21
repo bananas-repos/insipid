@@ -125,6 +125,8 @@ class Link {
 
                     # add stuff
                     $this->_image();
+                    $this->_tags();
+                    $this->_categories();
                 }
             } catch (Exception $e) {
                 Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
@@ -147,6 +149,8 @@ class Link {
             && isset($data['title']) && isset($data['hash']) && isset($data['description']) && isset($data['image'])) {
             $this->_data = $data;
             $this->_image();
+            $this->_tags();
+            $this->_categories();
         }
 
         return $this->_data;
