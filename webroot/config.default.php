@@ -39,8 +39,10 @@ const FRONTEND_PASSWORD = 'solo';
 
 # absolute path of webroot
 const ABSOLUTE_PATH = '/path/to/insipid/webroot';
+# log file location. Needs read and write permission for the webservice user
 const LOGFILE = ABSOLUTE_PATH.'/insipid.log';
 # relative to absolute path the name of the storage folder
+# Needs read and write permission for the webservice user
 const LOCAL_STORAGE = 'localdata';
 
 # complete restricted access, not only the private links or the edit functions
