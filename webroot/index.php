@@ -29,10 +29,8 @@
 mb_http_output('UTF-8');
 mb_internal_encoding('UTF-8');
 error_reporting(-1); // E_ALL & E_STRICT
-# time settings
-date_default_timezone_set('Europe/Berlin');
-
 require('config.php');
+date_default_timezone_set(TIMEZONE);
 
 ## check request
 $_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);

@@ -1,4 +1,6 @@
 version 2.x.x - Griffin Chapel ()
+    + Added TIMEZONE as a new config setting. Please update your config.
+      See update.txt for more details.
     + Better logging
     + New home screen layout
 

@@ -83,6 +83,9 @@ const EMAIL_REPLY_BACK_SUBJECT = 'Insipid email import response';
 const COMPLETE_PAGE_SCREENSHOT = false;
 const COMPLETE_PAGE_SCREENSHOT_COMMAND = '/absolute/path/to/command';
 
+# Timezone setting
+const TIMEZONE = 'Europe/Berlin';
+
 # debug
 const DEBUG = false;
 const QUERY_DEBUG = false;

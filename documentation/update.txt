@@ -1,6 +1,9 @@
 If you are updating from a previous version make sure every update info from
 the version your are updating from is done.
 
+## version 2.x.x - Griffin Chapel
++ Add new config setting TIMEZONE to your config. See config.default.php for more details
+
 ## version 2.8.2 - Dragon Chapel
 + Add query debug setting to config file.
   See config.default.php for QUERY_DEBUG constant. Add it to your local config.php
