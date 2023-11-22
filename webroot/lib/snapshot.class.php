@@ -68,8 +68,8 @@ class Snapshot {
                 if(DEBUG) {
                     Summoner::sysLog("[DEBUG] Call result data: ".Summoner::cleanForLog($jsonData));
                 }
-                if(!empty($jsonData) && isset($jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'])) {
-                    $imageData = $jsonData['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'];
+                if(!empty($jsonData) && isset($jsonData['lighthouseResult']['fullPageScreenshot']['screenshot']['data'])) {
+                    $imageData = $jsonData['lighthouseResult']['fullPageScreenshot']['screenshot']['data'];
 
                     $source = fopen($imageData, 'r');
                     $destination = fopen($filename, 'w');
@@ -79,7 +79,7 @@ class Snapshot {
                     fclose($source);
                     fclose($destination);
                 } elseif(DEBUG) {
-                    Summoner::sysLog("[DEBUG] invalid json data. Path ['lighthouseResult']['audits']['full-page-screenshot']['details']['screenshot']['data'] not found in : ".Summoner::cleanForLog($jsonData));
+                    Summoner::sysLog("[DEBUG] invalid json data. Path ['lighthouseResult']['fullPageScreenshot']['screenshot']['data'] not found in : ".Summoner::cleanForLog($jsonData));
                 }
             } elseif(DEBUG) {
                 Summoner::sysLog("[DEBUG] curl call failed ".Summoner::cleanForLog($theCall));
