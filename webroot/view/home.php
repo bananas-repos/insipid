@@ -88,7 +88,7 @@
 				<div class="field has-addons">
 					<div class="control is-expanded">
 						<div class="control has-icons-left">
-							<input type="url" name="data[url]" class="input" value="<?php echo Summoner::ifset($formData, 'url'); ?>" />
+							<input type="url" name="data[url]" class="input" value="<?php echo $formData['url'] ?? ''; ?>" />
 							<span class="icon is-small is-left">
 								<i class="ion-link"></i>
 							</span>
@@ -103,7 +103,7 @@
 				<div class="field">
 					<label class="label"><?php echo $T->t('view.title'); ?></label>
 					<div class="control">
-						<input class="input" type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
+						<input class="input" type="text" name="data[title]" value="<?php echo $formData['title'] ?? ''; ?>" />
 					</div>
 				</div>
 			</div>
@@ -111,7 +111,7 @@
 				<div class="field">
 					<label class="label"><?php echo $T->t('view.description'); ?></label>
 					<div class="control">
-						<input class="input" type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
+						<input class="input" type="text" name="data[description]" value="<?php echo $formData['description'] ?? ''; ?>" />
 					</div>
 				</div>
 			</div>
@@ -119,13 +119,13 @@
 
 		<div class="columns">
 			<div class="column is-half">
-				<img class="linkthumbnail" src="<?php echo Summoner::ifset($formData, 'imageToShow'); ?>" alt="<?php echo $T->t('view.image.of.link'); ?>" />
+				<img class="linkthumbnail" src="<?php echo $formData['imageToShow'] ?? ''; ?>" alt="<?php echo $T->t('view.image.of.link'); ?>" />
 			</div>
 			<div class="column is-half">
 				<div class="field">
 					<label class="label"><?php echo $T->t('view.image.link'); ?></label>
 					<div class="control">
-						<input class="input" type="url" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" />
+						<input class="input" type="url" name="data[image]" value="<?php echo $formData['image'] ?? ''; ?>" />
 					</div>
 				</div>
 			</div>
@@ -207,7 +207,7 @@
 		<div class="columns">
 			<div class="column is-half">
 				<label class="checkbox is-pulled-right">
-					<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
+					<input type="checkbox" name="data[private]" value="1" <?php if(isset($formData['private'])) echo "checked"; ?> />
 					<?php echo $T->t('view.private'); ?>
 				</label>
 			</div>

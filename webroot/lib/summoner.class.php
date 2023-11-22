@@ -207,20 +207,7 @@ class Summoner {
 
         return $ret;
     }
-
-    /**
-     * simulate the Null coalescing operator in php5
-     * this only works with arrays and checking if the key is there and echo/return it.
-     * http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
-     *
-     * @param array $array
-     * @param string $key
-     * @return mixed
-     */
-    static function ifset(array $array, string $key): mixed {
-        return $array[$key] ?? false;
-    }
-
+    
     /**
      * try to gather meta information from given URL
      *
