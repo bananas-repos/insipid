@@ -116,7 +116,7 @@ class Management {
             $queryStr .= " AND ".$this->_decideLinkTypeForQuery();
             $queryStr .= " GROUP BY categoryid";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -126,7 +126,7 @@ class Management {
                     }
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 
@@ -137,7 +137,7 @@ class Management {
             $queryStr .= " LIMIT $limit";
         }
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -152,7 +152,7 @@ class Management {
                 }
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         $this->_categories = $ret;
@@ -180,7 +180,7 @@ class Management {
             $queryStr .= " AND ".$this->_decideLinkTypeForQuery();
             $queryStr .= " GROUP BY tagId";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -190,7 +190,7 @@ class Management {
                     }
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 
@@ -201,7 +201,7 @@ class Management {
             $queryStr .= " LIMIT $limit";
         }
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -216,7 +216,7 @@ class Management {
                 }
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -238,7 +238,7 @@ class Management {
             $queryStr .= " LIMIT $limit";
         }
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -250,7 +250,7 @@ class Management {
                 }
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -274,7 +274,7 @@ class Management {
         $queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
         $queryStr .= " LIMIT $offset, $limit";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -282,7 +282,7 @@ class Management {
                 $ret = $query->fetch_all(MYSQLI_ASSOC);
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -303,7 +303,7 @@ class Management {
         $queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_category`";
         $queryStr .= " LIMIT $offset, $limit";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -311,7 +311,7 @@ class Management {
                 $ret = $query->fetch_all(MYSQLI_ASSOC);
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -332,7 +332,7 @@ class Management {
         $queryStr = "SELECT `id`, `name` FROM `".DB_PREFIX."_tag`";
         $queryStr .= " LIMIT $offset, $limit";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -340,7 +340,7 @@ class Management {
                 $ret = $query->fetch_all(MYSQLI_ASSOC);
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -419,7 +419,7 @@ class Management {
             }
         }
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit));
 
         try {
             $query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
@@ -435,7 +435,7 @@ class Management {
                 $ret['amount'] = $result['amount'];
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -492,7 +492,7 @@ class Management {
             }
         }
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit));
 
         try {
             $query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
@@ -503,14 +503,14 @@ class Management {
                     unset($linkObj);
                 }
 
-                if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryFrom.$queryWhere));
+                if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryFrom.$queryWhere));
 
                 $query = $this->DB->query("SELECT COUNT(DISTINCT(t.hash)) AS amount ".$queryFrom.$queryWhere);
                 $result = $query->fetch_assoc();
                 $ret['amount'] = $result['amount'];
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -558,7 +558,7 @@ class Management {
             }
         }
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit));
 
         try {
             $query = $this->DB->query($querySelect.$queryFrom.$queryWhere.$queryOrder.$queryLimit);
@@ -569,14 +569,14 @@ class Management {
                     unset($linkObj);
                 }
 
-                if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryFrom.$queryWhere));
+                if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryFrom.$queryWhere));
 
                 $query = $this->DB->query("SELECT COUNT(t.hash) AS amount ".$queryFrom.$queryWhere);
                 $result = $query->fetch_assoc();
                 $ret['amount'] = $result['amount'];
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -600,7 +600,7 @@ class Management {
                             ORDER BY t.created DESC
                             LIMIT 1";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -608,7 +608,7 @@ class Management {
                     $ret = $query->fetch_all(MYSQLI_ASSOC);
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
         return $ret;
@@ -629,7 +629,7 @@ class Management {
             $queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
             $queryStr .= " AND t.link = '".$this->DB->real_escape_string($url)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -637,7 +637,7 @@ class Management {
                     $ret = $query->fetch_all(MYSQLI_ASSOC);
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 
@@ -661,7 +661,7 @@ class Management {
             $queryStr .= " AND ".$this->_decideLinkTypeForQuery();
             $queryStr .= " ORDER BY score DESC";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -669,7 +669,7 @@ class Management {
                     $ret = $query->fetch_all(MYSQLI_ASSOC);
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 
@@ -688,7 +688,7 @@ class Management {
                         FROM `".DB_PREFIX."_link` AS t";
         $queryStr .= " WHERE ".$this->_decideLinkTypeForQuery();
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -697,7 +697,7 @@ class Management {
                 $ret = $result['amount'];
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -713,7 +713,7 @@ class Management {
 
         $queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_tag`";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -722,7 +722,7 @@ class Management {
                 $ret = $result['amount'];
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -738,7 +738,7 @@ class Management {
 
         $queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_category`";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -747,7 +747,7 @@ class Management {
                 $ret = $result['amount'];
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -764,7 +764,7 @@ class Management {
         $queryStr = "SELECT COUNT(*) AS amount FROM `".DB_PREFIX."_link`";
         $queryStr .= " WHERE `status` = 3";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -773,7 +773,7 @@ class Management {
                 $ret = $result['amount'];
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -832,7 +832,7 @@ class Management {
             $queryWhere = " WHERE ".$this->_decideLinkTypeForQuery();
             $queryWhere .= " AND t.hash = '".$this->DB->real_escape_string($hash)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($querySelect.$queryFrom.$queryWhere));
 
             try {
                 $query = $this->DB->query($querySelect.$queryFrom.$queryWhere);
@@ -853,7 +853,7 @@ class Management {
                     }
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 
@@ -877,7 +877,7 @@ class Management {
                 $queryStr = "DELETE FROM `" . DB_PREFIX . "_link` 
                         WHERE `hash` = '" . $this->DB->real_escape_string($hash) . "'";
 
-                if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+                if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
                 try {
                     $query = $this->DB->query($queryStr);
@@ -885,7 +885,7 @@ class Management {
                         $ret = true;
                     }
                 } catch (Exception $e) {
-                    Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                    Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
                 }
             }
         }
@@ -971,12 +971,12 @@ class Management {
                                 SET `search` = '".$this->DB->real_escape_string($searchStr)."'
                                 WHERE `hash` = '".$this->DB->real_escape_string($link['hash'])."'";
 
-                if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+                if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
                 try {
                     $this->DB->query($queryStr);
                 } catch (Exception $e) {
-                    Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                    Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
                 }
 
                 unset($LinkObj,$l,$searchStr,$_t,$queryStr);
@@ -1122,7 +1122,7 @@ class Management {
                         ORDER BY `linkid`, rel ASC";
         }
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -1138,7 +1138,7 @@ class Management {
                 }
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         // now count the unique digit strings
@@ -1179,7 +1179,7 @@ class Management {
                                     WHERE `id` = '".$this->DB->real_escape_string($t)."'";
                         }
 
-                        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+                        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
                         try {
                             $query = $this->DB->query($queryStr);
@@ -1189,7 +1189,7 @@ class Management {
                                 $_t['rel'][$t] = $relinfo['name'];
                             }
                         } catch (Exception $e) {
-                            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
                         }
                     } else {
                         $_t['rel'][$t] = $_existingRelInfo[$t];
@@ -1230,7 +1230,7 @@ class Management {
                             FROM `" . DB_PREFIX . "_link`
                             WHERE `id` = '" . $this->DB->real_escape_string($id) . "'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -1238,7 +1238,7 @@ class Management {
                     $ret = true;
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 

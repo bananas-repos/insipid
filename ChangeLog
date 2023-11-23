@@ -1,9 +1,13 @@
 version 2.x.x - Griffin Chapel ()
     + Added TIMEZONE as a new config setting. Please update your config.
       See update.txt for more details.
+    + Added new config settings for whole page screenshot creation. Please update your config.
+      See update.txt for more details.
+      See whole-page-snapshot.txt for more details.
     + Fixed: Snapshot json result from Google.
     + New home screen layout
     + Better logging
+
 
 version 2.8.2 - Dragon Chapel (2023-09-14)
 

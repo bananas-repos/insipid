@@ -120,7 +120,7 @@ try {
     if(DEBUG === true) $EmailReader->mailboxStatus();
 }
 catch (Exception $e) {
-    Summoner::sysLog('[ERROR] Email server connection failed: '.$e->getMessage());
+    Summoner::sysLog('ERROR Email server connection failed: '.$e->getMessage());
     exit();
 }
 
@@ -130,7 +130,7 @@ try {
     $emails = $EmailReader->messageWithValidSubject(EMAIL_MARKER);
 }
 catch (Exception $e) {
-    Summoner::sysLog('[ERROR] Can not process email messages: '.$e->getMessage());
+    Summoner::sysLog('ERROR Can not process email messages: '.$e->getMessage());
     exit();
 }
 
@@ -259,7 +259,7 @@ if(!empty($emails)) {
 				}
 				else {
 					$DB->rollback();
-                    Summoner::sysLog("[ERROR] Link could not be added. SQL problem? ".$newdata['link']);
+                    Summoner::sysLog("ERROR Link could not be added. SQL problem? ".$newdata['link']);
 					$emailData['importmessage'] = "Link could not be added";
 					array_push($invalidProcessedEmails,$emailData);
 				}

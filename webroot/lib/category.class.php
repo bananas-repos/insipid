@@ -66,7 +66,7 @@ class Category {
             $queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_category`
                             WHERE `name` = '".$this->DB->real_escape_string($string)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -81,7 +81,7 @@ class Category {
                         $queryStr = "INSERT INTO `" . DB_PREFIX . "_category`
                                         SET `name` = '" . $this->DB->real_escape_string($string) . "'";
 
-                        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+                        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
                         $this->DB->query($queryStr);
                         if (!empty($this->DB->insert_id)) {
@@ -96,7 +96,7 @@ class Category {
                     }
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
         return $ret;
@@ -116,7 +116,7 @@ class Category {
                 FROM `".DB_PREFIX."_category`
                 WHERE `id` = '".$this->DB->real_escape_string($id)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -126,7 +126,7 @@ class Category {
                     $this->_data = $result;
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 
@@ -161,12 +161,12 @@ class Category {
                             SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
                                 `categoryid` = '".$this->DB->real_escape_string($this->_id)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $this->DB->query($queryStr);
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
     }
@@ -183,7 +183,7 @@ class Category {
                     FROM `".DB_PREFIX."_categoryrelation` 
                     WHERE `categoryid` = '".$this->DB->real_escape_string($this->_id)."'";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -193,7 +193,7 @@ class Category {
                 }
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -219,7 +219,7 @@ class Category {
                     FROM `".DB_PREFIX."_category`
                     WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $this->DB->query($queryStr);
@@ -246,12 +246,12 @@ class Category {
                         SET `name` = '".$this->DB->real_escape_string($newValue)."'
                         WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $this->DB->query($queryStr);
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
 
             $this->_data['name'] = $newValue;

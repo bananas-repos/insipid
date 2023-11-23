@@ -74,7 +74,7 @@ class Tag {
             $queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
                             WHERE `name` = '".$this->DB->real_escape_string($string)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -89,7 +89,7 @@ class Tag {
                         $queryStr = "INSERT INTO `" . DB_PREFIX . "_tag`
                                         SET `name` = '" . $this->DB->real_escape_string($string) . "'";
 
-                        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+                        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
                         $this->DB->query($queryStr);
                         if (!empty($this->DB->insert_id)) {
@@ -104,7 +104,7 @@ class Tag {
                     }
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
         return $ret;
@@ -123,7 +123,7 @@ class Tag {
             $queryStr = "SELECT `id`,`name` FROM `".DB_PREFIX."_tag`
                             WHERE `id` = '".$this->DB->real_escape_string($id)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $query = $this->DB->query($queryStr);
@@ -133,7 +133,7 @@ class Tag {
                     $this->_data = $result;
                 }
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
 
@@ -167,12 +167,12 @@ class Tag {
             $queryStr = "INSERT IGNORE INTO `".DB_PREFIX."_tagrelation`
                             SET `linkid` = '".$this->DB->real_escape_string($linkid)."',
                                 `tagid` = '".$this->DB->real_escape_string($this->_id)."'";
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $this->DB->query($queryStr);
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
         }
     }
@@ -189,7 +189,7 @@ class Tag {
                     FROM `".DB_PREFIX."_tagrelation` 
                     WHERE tagid = '".$this->DB->real_escape_string($this->_id)."'";
 
-        if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+        if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
         try {
             $query = $this->DB->query($queryStr);
@@ -199,7 +199,7 @@ class Tag {
                 }
             }
         } catch (Exception $e) {
-            Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+            Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
         }
 
         return $ret;
@@ -226,12 +226,12 @@ class Tag {
                     FROM `".DB_PREFIX."_tag`
                     WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
 
-                if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+                if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
                 $this->DB->query($queryStr);
                 $this->DB->commit();
             } catch (Exception $e) {
-                Summoner::sysLog('[ERROR] Failed to remove tag: '.$e->getMessage());
+                Summoner::sysLog('ERROR Failed to remove tag: '.$e->getMessage());
 
                 $this->DB->rollback();
             }
@@ -252,12 +252,12 @@ class Tag {
                         SET `name` = '".$this->DB->real_escape_string($newValue)."'
                         WHERE `id` = '".$this->DB->real_escape_string($this->_id)."'";
 
-            if(QUERY_DEBUG) Summoner::sysLog("[QUERY] ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
+            if(QUERY_DEBUG) Summoner::sysLog("QUERY ".__METHOD__." query: ".Summoner::cleanForLog($queryStr));
 
             try {
                 $this->DB->query($queryStr);
             } catch (Exception $e) {
-                Summoner::sysLog("[ERROR] ".__METHOD__." mysql catch: ".$e->getMessage());
+                Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
             $this->_data['name'] = $newValue;
         }

@@ -79,9 +79,14 @@ const EMAIL_REPLY_BACK_VALID = '';
 const EMAIL_REPLY_BACK_ADDRESS = '';
 const EMAIL_REPLY_BACK_SUBJECT = 'Insipid email import response';
 
-# Use ... to create a whole page screenshot of a given link
+# Set this to true to enable the option in the link form
+# You need the API Key from your browserless.io account
+# See whole-page-snapshot.txt for more details
 const COMPLETE_PAGE_SCREENSHOT = false;
-const COMPLETE_PAGE_SCREENSHOT_COMMAND = '/absolute/path/to/command';
+const COMPLETE_PAGE_SCREENSHOT_BROWSERLESS_API = "https://chrome.browserless.io/screenshot?token=";
+const COMPLETE_PAGE_SCREENSHOT_API_KEY = 'YOUR-API-KEY';
+const COMPLETE_PAGE_SCREEENSHOT_BROWSERLESS_TIMEOUT = 10000; # milliseconds
+const COMPLETE_PAGE_SCREEENSHOT_BROWSERLESS_IMAGE_QUALITY = 75; # quality for jpeg
 
 # Timezone setting
 const TIMEZONE = 'Europe/Berlin';
