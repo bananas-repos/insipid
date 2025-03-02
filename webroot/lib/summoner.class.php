@@ -31,7 +31,7 @@
  */
 class Summoner {
 
-    private const BROWSER_AGENT_STRING = 'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0';
+    private const BROWSER_AGENT_STRING = 'Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0';
 
     /**
      * validate the given string with the given type. Optional check the string

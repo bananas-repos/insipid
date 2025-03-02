@@ -20,8 +20,8 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `#REPLACE_ME#_category`;
 CREATE TABLE `#REPLACE_ME#_category` (
-                                    `id` int NOT NULL,
-                                    `name` varchar(128) COLLATE utf8mb4_unicode_520_ci NOT NULL
+    `id` int NOT NULL,
+    `name` varchar(128) COLLATE utf8mb4_unicode_520_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -32,8 +32,8 @@ CREATE TABLE `#REPLACE_ME#_category` (
 
 DROP TABLE IF EXISTS `#REPLACE_ME#_categoryrelation`;
 CREATE TABLE `#REPLACE_ME#_categoryrelation` (
-                                            `linkid` int NOT NULL,
-                                            `categoryid` int NOT NULL
+    `linkid` int NOT NULL,
+    `categoryid` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -44,7 +44,7 @@ CREATE TABLE `#REPLACE_ME#_categoryrelation` (
 --
 DROP VIEW IF EXISTS `#REPLACE_ME#_combined`;
 CREATE TABLE `#REPLACE_ME#_combined` (
-                                    `category` varchar(128)
+    `category` varchar(128)
     ,`categoryId` int
     ,`created` datetime
     ,`description` varchar(255)
@@ -66,16 +66,16 @@ CREATE TABLE `#REPLACE_ME#_combined` (
 
 DROP TABLE IF EXISTS `#REPLACE_ME#_link`;
 CREATE TABLE `#REPLACE_ME#_link` (
-                                `id` int NOT NULL,
-                                `link` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
-                                `created` datetime NOT NULL,
-                                `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                `status` int NOT NULL,
-                                `description` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-                                `title` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-                                `image` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-                                `hash` char(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-                                `search` text COLLATE utf8mb4_unicode_520_ci NOT NULL
+    `id` int NOT NULL,
+    `link` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+    `created` datetime NOT NULL,
+    `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `status` int NOT NULL,
+    `description` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+    `title` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+    `image` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+    `hash` char(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+    `search` text COLLATE utf8mb4_unicode_520_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
