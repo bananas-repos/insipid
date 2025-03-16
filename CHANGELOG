@@ -1,4 +1,5 @@
-version 2.x.x - Griffin Chapel ()
+version 2.9.0 - Griffin Chapel (2025-03-16)
+
     + Added TIMEZONE as a new config setting. Please update your config.php file.
       See update.md for more details.
     + Added new config settings for whole page screenshot creation. Please update your config.
@@ -9,6 +10,7 @@ version 2.x.x - Griffin Chapel ()
     + New home screen layout
     + Better logging
     + Changed documentation files to markdown syntax.
+    + Updated requirements information.
 
 version 2.8.2 - Dragon Chapel (2023-09-14)
 

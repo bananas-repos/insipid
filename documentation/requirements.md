@@ -12,8 +12,7 @@ PHP (8 and up)
 - xmlread
 - xmlwriter
 
-MySQL server or access to a database 5.6.x and up
+MySQL server or access to a database 8.x and up
 - DB user rights has to include create, alter a view
-- NOT MariaDB. It is missing some functions MySQL has.
 
 Latest browser for accessing the client.

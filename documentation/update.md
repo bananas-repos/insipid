@@ -2,7 +2,7 @@
 
 If you are updating from a previous version make sure every update info from  the version your are updating from is done.
 
-## version 2.x.x - Griffin Chapel
+## version 2.9.0 - Griffin Chapel
 
 Add new config setting `TIMEZONE` to your config. See `config.default.php` for more details.
 
@@ -10,7 +10,7 @@ Add new config settings for using page screenshot with browserless.io. See `conf
 
 ```
 const COMPLETE_PAGE_SCREENSHOT_BROWSERLESS_API = "https://chrome.browserless.io/screenshot?token=";
-const COMPLETE_PAGE_SCREENSHOT_API_KEY = 'YOUR-API-KEY';
+const COMPLETE_PAGE_SCREENSHOT_BROWSERLESS_API_KEY = 'YOUR-API-KEY';
 const COMPLETE_PAGE_SCREEENSHOT_BROWSERLESS_TIMEOUT = 10000; # milliseconds
 const COMPLETE_PAGE_SCREEENSHOT_BROWSERLESS_IMAGE_QUALITY = 75; # quality for jpeg
 ```
