@@ -281,7 +281,6 @@ class Link {
                 Summoner::sysLog("ERROR ".__METHOD__." mysql catch: ".$e->getMessage());
             }
 
-
             if ($query !== false) {
                 $catObj = new Category($this->DB);
                 $tagObj = new Tag($this->DB);

@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2023 Johannes Keßler
+ * Copyright 2016-2025 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -84,7 +84,7 @@ const EMAIL_REPLY_BACK_SUBJECT = 'Insipid email import response';
 # See whole-page-snapshot.txt for more details
 const COMPLETE_PAGE_SCREENSHOT = false;
 const COMPLETE_PAGE_SCREENSHOT_BROWSERLESS_API = "https://chrome.browserless.io/screenshot?token=";
-const COMPLETE_PAGE_SCREENSHOT_API_KEY = 'YOUR-API-KEY';
+const COMPLETE_PAGE_SCREENSHOT_BROWSERLESS_API_KEY = 'YOUR-API-KEY';
 const COMPLETE_PAGE_SCREEENSHOT_BROWSERLESS_TIMEOUT = 10000; # milliseconds
 const COMPLETE_PAGE_SCREEENSHOT_BROWSERLESS_IMAGE_QUALITY = 75; # quality for jpeg
 

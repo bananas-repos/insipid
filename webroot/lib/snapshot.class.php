@@ -27,10 +27,9 @@
  */
 
 /**
- * class Snapshot
- * create from given ULR a Screenshot for storage
- * right now it uses google pagespeedonline for a simple snapshot
- *
+ * Class Snapshot
+ * Create from given ULR a Screenshot for storage.
+ * Currently only browserless.io is supported.
  *
  */
 class Snapshot {
@@ -82,7 +81,7 @@ class Snapshot {
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
 
-            // DEBUG ONLY
+            // manual DEBUG ONLY
             //$curl_log = fopen(ABSOLUTE_PATH."/curl.log", 'w');
             //curl_setopt($ch, CURLOPT_VERBOSE, true);
             //curl_setopt($ch, CURLOPT_STDERR, $curl_log);
@@ -96,7 +95,7 @@ class Snapshot {
 
             if(DEBUG) Summoner::sysLog("DEBUG return ".Summoner::cleanForLog($do));
 
-            // DEBUG ONLY
+            // manual DEBUG ONLY
             //fclose($curl_log);
 
             $ret = true;

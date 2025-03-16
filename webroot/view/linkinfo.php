@@ -75,6 +75,20 @@
 			</p>
 		</div>
 	</div>
+    <?php if(defined('COMPLETE_PAGE_SCREENSHOT') && COMPLETE_PAGE_SCREENSHOT === true) { ?>
+    <div class="columns">
+	    <div class="column is-one-third">
+		    <p>
+                <?php echo $T->t('view.pagescreenshot'); ?>
+		    </p>
+	    </div>
+	    <div class="column is-two-third">
+            <?php if(isset($linkData['pagescreenshotLink'])) { ?>
+			    <p><a href="<?php echo $linkData['pagescreenshotLink']; ?>" target="_blank"><?php echo $T->t('view.pagescreenshot.link'); ?></a></p>
+            <?php } ?>
+	    </div>
+    </div>
+    <?php } ?>
 	<div class="columns">
 		<div class="column is-one-third">
 			<p><?php echo $T->t('view.date.added'); ?></p>
