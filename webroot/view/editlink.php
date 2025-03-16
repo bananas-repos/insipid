@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2022 Johannes Keßler
+ * Copyright 2016-2025 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -36,7 +36,7 @@
 	<div class="columns">
 		<div class="column">
 			<h1 class="is-size-2"><?php echo $linkData['title']; ?></h1>
-			<h3><a href="index.php?p=linkinfo&id=<?php echo Summoner::ifset($formData, 'hash'); ?>">
+			<h3><a href="index.php?p=linkinfo&id=<?php echo $formData['hash'] ?? ''; ?>">
 				<i class="icon ion-md-return-left"></i></a></h3>
 		</div>
 	</div>
@@ -61,7 +61,7 @@
 				<p><?php echo $T->t('view.title'); ?></p>
 			</div>
 			<div class="column">
-				<input class="input" type="text" name="data[title]" value="<?php echo Summoner::ifset($formData, 'title'); ?>" />
+				<input class="input" type="text" name="data[title]" value="<?php echo $formData['title'] ?? ''; ?>" />
 			</div>
 		</div>
 		<div class="columns">
@@ -69,7 +69,7 @@
 				<p><?php echo $T->t('view.description'); ?></p>
 			</div>
 			<div class="column">
-				<input class="input" type="text" name="data[description]" value="<?php echo Summoner::ifset($formData, 'description'); ?>" />
+				<input class="input" type="text" name="data[description]" value="<?php echo $formData['description'] ?? ''; ?>" />
 			</div>
 		</div>
 		<div class="columns">
@@ -83,34 +83,18 @@
 		<div class="columns">
 			<div class="column is-one-quarter">
 				<p>
-					<?php echo $T->t('view.image'); ?>: (<small><?php echo $T->t('view.image.provided'); ?></small>)
+					<?php echo $T->t('view.website.thumbnail'); ?> (<small><?php echo $T->t('view.website.thumbnail.provided'); ?></small>)
 				</p>
 			</div>
 			<div class="column">
 				<p>
-					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.image.noimage'); ?>">
+					<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.website.thumbnail.noimage'); ?>">
 				</p>
-				<input class="input" type="text" name="data[image]" value="<?php echo Summoner::ifset($formData, 'image'); ?>" /><br />
+				<input class="input" type="text" name="data[image]" value="<?php echo $formData['image'] ?? ''; ?>" /><br />
 				<br />
 				<label class="checkbox">
-					<input type="checkbox" name="data[localImage]" value="1" <?php if(Summoner::ifset($formData, 'localImage')) echo "checked"; ?> />
+					<input type="checkbox" name="data[localImage]" value="1" <?php if(isset($formData['localImage'])) echo "checked"; ?> />
 					<?php echo $T->t('edit.link.image.save'); ?>
-				</label>
-			</div>
-		</div>
-		<div class="columns">
-			<div class="column is-one-quarter">
-				<p>
-					<?php echo $T->t('edit.link.thumbnail.webpage'); ?>
-				</p>
-			</div>
-			<div class="column">
-				<?php if(isset($linkData['snapshotLink'])) { ?>
-				<p><a href="<?php echo $linkData['snapshotLink']; ?>" target="_blank"><?php echo $T->t('edit.link.thumbnail.view'); ?></a></p>
-				<?php } ?>
-				<label class="checkbox">
-					<input type="checkbox" name="data[snapshot]" value="1" <?php if(Summoner::ifset($formData, 'snapshot')) echo "checked"; ?>  />
-					<?php echo $T->t('edit.link.thumbnail.save'); ?>
 				</label>
 			</div>
 		</div>
@@ -126,7 +110,7 @@
 				<p><a href="<?php echo $linkData['pagescreenshotLink']; ?>" target="_blank"><?php echo $T->t('edit.link.full.screenshot.view'); ?></a></p>
 				<?php } ?>
 				<label class="checkbox">
-					<input type="checkbox" name="data[pagescreenshot]" value="1" <?php if(Summoner::ifset($formData, 'pagescreenshot')) echo "checked"; ?>  />
+					<input type="checkbox" name="data[pagescreenshot]" value="1" <?php if(isset($formData['pagescreenshot'])) echo "checked"; ?>  />
 					<?php echo $T->t('edit.link.full.screenshot.save'); ?>
 				</label>
 			</div>
@@ -213,7 +197,7 @@
 			</div>
 			<div class="column">
 				<label class="checkbox">
-					<input type="checkbox" name="data[private]" value="1" <?php if(Summoner::ifset($formData, 'private')) echo "checked"; ?> />
+					<input type="checkbox" name="data[private]" value="1" <?php if(isset($formData['private'])) echo "checked"; ?> />
 					<?php echo $T->t('view.private'); ?>
 				</label>
 			</div>

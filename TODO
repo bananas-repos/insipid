@@ -1,7 +1,7 @@
 TODO / Feature list
-+ Replace ifset https://www.php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
-  from summoner.class.php
-+ Whole Page snapshot
++ combine category and tag class into one.
++ installer
 + view table really still needed?
 + theme support
-+ combine category and tag class into one.
++ backup only tables and not the db itself
++ E-mail import fixing?

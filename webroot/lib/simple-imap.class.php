@@ -160,7 +160,7 @@ class SimpleImap {
                     echo $val->attributes . "<br />\n";
                 }
             } else {
-                Summoner::sysLog("ERROR imap_getmailboxes failed: ".var_export(imap_last_error()));
+                Summoner::sysLog("ERROR imap_getmailboxes failed: ".Summoner::cleanForLog(imap_last_error()));
             }
         }
     }

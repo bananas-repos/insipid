@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2022 Johannes Keßler
+ * Copyright 2016-2025 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -103,11 +103,6 @@ if(isset($_POST['data']) && !empty($_POST['data']) && isset($_POST['editlink']))
 	$formData['localImage'] = false;
 	if(isset($fData['localImage'])) {
 		$formData['localImage'] = true;
-	}
-
-	$formData['snapshot'] = false;
-	if(isset($fData['snapshot'])) {
-		$formData['snapshot'] = true;
 	}
 
 	$formData['pagescreenshot'] = false;

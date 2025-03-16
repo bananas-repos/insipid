@@ -29,10 +29,8 @@
 mb_http_output('UTF-8');
 mb_internal_encoding('UTF-8');
 error_reporting(-1); // E_ALL & E_STRICT
-# time settings
-date_default_timezone_set('Europe/Berlin');
-
 require('../config.php');
+date_default_timezone_set(TIMEZONE);
 
 ## set the error reporting
 ini_set('log_errors',true);;
@@ -110,7 +108,7 @@ if(EMAIL_REPORT_BACK === true) {
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
 $DB->set_charset("utf8mb4");
-$DB->query("SET collation_connection = 'utf8mb4_bin'");
+$DB->query("SET collation_connection = 'utf8mb4_unicode_520_ci'");
 $driver = new mysqli_driver();
 $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;;
 
@@ -122,7 +120,7 @@ try {
     if(DEBUG === true) $EmailReader->mailboxStatus();
 }
 catch (Exception $e) {
-    Summoner::sysLog('[ERROR] Email server connection failed: '.var_export($e->getMessage(),true));
+    Summoner::sysLog('ERROR Email server connection failed: '.$e->getMessage());
     exit();
 }
 
@@ -132,7 +130,7 @@ try {
     $emails = $EmailReader->messageWithValidSubject(EMAIL_MARKER);
 }
 catch (Exception $e) {
-    Summoner::sysLog('[ERROR] Can not process email messages: '.var_export($e->getMessage(),true));
+    Summoner::sysLog('ERROR Can not process email messages: '.$e->getMessage());
     exit();
 }
 
@@ -143,7 +141,7 @@ if(!empty($emails)) {
     foreach($emails as $emailId=>$emailData) {
         $links = EmailImportHelper::extractEmailLinks($emailData['body']);
 		if(!empty($links)) {
-			if(DEBUG === true) var_dump("Links in email:",$links);
+			if(DEBUG === true) Summoner::sysLog("Links in email: ".Summoner::cleanForLog($links));
 
 			foreach($links as $linkstring) {
 				# defaults
@@ -170,8 +168,8 @@ if(!empty($emails)) {
 				$newdata['link'] = Summoner::addSchemeToURL($newdata['link']);
 
 				if (!filter_var($newdata['link'], FILTER_VALIDATE_URL)) {
-					error_log("ERROR Invalid URL: ".var_export($newdata['link'],true));
-					if(DEBUG === true) var_dump("Invalid URL:", $newdata['link']);
+					error_log("ERROR Invalid URL: ".Summoner::cleanForLog($newdata['link']));
+					if(DEBUG === true) Summoner::sysLog("Invalid URL: ".Summoner::cleanForLog($newdata['link']));
 					continue;
 				}
 
@@ -190,12 +188,12 @@ if(!empty($emails)) {
 				}
 				else {
 					error_log("WARN No valid title for link found: ".$newdata['link']);
-					if(DEBUG === true) var_dump("WARN No valid title for link found: ".var_export($newdata,true));
+					if(DEBUG === true) Summoner::sysLog("[WARN] No valid title for link found: ".Summoner::cleanForLog($newdata));
 					array_push($invalidProcessedEmails, $emailData);
 					continue;
 				}
 
-				if(DEBUG === true) var_dump("New data", $newdata);
+				if(DEBUG === true) Summoner::sysLog("New data ".Summoner::cleanForLog($newdata));
 
                 $linkObj = new Link($DB);
                 $linkID = false;
@@ -207,7 +205,7 @@ if(!empty($emails)) {
 
                 if(!empty($existing) && isset($existing['id'])) {
                     $linkID = $existing['id'];
-                    Summoner::sysLog('[INFO] Updating existing link with tag or category '.$newdata['link']);
+                    Summoner::sysLog('[INFO] Updating existing link with tag or category '.Summoner::cleanForLog($newdata['link']));
                 }
                 else {
                     $linkObj = new Link($DB);
@@ -223,12 +221,12 @@ if(!empty($emails)) {
 							'catArr' => $newdata['catArr']
                         ), true);
                     } catch (Exception $e) {
-                        $_m = "WARN Can not create new link into DB." . $e->getMessage();
+                        $_m = "[WARN] Can not create new link into DB." . $e->getMessage();
                         Summoner::sysLog($_m);
                         $emailData['importmessage'] = $_m;
                         array_push($invalidProcessedEmails, $emailData);
-                        if (DEBUG === true) var_dump($_m);
-                        if (DEBUG === true) var_dump($newdata);
+                        if (DEBUG === true) Summoner::sysLog($_m);
+                        if (DEBUG === true) Summoner::sysLog(Summoner::cleanForLog($newdata));
                         continue;
                     }
                 }
@@ -261,7 +259,7 @@ if(!empty($emails)) {
 				}
 				else {
 					$DB->rollback();
-                    Summoner::sysLog("[ERROR] Link could not be added. SQL problem? ".$newdata['link']);
+                    Summoner::sysLog("ERROR Link could not be added. SQL problem? ".$newdata['link']);
 					$emailData['importmessage'] = "Link could not be added";
 					array_push($invalidProcessedEmails,$emailData);
 				}

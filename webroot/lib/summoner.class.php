@@ -31,7 +31,7 @@
  */
 class Summoner {
 
-    private const BROWSER_AGENT_STRING = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0';
+    private const BROWSER_AGENT_STRING = 'Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0';
 
     /**
      * validate the given string with the given type. Optional check the string
@@ -134,10 +134,10 @@ class Summoner {
      *
      * @param string $url The request url
      * @param int $port
-     * @return string
+     * @return array
      */
-    static function curlCall(string $url, int $port=0): string {
-        $ret = '';
+    static function curlCall(string $url, int $port=0): array {
+        $ret = array('status' => false, 'message' => 'Unknown');
 
         $ch = curl_init();
 
@@ -159,10 +159,11 @@ class Summoner {
         $do = curl_exec($ch);
 
         if(is_string($do) === true) {
-            $ret = $do;
+            $ret['status'] = true;
+            $ret['message'] = $do;
         }
         else {
-            self::sysLog('ERROR '.var_export(curl_error($ch),true));
+            $ret['message'] = curl_error($ch);
         }
 
         curl_close($ch);
@@ -208,19 +209,6 @@ class Summoner {
     }
 
     /**
-     * simulate the Null coalescing operator in php5
-     * this only works with arrays and checking if the key is there and echo/return it.
-     * http://php.net/manual/en/migration70.new-features.php#migration70.new-features.null-coalesce-op
-     *
-     * @param array $array
-     * @param string $key
-     * @return mixed
-     */
-    static function ifset(array $array, string $key): mixed {
-        return $array[$key] ?? false;
-    }
-
-    /**
      * try to gather meta information from given URL
      *
      * @param string $url
@@ -231,8 +219,8 @@ class Summoner {
 
         if(self::validate($url,'url')) {
             $data = self::curlCall($url);
-            if(!empty($data)) {
-                $ret = self::socialMetaInfos($data);
+            if(!empty($data['status'])) {
+                $ret = self::socialMetaInfos($data['message']);
             }
         }
 
@@ -383,7 +371,6 @@ class Summoner {
                 }
             }
         }
-
 
         return $ret;
     }
@@ -565,10 +552,10 @@ class Summoner {
     /**
      * Make the input more safe for logging
      *
-     * @param string $input The string to be made more safe
+     * @param mixed $input The string to be made more safe
      * @return string
      */
-    static function cleanForLog(string $input): string {
+    static function cleanForLog(mixed $input): string {
         $input = var_export($input, true);
         $input = preg_replace( "/[\t\n\r]/", " ", $input);
         return addcslashes($input, "\000..\037\177..\377\\");

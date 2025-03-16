@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2023 Johannes Keßler
+ * Copyright 2016-2025 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -23,25 +23,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.
- *
  */
 
 mb_http_output('UTF-8');
 mb_internal_encoding('UTF-8');
 error_reporting(-1); // E_ALL & E_STRICT
-# time settings
-date_default_timezone_set('Europe/Berlin');
-
 require('config.php');
-
-## check request
-$_urlToParse = filter_var($_SERVER['QUERY_STRING'],FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
-if(!empty($_urlToParse)) {
-    # see http://de2.php.net/manual/en/regexp.reference.unicode.php
-    if(preg_match('/[\p{C}\p{M}\p{Sc}\p{Sk}\p{So}\p{Zl}\p{Zp}]/u',$_urlToParse) === 1) {
-        die('Malformed request. Make sure you know what you are doing.');
-    }
-}
+date_default_timezone_set(TIMEZONE);
 
 ## set the error reporting
 ini_set('log_errors',true);
@@ -81,7 +69,7 @@ if(defined("USE_PAGE_AUTH") && USE_PAGE_AUTH === true) {
 $DB = new mysqli(DB_HOST, DB_USERNAME,DB_PASSWORD, DB_NAME);
 if ($DB->connect_errno) exit('Can not connect to MySQL Server');
 $DB->set_charset("utf8mb4");
-$DB->query("SET collation_connection = 'utf8mb4_bin'");
+$DB->query("SET collation_connection = 'utf8mb4_unicode_520_ci'");
 $driver = new mysqli_driver();
 $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;;
 
