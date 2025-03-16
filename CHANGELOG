@@ -1,3 +1,5 @@
+version 2.x.x - Heresiarch's Seminary ()
+
 version 2.9.0 - Griffin Chapel (2025-03-16)
 
     + Added TIMEZONE as a new config setting. Please update your config.php file.
