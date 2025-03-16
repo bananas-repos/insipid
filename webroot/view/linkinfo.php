@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2021 Johannes Keßler
+ * Copyright 2016-2025 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -66,12 +66,12 @@
 	<div class="columns">
 		<div class="column is-one-third">
 			<p>
-				<?php echo $T->t('view.image'); ?> (<small><?php echo $T->t('view.image.provided'); ?></small>)
+				<?php echo $T->t('view.website.thumbnail'); ?> (<small><?php echo $T->t('view.website.thumbnail.provided'); ?></small>)
 			</p>
 		</div>
 		<div class="column is-two-third">
 			<p>
-				<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.image.provided'); ?>">
+				<img class="linkthumbnail" src="<?php echo $linkData['imageToShow']; ?>" alt="<?php echo $T->t('view.website.thumbnail.noimage'); ?>">
 			</p>
 		</div>
 	</div>

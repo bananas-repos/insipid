@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2023 Johannes Keßler
+ * Copyright 2016-2025 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -89,8 +89,7 @@ class Link {
                     $this->_tags();
                     $this->_categories();
                     $this->_image();
-                    $this->_private();
-                    $this->_snapshot();
+                    $this->_private();;
                     $this->_pageScreenshot();
                 }
             } catch (Exception $e) {
@@ -325,27 +324,6 @@ class Link {
                     }
                 }
 
-                # decide if we want to make a local snapshot
-                if(isset($data['snapshot'])) {
-                    $snapshot = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/snapshot-' . $this->_data['hash'].'.webp';
-                    if ($data['snapshot'] === true) {
-                        if (!file_exists($snapshot) || $_imageUrlChanged === true) {
-                            require_once 'lib/snapshot.class.php';
-                            $snap = new Snapshot();
-                            $do = $snap->doSnapshot($this->_data['link'], $snapshot);
-                            if(empty($do)) {
-                                Summoner::sysLog('ERROR Failed to create snapshot: '.Summoner::cleanForLog($data));
-                            }
-                        }
-                    } elseif ($data['snapshot'] === false) {
-                        if(DEBUG) Summoner::sysLog("DEBUG want to remove local snapshot: $snapshot");
-                        if (file_exists($snapshot)) {
-                            if(DEBUG) Summoner::sysLog("DEBUG remove local snapshot: $snapshot");
-                            unlink($snapshot);
-                        }
-                    }
-                }
-
                 # decide if we want to make a local full page screenshot
                 if(isset($data['pagescreenshot'])) {
                     $pagescreenshot = ABSOLUTE_PATH . '/' . LOCAL_STORAGE . '/pagescreenshot-' . $this->_data['hash'].'.jpeg';
@@ -388,7 +366,6 @@ class Link {
         $this->_removeTagRelation();
         $this->_removeCategoryRelation();
         $this->_deleteImage();
-        $this->_deleteSnapshot();
         $this->_deletePageScreenshot();
     }
 
@@ -543,22 +520,6 @@ class Link {
     }
 
     /**
-     * determine if we have a local stored snapshot
-     * if so populate the snapshotLink attribute
-     *
-     * @return void
-     */
-    private function _snapshot(): void {
-        if (!empty($this->_data['hash'])) {
-            $snapshot = ABSOLUTE_PATH.'/'.LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.webp';
-            if (file_exists($snapshot)) {
-                $this->_data['snapshotLink'] = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.webp';
-                $this->_data['snapshot'] = true;
-            }
-        }
-    }
-
-    /**
      * determine if we have a local full page screenshot
      * if so populate the pagescreenshotLink attribute
      *
@@ -584,20 +545,6 @@ class Link {
             $image = ABSOLUTE_PATH.'/'.$this->_data['imageToShow'];
             if (file_exists($image)) {
                 unlink($image);
-            }
-        }
-    }
-
-    /**
-     * remove the local stored snapshot
-     *
-     * @return void
-     */
-    private function _deleteSnapshot(): void {
-        if (!empty($this->_data['hash']) && !empty($this->_data['snapshotLink'])) {
-            $snapshot = LOCAL_STORAGE.'/snapshot-'.$this->_data['hash'].'.webp';
-            if (file_exists($snapshot)) {
-                unlink($snapshot);
             }
         }
     }

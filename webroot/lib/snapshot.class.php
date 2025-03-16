@@ -3,7 +3,7 @@
  * Insipid
  * Personal web-bookmark-system
  *
- * Copyright 2016-2023 Johannes Keßler
+ * Copyright 2016-2025 Johannes Keßler
  *
  * Development starting from 2011: Johannes Keßler
  * https://www.bananas-playground.net/projekt/insipid/
@@ -34,59 +34,11 @@
  *
  */
 class Snapshot {
-    /**
-     * @var string
-     */
-    private string $_googlePageSpeed = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=';
 
     /**
      * Snapshot constructor
      */
     public function __constructor(): void {}
-
-    /**
-     * call given url with google PageSpeed API
-     * to receive image data
-     *
-     * @param String $url URL to take a thumbnail from
-     * @param string $filename
-     * @return boolean
-     */
-    public function doSnapshot(string $url, string $filename): bool {
-        $ret = false;
-
-        if(!empty($url) && is_writable(dirname($filename))) {
-            if(DEBUG) {
-                Summoner::sysLog("DEBUG try to save to $filename with $this->_googlePageSpeed for $url");
-            }
-            $theCall = Summoner::curlCall($this->_googlePageSpeed.urlencode($url).'&screenshot=true');
-            if(!empty($theCall['status'])) {
-                $jsonData = json_decode($theCall['message'],true);
-                if(DEBUG) {
-                    Summoner::sysLog("DEBUG Call result data: ".Summoner::cleanForLog($jsonData));
-                }
-                if(!empty($jsonData) && isset($jsonData['lighthouseResult']['fullPageScreenshot']['screenshot']['data'])) {
-                    $imageData = $jsonData['lighthouseResult']['fullPageScreenshot']['screenshot']['data'];
-
-                    $source = fopen($imageData, 'r');
-                    $destination = fopen($filename, 'w');
-                    if(stream_copy_to_stream($source, $destination)) {
-                        $ret = $filename;
-                    }
-                    fclose($source);
-                    fclose($destination);
-                } elseif(DEBUG) {
-                    Summoner::sysLog("DEBUG invalid json data. Path ['lighthouseResult']['fullPageScreenshot']['screenshot']['data'] not found in : ".Summoner::cleanForLog($jsonData));
-                }
-            } elseif(DEBUG) {
-                Summoner::sysLog("DEBUG curl call failed ".Summoner::cleanForLog($theCall));
-            }
-        } else {
-            Summoner::sysLog("ERROR URL $url is empty or target $filename is not writeable.");
-        }
-
-        return $ret;
-    }
 
     /**
      * use configured COMPLETE_PAGE_SCREENSHOT_COMMAND to create a whole page screenshot
@@ -155,4 +107,3 @@ class Snapshot {
         return $ret;
     }
 }
-
